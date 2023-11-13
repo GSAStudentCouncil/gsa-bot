@@ -1,0 +1,10 @@
+{
+  "name": "gsa-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "html-to-text": "^9.0.5",
+    "sync-request": "^6.1.0"
+  }
+}

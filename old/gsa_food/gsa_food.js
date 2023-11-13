@@ -1,4 +1,4 @@
-const scriptName = "gsa_food";
+const scriptName = "food";
 
 /**
  * 카카오톡봇(메신저봇R)을 이용한 학교 홈페이지의 급식(http://gsa.gen.hs.kr)을 크롤링 해 오는 코드입니다. 따라서 Rhino JS를 사용합니다.

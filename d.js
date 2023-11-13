@@ -1,3 +1,7 @@
+import request from 'sync-request';
+import cheerio from 'cheerio';
+import { convert } from 'html-to-text';
+
 /**
  * 모든 정보는 여기서 참고했습니다.
  * - https://darktornado.github.io/KakaoTalkBot/docs/api2/api2/
@@ -58,8 +62,9 @@ export class Message {
      * @param {boolean} hasMention
      * @param {number} chatLogId
      * @param {string} packageName
-     * @param {object} args
+     * @param {string[]} args
      * @param {string} command
+     * @param {number} systemUserId
      */
     constructor(
         content,
@@ -70,7 +75,8 @@ export class Message {
         chatLogId,
         packageName,
         args,
-        command
+        command,
+        systemUserId,
     ) {
         this.content = content;
         this.room = room;
@@ -82,6 +88,7 @@ export class Message {
         this.packageName = packageName;
         this.args = args;
         this.command = command;
+        this.systemUserId = systemUserId;
     }
 
     /**
@@ -90,6 +97,7 @@ export class Message {
      * @return {void}
      */
     reply(text) {
+        console.log(text.toString());
     }
 
     /**
@@ -279,11 +287,11 @@ export class Bot {
         switch (eventName) {
             case Event.MESSAGE:
             case Event.COMMAND:
-                listener(new Message());
+                listener(msg);
                 break;
             case Event.MEMBER_COUNT_CHANGED:
                 listener({
-                    room: new Room(),
+                    room: room,
                     count: {
                         before: 0,
                         after: 1
@@ -365,6 +373,7 @@ export class BotManager {
      * @return {Bot}
      */
     static getCurrentBot() {
+        return new Bot();
     }
 
     /**
@@ -436,7 +445,6 @@ export class BotManager {
      */
     static prepare(scriptName, throwOnError = false) {
     }
-
 
     /**
      * 특정 Bot의 컴파일 완료 여부를 반환합니다.
@@ -665,7 +673,7 @@ export const Event = {
      *
      *   chat.room - 채팅이 수신된 방의 정보가 담겨있는 객체
      *   chat.room.name - 채팅이 수신된 방의 이름
-     *   chat.room.chatId - 채팅이 수신된 방의 chat_id. 카톡 로컬 DB 뜯으면 나오는 그 chat_id가 맞아요.
+     *   chat.room.chatId - 채팅이 수신된 방의 chat_id. 카톡 로컬 db 뜯으면 나오는 그 chat_id가 맞아요.
      *   chat.room.isGroupChat - 채팅이 수신된 방이 단체채팅방이라면 `true`, 1:1 채팅방이라면 `false`
      *   chat.room.isOpenChat - 채팅이 수신된 방이 오픈채팅방이라면 `true`, 아니라면 `false`
      *   chat.room.icon - 채팅이 수신된 방의 방 아이콘 정보가 담긴 객체
@@ -869,7 +877,7 @@ export class FileStream {
      * @param {boolean} append
      * @return {void}
      */
-    static save(path, value, append=false) {
+    static save(path, value, append = false) {
     }
 
     /**
@@ -1158,3 +1166,66 @@ export class Security {
     static sha512(value) {
     }
 }
+
+export const org = {
+    jsoup: {
+        Jsoup: class {
+            constructor(url) {
+                this.url = url;
+            }
+
+            /**
+             * @param {string} url
+             */
+            static connect(url) {
+                return new org.jsoup.Jsoup(url);
+            }
+
+            get() {
+                return this;
+            }
+
+            html() {
+                const res = request('GET', this.url);
+                const $ = cheerio.load(res.getBody('utf8'));
+                return $.html();
+
+                // fixme: 구현체와 앱의 출력이 다름
+                //  - 구현체는 html 파일에서 개행을 삭제해서 반환하는데, jsoup은 코드 그 자체(개행마저 살려)를 반환함.
+            }
+
+            text() {
+                const res = request('GET', this.url);
+                const $ = cheerio.load(res.getBody('utf8'));
+                return $.text();
+
+                // fixme: 구현체와 앱의 출력이 미세하게 다름
+                //  - 구현체는 개행이 공백으로 변하지 않지만, jsoup은 개행이 공백으로 변함.
+            }
+        }
+    }
+}
+
+let room = new Room(
+    'debug room',
+    23454321234,
+    true,
+    false,
+    new Image()
+);
+let author = new Author(
+    '류현승',
+    '1edfdf1a29a58e9e5565a59dab358829112af75d55a15383143149ab088a5592',
+    new Image()
+);
+let image = new Image();
+let msg = new Message(
+    '/hello world',
+    room, author, image,
+    false,
+    123456,
+    'com.kakao.talk',
+    ['world'],
+    'hello',
+    95
+)
