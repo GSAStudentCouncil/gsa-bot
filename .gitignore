@@ -1,2 +1,5 @@
-.idea/
-node_modules/
+/node_modules
+/.idea
+/dist
+/modules/DBHelper
+.DS_Store
