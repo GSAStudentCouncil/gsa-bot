@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build-legacy": "node ./build.js legacy",
-    "build-api2": "node ./build.js api2",
+    "build-api2": "node ./build.js api2 src/index.js",
     "build-custom": "node ./build.js custom",
     "compile": "node ./compile.js"
   },

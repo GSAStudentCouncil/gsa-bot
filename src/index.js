@@ -3,22 +3,12 @@ const DB = require('../modules/DBManager').DBManager;
 let DBListener = DB.getInstance({});
 
 DBListener.on("message", (chat, channel) => {
-
-    /**
-     * 채팅 유저정보
-     */
     let user = chat.user;
 
-    /**
-     * /ㅎㅇ라고 말하면 보낸사람 + 님 안녕하세요
-     */
     if (chat.text === "/ㅎㅇ") {
-        channel.send(user.name + "님 안녕하세요")
+        channel.send(user.name + "님 안녕하세요");
     }
 
-    /**
-     * 답장의 원본 원본 꼬리물기로 얻기
-     */
     if (chat.isReply() && chat.text === "/원본답장") {
         let tempChat = chat.source;
         while (tempChat.isReply()) {
@@ -27,16 +17,10 @@ DBListener.on("message", (chat, channel) => {
         channel.send(tempChat.user.name + "님이 보낸 원본입니다 " + chat.text)
     }
 
-    /**
-     * 이전챗 구하기
-     */
     if(chat.isReply() && chat.text ==="/이전챗"){
         channel.send(  chat.source.getPrevChat().text);
     }
 
-    /**
-     * 다음 챗 구하기
-     */
     else if(chat.isReply() && chat.text ==="/다음챗"){
         channel.send(  chat.source.getNextChat().text);
     }
