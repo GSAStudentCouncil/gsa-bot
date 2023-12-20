@@ -1,8 +1,8 @@
-const DB = require('../modules/DBManager').DBManager;
+const manager = require('../modules/DBManager').DBManager;
 
-let DBListener = DB.getInstance({});
+let app = manager.getInstance({});
 
-DBListener.on("message", (chat, channel) => {
+app.on("message", (chat, channel) => {
     let user = chat.user;
 
     if (chat.text === "/ㅎㅇ") {
@@ -38,13 +38,13 @@ DBListener.on("message", (chat, channel) => {
 /**
  * 오픈채팅에 들어왔을 때 반응
  */
-DBListener.on("join", (chat, channel) => {
+app.on("join", (chat, channel) => {
     channel.send(chat.joinUsers[0].nickName + "님 안녕하세요")
 });
 /**
  * 단체톡방에 초대했을 때 반응
  */
-DBListener.on("invite", (chat, channel) => {
+app.on("invite", (chat, channel) => {
     channel.send(chat.inviteUser.nickName + "님이" + chat.invitedUsers.map((e) => e.nickName).join(",") + "님을 초대했습니다")
 });
 
@@ -52,7 +52,7 @@ DBListener.on("invite", (chat, channel) => {
  * 톡방에서 나갈 때
  */
 
-DBListener.on("leave", (chat, channel) => {
+app.on("leave", (chat, channel) => {
     if(chat.isKicked()){
         channel.send(chat.leaveUser.nickName + "님이 강퇴당했어요");
     }
@@ -65,26 +65,26 @@ DBListener.on("leave", (chat, channel) => {
  * 톡방에서 강퇴 당할 때
  */
 
-DBListener.on("kick", (chat, channel) => {
+app.on("kick", (chat, channel) => {
     channel.send(chat.kickedBy.name + "님이 " + chat.kickedUser.nickName + "님을 강퇴했습니다")
 })
 /**
  * 누군가 메시지를 지웠을 때
  */
-DBListener.on("delete", (chat, channel) => {
+app.on("delete", (chat, channel) => {
     channel.send(chat.deletedChat.text + "메시지가 지워졌어요");
 });
 /**
  * 방장이나 부방장이 메시지를 가렸을 때
  */
-DBListener.on("hide", (chat, channel) => {
+app.on("hide", (chat, channel) => {
     channel.send(chat.user.name + "님이 " + "메시지를 가렸어요");
 });
 
 /**
  * 권한이 바뀔 때
  */
-DBListener.on("member_type_change", (chat, channel) => {
+app.on("member_type_change", (chat, channel) => {
     if (chat.isDemote()) {
         channel.send(chat.demoteUser.nickName + "님이 부방장에서 내려왔어요")
     } else if (chat.isPromote()) {
@@ -97,8 +97,8 @@ DBListener.on("member_type_change", (chat, channel) => {
 /**
  * 오픈채팅방에서 프로필을 바꿀 때
  */
-DBListener.on("open_profile_change", (beforeUser, afterUser, channel)=> {
+app.on("open_profile_change", (beforeUser, afterUser, channel)=> {
     channel.send("누군가 프로필이 바뀌었어요\n"+ beforeUser.name +"->"+afterUser.name)
 })
 
-DBListener.start();
+app.start();

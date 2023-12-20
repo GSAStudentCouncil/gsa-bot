@@ -6,11 +6,11 @@ const api2_prefix = `const bot = BotManager.getCurrentBot();
 `;
 const api2_suffix = `
 bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
-    DBListener.addChannel(sbn);
+    app.addChannel(sbn);
 });
 
 bot.addListener(Event.START_COMPILE, () => {
-    DBListener.stop();
+    app.stop();
 });
 `;
 const api_suffix = `
@@ -23,33 +23,46 @@ function onStartCompile() {
 }
 `;
 
-const [ , , api, filePath ] = process.argv;
+const [ , , api ] = process.argv;
 
 if (api === "")
     process.exit(1);
 
 console.log(`api ver: ${api}`);
-console.log(`filename: ${filePath}`);
 
-let botCode = (api === "api2" ? api2_prefix : "") + fs.readFileSync(filePath, 'utf-8');
-if (api === "api2") {
-    botCode += api2_suffix;
-} else if (api === "legacy") {
-    botCode += api_suffix;
+function build(filePath) {
+    let botCode = (api === "api2" ? api2_prefix : "") + fs.readFileSync(filePath, 'utf-8');
+    if (api === "api2")
+        botCode += api2_suffix;
+    else if (api === "legacy")
+        botCode += api_suffix;
+
+    const distPath = path.join('.', 'dist', filePath);
+    const directories = distPath.split(path.sep).slice(0, -1);
+
+    let curr = '';
+    directories.forEach(dir => {
+        curr = path.join(curr, dir);
+        if (!fs.existsSync(curr)) {
+            fs.mkdirSync(curr);
+            console.log(`directory ${curr} created`);
+        }
+    });
+
+    fs.writeFileSync(distPath, botCode
+        .replace("require('../modules/DBManager')", "require('DBManager')"));
+
+    console.log(`compile ${filePath} complete`);
 }
 
-const distPath = `./dist/${filePath}`;
-const directories = distPath.split('/').slice(1, -1);
+function dfs(filePath) {
+    fs.readdirSync(filePath).forEach(child => {
+        const childPath = path.join(filePath, child);
+        if (childPath.endsWith('.js'))
+            build(childPath);
+        else
+            dfs(childPath);
+    });
+}
 
-let curr = '';
-directories.forEach(dir => {
-    curr = path.join(curr, dir);
-    if (!fs.existsSync(curr)) {
-        fs.mkdirSync(curr);
-        console.log(`directory ${curr} created`);
-    }
-});
-
-fs.writeFileSync(distPath, botCode
-    .replace(/require\(['"]\.\/modules\/(.*)['"]\)/g, 'require(\'$1\')'));  // require 문 교체
-console.log('compile complete');
+dfs(path.join('.', 'src'));
