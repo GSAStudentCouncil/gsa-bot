@@ -3,3 +3,4 @@
 /dist
 /modules/DBHelper
 .DS_Store
+package-lock.json
