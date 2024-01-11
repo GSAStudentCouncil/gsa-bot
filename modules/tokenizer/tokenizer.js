@@ -49,7 +49,15 @@ Tokenizer.prototype.input = function (message) {
     };
 };
 
-const tokenizer = new Tokenizer({
+const Tokens = (tokens) => {
+    const tokenizer = new Tokenizer(tokens);
+
+    return function (msg) {
+        return tokenizer.input(msg);
+    }
+};
+
+const $ = Tokens({
     "급식": ["급식", "밥", "끼니", "음식", "학식", "병영식", "메뉴", "짬", "짬밥", "식단", "식사", "먹", "뭐나", "머나"],
     "아침": ["아침", "조식", "아침밥", "아침급식", "브렉퍼스트", "아침식사"],
     "점심": ["점심", "정오", "중식", "점심밥", "점심급식", "런치", "점심식사"],
@@ -64,11 +72,9 @@ const tokenizer = new Tokenizer({
     "그끄저께": ["그끄저께", "그끄제", "삼작일", "재재작일", "저먼제", "-3일"],
 });
 
-const command = tokenizer.input("아침 밥");
+const command = $("아침 밥");
 
 // 의미에 따른 액션
 if (command.in("급식")) {
     console.log("아침 급식 ~~");
 }
-
-
