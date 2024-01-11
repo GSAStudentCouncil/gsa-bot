@@ -2,7 +2,7 @@
   "name": "gsa-bot",
   "version": "2.4.2",
   "description": "GSA Kakaotalk Bot",
-  "main": "src/index.js",
+  "main": "test/index.js",
   "scripts": {
     "build-legacy": "node ./build.js legacy",
     "build-api2": "node ./build.js api2",

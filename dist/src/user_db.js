@@ -1,4 +1,5 @@
-const manager = require('../modules/DBManager').DBManager;
+const bot = BotManager.getCurrentBot();
+const manager = require('DBManager').DBManager;
 const app = manager.getInstance({});
 
 const basePath = "/sdcard/msgbot";
@@ -20,10 +21,9 @@ function userReload(user, channel) {
 }
 
 app.on("message", (chat, channel) => {
-    if (!/\d+기 톡방/.test(channel.name)) return;
+    // if (!/\d+기 톡방/.test(channel.name)) return;
 
     // 채널 갱신
-    // todo: key-value 구조를 뒤집어야 편할 것 같기도 하고...
     if (!(channel.id in channelDB) ||
         !(channelDB[channel.id] === channel.name)) {
         channelDB[channel.id] = channel.name;
@@ -42,3 +42,10 @@ app.on("message", (chat, channel) => {
 });
 
 app.start();
+bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
+    app.addChannel(sbn);
+});
+
+bot.addListener(Event.START_COMPILE, () => {
+    app.stop();
+});
