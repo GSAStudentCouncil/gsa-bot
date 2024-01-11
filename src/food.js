@@ -4,7 +4,6 @@ const app = manager.getInstance({});
 
 const i2c = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").i2c;
 
-// TODO: 매일 자정 내일 급식 총 출력
 // TODO: 급식 출력 이쁘게
 
 const getMeals = () => {
@@ -55,6 +54,7 @@ app.on("message", (chat, channel) => {
     }
 });
 
+// TODO: 매일 자정 내일 급식 총 출력
 cronjob.add("0 0 * * *", () => {
     const meals = getMeals();
 
