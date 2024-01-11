@@ -1,35 +1,29 @@
 const manager = require('../modules/DBManager').DBManager;
 const app = manager.getInstance({});
 
-let channels = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}");
+const ids = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").c2i;
 const kinds = ["학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"];
-
-const ids = {
-    39: 90827345789234,
-    40: 98723487902134,
-    41: 97236487612323
-}
 
 app.on("message", (chat, channel) => {
     if (!["공지방"].includes(channel.name)) return;
     if (!chat.isReply()) return;
 
-    let [ kind, cmdName, nth ] = chat.source.text.split(" ");
-    if (nth != null) {
-        nth = Number(nth);
-        if (!(nth in ids)) return;
+    const [ kind, cmdName, n1, n2, n3 ] = chat.source.text.trim().split(" ");
+
+    let nths = [n1, n2, n3].filter(n => n !== undefined);   // 입력한 기수만 거르기
+    if (nths.length === 0) {    // 아무 기수도 특정하지 않으면 전체 기수를 가리킴
+        const max = Math.max.apply(null, Object.keys(ids).map(Number));
+        nths = [String(max - 2), String(max - 1), String(max)];
     }
 
     if (kinds.includes(kind) && cmdName === "알림") {
-        // todo: nth 적용
-        for (let i = 0; i < ids.length; i++) {
-            const idChannel = manager.getChannelById(ids[i]);
-            idChannel.send('[' + args[0] + '에서 알립니다.]\n' + args.slice(1).join(" "))
-                .then(
-                    _ => channel.send(`${idChannel.name}에 전송하였습니다.`),
-                    e => channel.send(`${idChannel.name}에 전송 실패. ${e}`)
-                );
-        }
+        nths.forEach(nth => {
+            const idChannel = manager.getChannelById(ids[nth]);
+            idChannel.send('🔔 ' + kind + '\n─────\n' + chat.text).then(
+                _ => channel.send(idChannel.name + " 에 전송하였습니다."),
+                e => channel.send(idChannel.name + " 에 전송 실패하였습니다.\n" + e.toString())
+            );
+        });
     }
 });
 

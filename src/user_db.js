@@ -3,10 +3,13 @@ const app = manager.getInstance({});
 
 const basePath = "/sdcard/msgbot";
 const userDBPath = basePath + "/users.json";
-const channelDBPath = basePath + "/channels.json";
+const channelDBPath = basePath + "/channel2id.json";
 
 let userDB = JSON.parse(FileStream.read(userDBPath) || "{}");
-let channelDB = JSON.parse(FileStream.read(channelDBPath) || "{}");
+let channelDB = JSON.parse(FileStream.read(channelDBPath) || JSON.stringify({
+    'c2i': {},  // channel to id
+    'i2c': {},  // id to channel
+}));
 
 /**
  * @param {User} user
@@ -15,18 +18,18 @@ let channelDB = JSON.parse(FileStream.read(channelDBPath) || "{}");
 function userReload(user, channel) {
     userDB[user.id] = {
         name: user.name,
-        channel: channel.id
+        channelId: channel.id,
     };
 }
 
 app.on("message", (chat, channel) => {
-    if (!/\d+기 톡방/.test(channel.name)) return;
+    const matched = /^광곽 (\d+)기$/.match(channel.name);
+    if (matched == null) return;
 
     // 채널 갱신
-    // todo: key-value 구조를 뒤집어야 편할 것 같기도 하고...
-    if (!(channel.id in channelDB) ||
-        !(channelDB[channel.id] === channel.name)) {
-        channelDB[channel.id] = channel.name;
+    if (!(channel.id in channelDB.i2c)) {
+        channelDB.i2c[channel.id] = channel.name;
+        channelDB.c2i[channel.name] = channel.id;
         FileStream.write(channelDBPath, JSON.stringify(channelDB, null, 4));
 
         channel.members.forEach(user => userReload(user, channel));
@@ -35,7 +38,7 @@ app.on("message", (chat, channel) => {
 
     // 유저 갱신
     if (!(chat.user.id in userDB) ||
-        !(userDB[chat.user.id].name === chat.user.name && userDB[chat.user.id].channel === channel.id)) {
+        !(userDB[chat.user.id].name === chat.user.name && userDB[chat.user.id].channelId === channel.id)) {
         userReload(user, channel);
         FileStream.write(userDBPath, JSON.stringify(userDB, null, 4));
     }

@@ -45,7 +45,7 @@ function dfs(filePath) {
         if (childPath.endsWith('.js'))      // is file
             build(childPath);
         else                                // is directory
-            if (!childPath.startsWith('.')) // ignore hidden directory (ex. src/.legacy)
+            if (!child.startsWith('.')) // ignore hidden directory (ex. src/.legacy)
                 dfs(childPath);
     });
 }

@@ -779,7 +779,7 @@ export const Event = {
     MEMBER_COUNT_CHANGED: 'memberCountChanged',
 
     Activity: class {
-        // todo: Activity
+        // TODO: Activity
     }
 }
 

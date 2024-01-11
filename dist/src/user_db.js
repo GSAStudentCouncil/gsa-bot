@@ -21,9 +21,10 @@ function userReload(user, channel) {
 }
 
 app.on("message", (chat, channel) => {
-    // if (!/\d+기 톡방/.test(channel.name)) return;
+    if (!/\d+기 톡방/.test(channel.name)) return;
 
     // 채널 갱신
+    // TODO: key-value 구조를 뒤집어야 편할 것 같기도 하고...
     if (!(channel.id in channelDB) ||
         !(channelDB[channel.id] === channel.name)) {
         channelDB[channel.id] = channel.name;
