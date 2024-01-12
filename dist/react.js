@@ -1,4 +1,5 @@
-const manager = require('../modules/DBManager').DBManager;
+const bot = BotManager.getCurrentBot();
+const manager = require('DBManager').DBManager;
 const { ReactClient, ReactionType } = require('kakao-react');
 
 const client = ReactClient.create({
@@ -22,3 +23,11 @@ app.on("message", (chat, channel) => {
 });
 
 app.start();
+
+bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
+    app.addChannel(sbn);
+});
+
+bot.addListener(Event.START_COMPILE, () => {
+    app.stop();
+});

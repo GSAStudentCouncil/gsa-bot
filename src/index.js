@@ -1,12 +1,22 @@
 const manager = require('../modules/DBManager').DBManager;
+const cronjob = require('../modules/cronJob').CronJob;
 
 let app = manager.getInstance({});
+
+// cronjob.add("* * * * *", () => {
+//     const channel = manager.getChannelById(393252027657624);    // 봇 테스트 방
+//     channel.send("* * * * * cronjob");
+// });
 
 app.on("message", (chat, channel) => {
     let user = chat.user;
 
     if (chat.text === "/ㅎㅇ") {
         channel.send(user.name + "님 안녕하세요");
+    }
+
+    if (chat.text === "/id") {
+        channel.send("채널 아이디는 " + channel.id + "입니다");
     }
 
     if (chat.isReply() && chat.text === "/원본답장") {

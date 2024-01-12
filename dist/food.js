@@ -1,10 +1,9 @@
-const manager = require('../modules/DBManager').DBManager;
-const cronjob = require('../modules/cronJob').CronJob;
-const Datetime = require('../modules/datetime');
+const bot = BotManager.getCurrentBot();
+const manager = require('DBManager').DBManager;
+const cronjob = require('cronJob').CronJob;
 const app = manager.getInstance({});
 
 const i2c = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").i2c;
-const dt = new Datetime(3);
 
 // TODO: 급식 출력 이쁘게
 
@@ -57,7 +56,6 @@ app.on("message", (chat, channel) => {
 });
 
 // TODO: 매일 자정 내일 급식 총 출력
-cronjob.setWakeLock(true);
 cronjob.add("0 0 * * *", () => {
     const meals = getMeals();
 
@@ -68,3 +66,11 @@ cronjob.add("0 0 * * *", () => {
 });
 
 app.start();
+
+bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
+    app.addChannel(sbn);
+});
+
+bot.addListener(Event.START_COMPILE, () => {
+    app.stop();
+});

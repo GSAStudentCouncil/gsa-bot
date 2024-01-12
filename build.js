@@ -5,11 +5,32 @@ const { execSync } = require("child_process");
 const apis = {
     legacy: {
         prefix: ``,
-        suffix: `\nfunction onNotificationPosted(sbn) {\n    DBListener.addChannel(sbn);\n}\n\nfunction onStartCompile() {\n    DBListener.stop();\n}\n`
+        suffix: `
+function onNotificationPosted(sbn) {
+    app.addChannel(sbn);
+}
+
+function onStartCompile() {
+    app.stop();
+    cronjob.setWakeLock(false);
+    cronjob.off();
+}
+`
     },
     api2: {
-        prefix: `const bot = BotManager.getCurrentBot();\n`,
-        suffix: `\nbot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {\n    app.addChannel(sbn);\n});\n\nbot.addListener(Event.START_COMPILE, () => {\n    app.stop();\n});\n`
+        prefix: `const bot = BotManager.getCurrentBot();
+`,
+        suffix: `
+bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
+    app.addChannel(sbn);
+});
+
+bot.addListener(Event.START_COMPILE, () => {
+    app.stop();
+    cronjob.setWakeLock(false);
+    cronjob.off();
+});
+`
     }
 };
 
@@ -18,10 +39,11 @@ if (!(api in apis)) process.exit(1);
 
 console.log(`api ver: ${api}`);
 
-function build(filePath) {
-    let botCode = apis[api].prefix + fs.readFileSync(filePath, 'utf-8') + apis[api].suffix;
+function build(originPath) {
+    const botCode = fs.readFileSync(originPath, 'utf-8')
+        .replace(/require\('\.\.\/modules\/(\w+)'\)/g, "require('$1')");    // modules 상대 경로 제거
 
-    const distPath = path.join('.', 'dist', filePath);
+    const distPath = path.join('.', originPath.replace('src', 'dist'));
     const directories = distPath.split(path.sep).slice(0, -1);
 
     let curr = '';
@@ -33,10 +55,9 @@ function build(filePath) {
         }
     });
 
-    fs.writeFileSync(distPath, botCode
-        .replace(/require\('\.\.\/modules\/(\w+)'\)/g, "require('$1')"));
+    fs.writeFileSync(distPath, botCode);
 
-    console.log(`compile ${filePath} complete`);
+    console.log(`compile ${originPath} -> ${distPath} complete`);
 }
 
 function dfs(filePath) {
