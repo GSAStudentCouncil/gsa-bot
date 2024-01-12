@@ -1,12 +1,10 @@
 const manager = require('../modules/DBManager').DBManager;
 const cronjob = require('../modules/cronJob').CronJob;
-const Datetime = require('../modules/datetime');
 const app = manager.getInstance({});
 
 const i2c = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").i2c;
-const dt = new Datetime(3);
 
-// TODO: 급식 출력 이쁘게
+// TODO: 급식 출력 이쁘게, 출력할 때 날짜도 보여주기
 
 const getMeals = () => {
     const year = String(new Date().getFullYear() % 100);

@@ -5,10 +5,13 @@ function Datetime(date) {
 }
 
 Datetime.prototype = {
-
+    toString(locale) {
+        locale ||= 'ko-KR';
+        return 'temp';
+    }
 };
 
 Datetime = Object.assign(Datetime, {
 });
 
-module.exports = Datetime;
+exports.Datetime = Datetime;
