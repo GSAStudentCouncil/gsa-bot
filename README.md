@@ -1,18 +1,22 @@
 # gsa-bot
 광주과학고등학교 공식 카카오톡 봇 레포지토리입니다. 
+
 > [!TIP]
-> 이 레포지토리는 IDE를 이용한 개발에 최적화되어있습니다.(`d.ts` 파일을 이용해 자동완성을 지원) 또한, `packages.json` 파일에 정의되어있는 `npm run build-api2` 등의 커맨드를 통해 `src` 폴더 내의 소스 파일들을 빌드할 수 있습니다. 이는 `dist` 폴더 내에 저장됩니다.
+> 이 레포지토리는 `d.ts` 을 사용해 자동완성을 지원하므로 IDE를 이용한 개발에 최적화되어있습니다.  
+> `packages.json` 파일에 이미 정의되어있는 `npm run build-api2` 등의 커맨드를 통해 `src` 폴더 내의 소스 파일들을 쉽게 빌드할 수 있습니다.
+
 ---
+
 ### 구동 환경
-NoxPlayer와 서버로 카카오톡을 24시간 실행하고,`adb`를 이용하여 파일을 공유합니다.
-NoxPlayer의 ROOT 기능을 이용해 슈퍼유저 권한을 부여한 [메신저봇 R](https://play.google.com/store/apps/details?id=com.xfl.msgbot) 앱을 사용합니다.
+NoxPlayer와 서버로 카카오톡을 24시간 실행하고,`adb`를 이용하여 파일을 공유합니다.  
+NoxPlayer의 ROOT 기능을 이용해 슈퍼유저 권한을 부여한 [메신저봇R](https://play.google.com/store/apps/details?id=com.xfl.msgbot) 앱을 사용합니다.
 
 ```shell
 adb connect 127.0.0.1:62001
 adb push /dist/example.js /sdcard/msgbot/bots/example/example.js
 adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 ```
-간단하게 위와 같은 방식으로 파일을 공유합니다.
+간단하게 위와 같은 방식으로 파일을 공유합니다. `dist` 폴더 내에 빌드된 소스 파일들을 `adb`를 사용해 메신저봇 내부 폴더로 전송해주세요.
 
 ### 사용한 모듈
   - `cronjob`
