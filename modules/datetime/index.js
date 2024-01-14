@@ -13,7 +13,7 @@ const property = (that, key, functions) => {
     Object.defineProperty(that, key, attributes);
 };
 
-function Datetime(date) {
+function DateTime(date) {
     property(this, 'year', {
         get() { return date.getFullYear(); },
         set(value) { date.setFullYear(value); }
@@ -50,7 +50,7 @@ function Datetime(date) {
     });
 }
 
-Datetime.prototype = {
+DateTime.prototype = {
     dayOfWeekName() {
         return this.toString('WW');
     },
@@ -70,36 +70,40 @@ Datetime.prototype = {
         if (time.millisecond)
             date.setMilliseconds(time.millisecond);
 
-        return new Datetime(date);
+        return new DateTime(date);
     },
 
     is(value) {
-        if (value instanceof Datetime)
+        if (value instanceof DateTime)
             return this.toNumber() === value.toNumber();
         else
-            return new Datetime_is(this);
+            return new DateTime_is(this);
     },
 
     add(value) {
-        if (value instanceof Datetime)
-            return new Datetime(new Date(this.toNumber() + value.toNumber()));
+        value ||= 1;
+
+        if (value instanceof DateTime)
+            return new DateTime(new Date(this.toNumber() + value.toNumber()));
         else
-            return new Datetime_add(this, value);
+            return new DateTime_add(this, value);
     },
 
     sub(value) {
-        if (value instanceof Datetime)
-            return new Datetime(new Date(this.toNumber() - value.toNumber()));
+        value ||= 1;
+
+        if (value instanceof DateTime)
+            return new DateTime(new Date(this.toNumber() - value.toNumber()));
         else
-            return new Datetime_add(this, -value);
+            return new DateTime_add(this, -value);
     },
 
     next() {
-        return new Datetime_step(this, 1);
+        return new DateTime_step(this, 1);
     },
 
     prev() {
-        return new Datetime_step(this, -1);
+        return new DateTime_step(this, -1);
     },
 
     last() {
@@ -173,7 +177,7 @@ Datetime.prototype = {
     }
 };
 
-Datetime = Object.assign(Datetime, {
+DateTime = Object.assign(DateTime, {
     isLeapYear(year) {
         return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
     },
@@ -181,31 +185,218 @@ Datetime = Object.assign(Datetime, {
     leapYearCount(start, end) {
         const l = y => Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
 
-        return l(end) - l(start) + (Datetime.isLeapYear(start) ? 1 : 0);    // [start, end]
+        return l(end) - l(start) + (DateTime.isLeapYear(start) ? 1 : 0);    // [start, end]
     },
 
     now() {
-        return new Datetime(new Date());
+        return new DateTime(new Date());
     },
 
     today() {
         const now = new Date();
-        return new Datetime(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+        return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+    },
+
+    tomorrow() {
+        const now = new Date();
+        return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
+    },
+
+    yesterday() {
+        const now = new Date();
+        return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
+    },
+
+    sunday() {
+        const diff = (0 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    sun() {
+        return DateTime.sunday();
+    },
+
+    monday() {
+        const diff = (1 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    mon() {
+        return DateTime.monday();
+    },
+
+    tuesday() {
+        const diff = (2 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    tue() {
+        return DateTime.tuesday();
+    },
+
+    wednesday() {
+        const diff = (3 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    wed() {
+        return DateTime.wednesday();
+    },
+
+    thursday() {
+        const diff = (4 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    thu() {
+        return DateTime.thursday();
+    },
+
+    friday() {
+        const diff = (5 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    fri() {
+        return DateTime.friday();
+    },
+
+    saturday() {
+        const diff = (6 - new Date().getDay() + 7) % 7;
+        return DateTime.today().add(diff).day();
+    },
+
+    sat() {
+        return DateTime.saturday();
+    },
+
+    january(day) {
+        day ||= 1;
+        return new DateTime(new Date(new Date().getFullYear(), 0, day));
+    },
+
+    jan(day) {
+        return DateTime.january(day);
+    },
+
+    february(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 1, day));
+    },
+
+    feb(day) {
+        return DateTime.february(day);
+    },
+
+    march(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 2, day));
+    },
+
+    mar(day) {
+        return DateTime.march(day);
+    },
+
+    april(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 3, day));
+    },
+
+    apr(day) {
+        return DateTime.april(day);
+    },
+
+    may(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 4, day));
+    },
+
+    june(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 5, day));
+    },
+
+    jun(day) {
+        return DateTime.june(day);
+    },
+
+    july(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 6, day));
+    },
+
+    jul(day) {
+        return DateTime.july(day);
+    },
+
+    august(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 7, day));
+    },
+
+    aug(day) {
+        return DateTime.august(day);
+    },
+
+    september(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 8, day));
+    },
+
+    sep(day) {
+        return DateTime.september(day);
+    },
+
+    october(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 9, day));
+    },
+
+    oct(day) {
+        return DateTime.october(day);
+    },
+
+    november(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 10, day));
+    },
+
+    nov(day) {
+        return DateTime.november(day);
+    },
+
+    december(day) {
+        return new DateTime(new Date(new Date().getFullYear(), 11, day));
+    },
+
+    dec(day) {
+        return DateTime.december(day);
+    },
+    
+    fromTimestamp(timestamp) {
+        return new DateTime(new Date(timestamp));
+    },
+
+    fromObject(datetimeObject) {
+        const now = new Date();
+        const year = datetimeObject.year || now.getFullYear();
+        const month = datetimeObject.month || now.getMonth() + 1;
+        const day = datetimeObject.day || now.getDate();
+        const hour = datetimeObject.hour || now.getHours();
+        const minute = datetimeObject.minute || now.getMinutes();
+        const second = datetimeObject.second || now.getSeconds();
+        const millisecond = datetimeObject.millisecond || now.getMilliseconds();
+
+        return new DateTime(new Date(year, month - 1, day, hour, minute, second, millisecond));
+    },
+
+    fromString(datetimeString) {
+        return this.parse(datetimeString);
     },
 
     parse(dateString) {
         // TODO: globalization 사용
-        return new Datetime(Date.parse(dateString));
-    }
+        return new DateTime(Date.parse(dateString));
+    },
 });
 
-function Datetime_is(datetime) {
+function DateTime_is(datetime) {
     property(this, '_datetime', {
         get() { return datetime; }
     });
 }
 
-Datetime_is.prototype = {
+DateTime_is.prototype = {
     sunday() {
         return this._datetime.dayOfWeek === 0;
     },
@@ -262,88 +453,96 @@ Datetime_is.prototype = {
         return this.saturday();
     },
 
-    january() {
-        return this._datetime.month === 1;
+    january(day) {
+        return this._datetime.month === 1 && (day ? this._datetime.day === day : true);
     },
 
-    jan() {
-        return this.january();
+    jan(day) {
+        return this.january(day);
     },
 
-    february() {
-        return this._datetime.month === 2;
+    february(day) {
+        return this._datetime.month === 2 && (day ? this._datetime.day === day : true);
     },
 
-    feb() {
-        return this.february();
+    feb(day) {
+        return this.february(day);
     },
 
-    march() {
-        return this._datetime.month === 3;
+    march(day) {
+        return this._datetime.month === 3 && (day ? this._datetime.day === day : true);
     },
 
-    mar() {
-        return this.march();
+    mar(day) {
+        return this.march(day);
     },
 
-    april() {
-        return this._datetime.month === 4;
+    april(day) {
+        return this._datetime.month === 4 && (day ? this._datetime.day === day : true);
     },
 
-    apr() {
-        return this.april();
+    apr(day) {
+        return this.april(day);
     },
 
-    may() {
-        return this._datetime.month === 5;
+    may(day) {
+        return this._datetime.month === 5 && (day ? this._datetime.day === day : true);
     },
 
-    june() {
-        return this._datetime.month === 6;
+    june(day) {
+        return this._datetime.month === 6 && (day ? this._datetime.day === day : true);
     },
 
-    july() {
-        return this._datetime.month === 7;
+    jun(day) {
+        return this.june(day);
     },
 
-    august() {
-        return this._datetime.month === 8;
+    july(day) {
+        return this._datetime.month === 7 && (day ? this._datetime.day === day : true);
     },
 
-    aug() {
-        return this.august();
+    jul(day) {
+        return this.july(day);
     },
 
-    september() {
-        return this._datetime.month === 9;
+    august(day) {
+        return this._datetime.month === 8 && (day ? this._datetime.day === day : true);
     },
 
-    sep() {
-        return this.september();
+    aug(day) {
+        return this.august(day);
     },
 
-    october() {
-        return this._datetime.month === 10;
+    september(day) {
+        return this._datetime.month === 9 && (day ? this._datetime.day === day : true);
     },
 
-    oct() {
-        return this.october();
+    sep(day) {
+        return this.september(day);
     },
 
-    november() {
-        return this._datetime.month === 11;
+    october(day) {
+        return this._datetime.month === 10 && (day ? this._datetime.day === day : true);
     },
 
-    nov() {
-        return this.november();
+    oct(day) {
+        return this.october(day);
     },
 
-    december() {
-        return this._datetime.month === 12;
+    november(day) {
+        return this._datetime.month === 11 && (day ? this._datetime.day === day : true);
     },
 
-    dec() {
-        return this.december();
+    nov(day) {
+        return this.november(day);
+    },
+
+    december(day) {
+        return this._datetime.month === 12 && (day ? this._datetime.day === day : true);
+    },
+
+    dec(day) {
+        return this.december(day);
     },
 
     leapYear() {
@@ -404,7 +603,7 @@ Datetime_is.prototype = {
     }
 };
 
-function Datetime_add(datetime, value) {
+function DateTime_add(datetime, value) {
     property(this, '_datetime', {
         get() { return datetime; }
     });
@@ -413,51 +612,57 @@ function Datetime_add(datetime, value) {
     });
 }
 
-Datetime_add.prototype = {
+DateTime_add.prototype = {
     year() {
         const date = this._datetime.toDate();
         date.setFullYear(date.getFullYear() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
     },
 
     month() {
         const date = this._datetime.toDate();
         date.setMonth(date.getMonth() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
     },
 
     day() {
         const date = this._datetime.toDate();
         date.setDate(date.getDate() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
+    },
+
+    week() {
+        const date = this._datetime.toDate();
+        date.setDate(date.getDate() + this._value * 7);
+        return new DateTime(date);
     },
 
     hour() {
         const date = this._datetime.toDate();
         date.setHours(date.getHours() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
     },
 
     minute() {
         const date = this._datetime.toDate();
         date.setMinutes(date.getMinutes() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
     },
 
     second() {
         const date = this._datetime.toDate();
         date.setSeconds(date.getSeconds() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
     },
 
     millisecond() {
         const date = this._datetime.toDate();
         date.setMilliseconds(date.getMilliseconds() + this._value);
-        return new Datetime(date);
+        return new DateTime(date);
     }
 };
 
-function Datetime_step(datetime, direction) {
+function DateTime_step(datetime, direction) {
     property(this, '_datetime', {
         get() { return datetime; }
     });
@@ -466,8 +671,8 @@ function Datetime_step(datetime, direction) {
     });
 }
 
-Datetime_step.prototype = {
+DateTime_step.prototype = {
 
 };
 
-exports.Datetime = Datetime;
+exports.DateTime = DateTime;

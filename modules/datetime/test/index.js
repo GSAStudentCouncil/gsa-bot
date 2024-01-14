@@ -1,5 +1,4 @@
-const Datetime = require('../index').Datetime;
+const DateTime = require('../index').DateTime;
 
-let dt = Datetime.now();
-console.log(dt.add(3).month().is().after(Datetime.now()));
-// TODO: Datetime.add(3).month().fromNow()
+console.log(DateTime.march(3));
+// TODO: (3).month().fromNow()
