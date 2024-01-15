@@ -1,5 +1,6 @@
 const manager = require('../modules/DBManager').DBManager;
 const cronjob = require('../modules/cronJob').CronJob;
+const datetime = require('../modules/datetime').DateTime;
 const app = manager.getInstance({});
 
 const i2c = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").i2c;
@@ -7,14 +8,10 @@ const i2c = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").
 // TODO: 급식 출력 이쁘게, 출력할 때 날짜도 보여주기
 
 const getMeals = () => {
-    const year = String(new Date().getFullYear() % 100);
-    const month = String(new Date().getMonth() + 1).padStart(2, "0");
-    const date = String(new Date().getDate()).padStart(2, "0");
-
     const options = [
         ["ATPT_OFCDC_SC_CODE", "F10"],
         ["SD_SCHUL_CODE", 7380031],
-        ["MLSV_YMD", year + month + date],
+        ["MLSV_YMD", datetime.today().toString('YYMMDD')],
         ["Type", "json"],
     ];
 

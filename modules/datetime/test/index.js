@@ -1,4 +1,5 @@
-const DateTime = require('../index').DateTime;
+const { DateTime, _ } = require('../index');
 
-console.log(DateTime.march(3));
-// TODO: (3).month().fromNow()
+console.log(_(3).month().ago().toString());
+
+// TODO: $(3).month().fromNow()

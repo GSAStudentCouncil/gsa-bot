@@ -13,7 +13,35 @@ const property = (that, key, functions) => {
     Object.defineProperty(that, key, attributes);
 };
 
+function Duration(millisecond) {
+    let _v = millisecond;
+    property(this, 'millisecond', {
+        get() { return _v % 1000; }
+    });
+
+    _v = Math.floor(_v / 1000);
+    property(this, 'second', {
+        get() { return _v % 60; }
+    });
+
+    _v = Math.floor(_v / 60);
+    _v = Math.floor(_v / 60);
+    _v = Math.floor(_v / 24);
+    property(this, 'day', {
+        get() { return _v; }
+    });
+}
+
+Duration.prototype = {
+    toString() {
+        return "(" + "day=" + this.day + ", second=" + this.second + ", millisecond=" + this.millisecond + ")";
+    }
+}
+
 function DateTime(date) {
+    if (!(this instanceof DateTime))
+        return new DateTime(date);
+
     property(this, 'year', {
         get() { return date.getFullYear(); },
         set(value) { date.setFullYear(value); }
@@ -57,20 +85,6 @@ DateTime.prototype = {
 
     timestamp() {
         return this.toNumber();
-    },
-
-    at(time) {
-        const date = this.toDate();
-        if (time.hour)
-            date.setHours(time.hour);
-        if (time.minute)
-            date.setMinutes(time.minute);
-        if (time.second)
-            date.setSeconds(time.second);
-        if (time.millisecond)
-            date.setMilliseconds(time.millisecond);
-
-        return new DateTime(date);
     },
 
     is(value) {
@@ -174,6 +188,18 @@ DateTime.prototype = {
 
     toDate() {
         return this._date;
+    },
+
+    toObject() {
+        return {
+            year: this.year,
+            month: this.month,
+            day: this.day,
+            hour: this.hour,
+            minute: this.minute,
+            second: this.second,
+            millisecond: this.millisecond
+        };
     }
 };
 
@@ -362,7 +388,7 @@ DateTime = Object.assign(DateTime, {
     dec(day) {
         return DateTime.december(day);
     },
-    
+
     fromTimestamp(timestamp) {
         return new DateTime(new Date(timestamp));
     },
@@ -384,11 +410,141 @@ DateTime = Object.assign(DateTime, {
         return this.parse(datetimeString);
     },
 
+    in(year) {
+        return new DateTime(new Date(year, 0, 1));
+    },
+
+    on(month, day) {
+        day ||= 1;
+
+        return new DateTime(new Date(new Date().getFullYear(), month - 1, day));
+    },
+
+    at(hour, minute, second, millisecond) {
+        minute ||= 0;
+        second ||= 0;
+        millisecond ||= 0;
+
+        const date = new Date();
+        date.setHours(hour);
+        date.setMinutes(minute);
+        date.setSeconds(second);
+        date.setMilliseconds(millisecond);
+
+        return new DateTime(date);
+    },
+
+    set(year, month, day, hour, minute, second, millisecond) {
+        month ||= 1;
+        day ||= 1;
+        hour ||= 0;
+        minute ||= 0;
+        second ||= 0;
+        millisecond ||= 0;
+
+        return new DateTime(new Date(year, month - 1, day, hour, minute, second, millisecond));
+    },
+
     parse(dateString) {
         // TODO: globalization 사용
         return new DateTime(Date.parse(dateString));
     },
 });
+
+function _(value, mode) {
+    if (!(this instanceof _))
+        return new _(value, mode);
+
+    property(this, '_value', {
+        get() { return value; }
+    });
+    property(this, '_datetime', {
+        get() { return new DateTime(new Date()); }
+    });
+    property(this, '_mode', {
+        get() { return mode; }
+    });
+}
+
+_.prototype = {
+    year() {
+        return new _(this._value, 'year');
+    },
+    
+    month() {
+        return new _(this._value, 'month');
+    },
+    
+    day() {
+        return new _(this._value, 'day');
+    },
+    
+    week() {
+        return new _(this._value, 'week');
+    },
+    
+    hour() {
+        return new _(this._value, 'hour');
+    },
+    
+    minute() {
+        return new _(this._value, 'minute');
+    },
+    
+    second() {
+        return new _(this._value, 'second');
+    },
+    
+    millisecond() {
+        return new _(this._value, 'millisecond');
+    },
+    
+    ago() {
+        switch (this._mode) {
+            case 'year':
+                return this._datetime.sub(this._value).year();
+            case 'month':
+                return this._datetime.sub(this._value).month();
+            case 'day':
+                return this._datetime.sub(this._value).day();
+            case 'week':
+                return this._datetime.sub(this._value).week();
+            case 'hour':
+                return this._datetime.sub(this._value).hour();
+            case 'minute':
+                return this._datetime.sub(this._value).minute();
+            case 'second':
+                return this._datetime.sub(this._value).second();
+            case 'millisecond':
+                return this._datetime.sub(this._value).millisecond();
+            default:
+                throw new Error('unknown mode ' + this._mode);
+        }
+    },
+    
+    fromNow() {
+        switch (this._mode) {
+            case 'year':
+                return this._datetime.add(this._value).year();
+            case 'month':
+                return this._datetime.add(this._value).month();
+            case 'day':
+                return this._datetime.add(this._value).day();
+            case 'week':
+                return this._datetime.add(this._value).week();
+            case 'hour':
+                return this._datetime.add(this._value).hour();
+            case 'minute':
+                return this._datetime.add(this._value).minute();
+            case 'second':
+                return this._datetime.add(this._value).second();
+            case 'millisecond':
+                return this._datetime.add(this._value).millisecond();
+            default:
+                throw new Error('unknown mode ' + this._mode);
+        }
+    }
+}
 
 function DateTime_is(datetime) {
     property(this, '_datetime', {
@@ -672,7 +828,12 @@ function DateTime_step(datetime, direction) {
 }
 
 DateTime_step.prototype = {
-
+    week() {
+        const date = this._datetime.toDate();
+        date.setDate(date.getDate() + this._direction * 7);
+        return new date(date);
+    }
 };
 
 exports.DateTime = DateTime;
+exports._ = _;

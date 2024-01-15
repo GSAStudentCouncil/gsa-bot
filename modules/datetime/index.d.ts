@@ -21,6 +21,22 @@ export declare interface DateTimeObject {
     millisecond?: number;
 }
 
+export declare class _ {
+    constructor(value: number, mode?: string);
+
+    year(): _;
+    month(): _;
+    day(): _;
+    week(): _;
+    hour(): _;
+    minute(): _;
+    second(): _;
+    millisecond(): _;
+
+    ago(): DateTime;
+    fromNow(): DateTime;
+}
+
 export declare class DateTime_is {
     constructor(datetime: DateTime);
     private _datetime: DateTime;
@@ -86,6 +102,7 @@ export declare class DateTime_add {
     year(): DateTime;
     month(): DateTime;
     day(): DateTime;
+    week(): DateTime;
     hour(): DateTime;
     minute(): DateTime;
     second(): DateTime;
@@ -97,7 +114,7 @@ export declare class DateTime_step {
     private _datetime: DateTime;
     private _direction: number;
 
-    // TODO: add methods
+    week(): DateTime;
 }
 
 export declare class DateTime {
@@ -114,8 +131,6 @@ export declare class DateTime {
 
     dayOfWeekName(): string;
     timestamp(): number;
-
-    at(time: TimeObject): DateTime;
     is(value?: number | DateTime): DateTime_is | boolean;
     add(value?: number | DateTime): DateTime_add | DateTime;
     sub(value?: number | DateTime): DateTime_add | DateTime;
@@ -126,6 +141,7 @@ export declare class DateTime {
     toString(formatString?: string): string;
     toNumber(): number;
     toDate(): Date;
+    toObject(): DateTimeObject;
 
     static isLeapYear(year: number): boolean;
     static leapYearCount(year: number): number;
@@ -173,5 +189,18 @@ export declare class DateTime {
     static fromTimestamp(timestamp: number): DateTime;
     static fromObject(datetimeObject: DateTimeObject): DateTime;
     static fromString(datetimeString: string): DateTime;
+    static in(year: number): DateTime;
+    static on(month: number, day?: number): DateTime;
+    static at(hour: number, minute?: number, second?: number, millisecond?: number): DateTime;
+    static set(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, millisecond?: number): DateTime;
     static parse(dateString: string): DateTime;
+}
+
+export declare class Duration {
+    constructor(millisecond: number);
+    public millisecond: number;
+    public second: number;
+    public day: number;
+
+    toString(): string;
 }
