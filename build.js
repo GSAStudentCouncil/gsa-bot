@@ -55,7 +55,7 @@ function build(originPath) {
         }
     });
 
-    fs.writeFileSync(distPath, botCode);
+    fs.writeFileSync(distPath, apis[api].prefix + botCode + apis[api].suffix);
 
     console.log(`compile ${originPath} -> ${distPath} complete`);
 }
@@ -63,9 +63,10 @@ function build(originPath) {
 function dfs(filePath) {
     fs.readdirSync(filePath).forEach(child => {
         const childPath = path.join(filePath, child);
+
         if (childPath.endsWith('.js'))      // is file
             build(childPath);
-        else                                // is directory
+        else if (fs.lstatSync(childPath).isDirectory()) // is directory
             if (!child.startsWith('.')) // ignore hidden directory (ex. src/.legacy)
                 dfs(childPath);
     });

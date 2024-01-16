@@ -35,4 +35,6 @@ bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
 
 bot.addListener(Event.START_COMPILE, () => {
     app.stop();
+    cronjob.setWakeLock(false);
+    cronjob.off();
 });

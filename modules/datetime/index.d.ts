@@ -132,8 +132,8 @@ export declare class DateTime {
     dayOfWeekName(): string;
     timestamp(): number;
     is(value?: number | DateTime): DateTime_is | boolean;
-    add(value?: number | DateTime): DateTime_add | DateTime;
-    sub(value?: number | DateTime): DateTime_add | DateTime;
+    add(value?: number): DateTime_add;
+    sub(value?: number | DateTime): DateTime_add | Duration;
     next(): DateTime_step;
     prev(): DateTime_step;
     last(): DateTime_step;

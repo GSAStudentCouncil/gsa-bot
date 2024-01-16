@@ -1,21 +1,20 @@
 const bot = BotManager.getCurrentBot();
 const manager = require('DBManager').DBManager;
 const cronjob = require('cronJob').CronJob;
+const datetime = require('datetime').DateTime;
+const tokenizer = require('tokenizer').Tokenizer;
+var _ = require('utils');
+
 const app = manager.getInstance({});
-
 const i2c = JSON.parse(FileStream.read("/sdcard/msgbot/channels.json") || "{}").i2c;
+const model = tokenizer(JSON.parse(FileStream.read("/sdcard/msgbot/food.json") || "{}"));
 
-// TODO: 급식 출력 이쁘게
-
-const getMeals = () => {
-    const year = String(new Date().getFullYear() % 100);
-    const month = String(new Date().getMonth() + 1).padStart(2, "0");
-    const date = String(new Date().getDate()).padStart(2, "0");
-
+/** @param {DateTime} dt */
+const getMeals = (dt) => {
     const options = [
         ["ATPT_OFCDC_SC_CODE", "F10"],
         ["SD_SCHUL_CODE", 7380031],
-        ["MLSV_YMD", year + month + date],
+        ["MLSV_YMD", dt.toString('YYMMDD')],
         ["Type", "json"],
     ];
 
@@ -29,43 +28,104 @@ const getMeals = () => {
 }
 
 app.on("message", (chat, channel) => {
-    const [ command, time ] = chat.text.trim().split(' ');
-    // TODO: tokenizer 적용
+    const command = model(chat.text.trim(), {
+        date: '오늘',
+        time: null,
+        what: '급식'
+    });
 
-    if (command === "급식") {
-        const meals = getMeals();
-
-        // TODO: time 생략 시 시간대 고려하여 출력
-        switch (time) {
-            case "아침":
-                channel.send(meals[0]);
+    if (command.what === "급식") {
+        // TODO: datetime 모듈의 parse 메서드를 사용하도록 수정
+        let date;
+        switch (command.date) {
+            case '그끄저께':
+                date = datetime.yesterday().sub(2).day();
                 break;
-            case "점심":
-                channel.send(meals[1]);
+            case '그제':
+                date = datetime.yesterday().sub().day();
                 break;
-            case "저녁":
-                channel.send(meals[2]);
+            case '어제':
+                date = datetime.yesterday();
                 break;
-            case undefined:
-                channel.send(meals.join("\n\n"));
+            case "오늘":
+                date = datetime.today();
+                break;
+            case "내일":
+                date = datetime.tomorrow();
+                break;
+            case "모레":
+                date = datetime.tomorrow().add().day();
+                break;
+            case "글피":
+                date = datetime.tomorrow().add(2).day();
+                break;
+            case "그글피":
+                date = datetime.tomorrow().add(3).day();
                 break;
             default:
-                Log.error("Invalid time: " + time);
+                Log.error("Invalid date: " + command.date);
+                return;
         }
+
+        const meals = getMeals(date);
+
+        let mealString;
+        switch (command.time) {
+            case "아침":
+                mealString = meals[0];
+                break;
+            case "점심":
+                mealString = meals[1];
+                break;
+            case "저녁":
+                mealString = meals[2];
+                break;
+            case null:
+                mealString = meals.join("\n\n");
+                break;
+            default:
+                Log.error("Invalid time: " + command.time);
+                return;
+        }
+        channel.send(_.f("🍚 {time} 급식\n─────\n{meals}", {
+            time: command.time || date.toString('오늘 (M월 D일)'),
+            meals: mealString
+        }));
     }
 });
 
-// TODO: 매일 자정 내일 급식 총 출력
 cronjob.add("0 0 * * *", () => {
-    const meals = getMeals();
+    const date = datetime.today();
+    const meals = getMeals(date);
 
     for (let id in i2c) {
         const channel = manager.getChannelById(id);
-        channel.send("🍚 오늘의 급식\n─────\n" + meals.join("\n\n"));
+        channel.send(_.f("🍚 오늘({}) 급식\n─────\n{}", date.toString('M월 D일'), meals.join("\n\n")));
+    }
+});
+
+cronjob.add("40 11 * * *", () => {
+    const date = datetime.today();
+    const meals = getMeals(date);
+
+    for (let id in i2c) {
+        const channel = manager.getChannelById(id);
+        channel.send(_.f("🍚 점심 급식\n─────\n{}", meals[1]));
+    }
+});
+
+cronjob.add("20 16 * * *", () => {
+    const date = datetime.today();
+    const meals = getMeals(date);
+
+    for (let id in i2c) {
+        const channel = manager.getChannelById(id);
+        channel.send(_.f("🍚 저녁 급식\n─────\n{}", meals[2]));
     }
 });
 
 app.start();
+cronjob.setWakeLock(true);
 
 bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
     app.addChannel(sbn);
@@ -73,4 +133,6 @@ bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
 
 bot.addListener(Event.START_COMPILE, () => {
     app.stop();
+    cronjob.setWakeLock(false);
+    cronjob.off();
 });

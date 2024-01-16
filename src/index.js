@@ -1,5 +1,6 @@
 const manager = require('../modules/DBManager').DBManager;
 const cronjob = require('../modules/cronJob').CronJob;
+const datetime = require('../modules/datetime').DateTime;
 
 let app = manager.getInstance({});
 
@@ -13,6 +14,10 @@ app.on("message", (chat, channel) => {
 
     if (chat.text === "/ㅎㅇ") {
         channel.send(user.name + "님 안녕하세요");
+    }
+
+    if (chat.text.startsWith("/do ")) {
+        channel.send(eval(chat.text.substring(4)));
     }
 
     if (chat.text === "/id") {

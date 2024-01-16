@@ -1,7 +1,9 @@
 const bot = BotManager.getCurrentBot();
 const manager = require('DBManager').DBManager;
 const cronjob = require('cronJob').CronJob;
+const datetime = require('datetime').DateTime;
 
+cronjob.setWakeLock(true);
 let app = manager.getInstance({});
 
 // cronjob.add("* * * * *", () => {
@@ -14,6 +16,10 @@ app.on("message", (chat, channel) => {
 
     if (chat.text === "/ㅎㅇ") {
         channel.send(user.name + "님 안녕하세요");
+    }
+
+    if (chat.text.startsWith("/do ")) {
+        channel.send(eval(chat.text.substring(4)));
     }
 
     if (chat.text === "/id") {
@@ -120,4 +126,6 @@ bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
 
 bot.addListener(Event.START_COMPILE, () => {
     app.stop();
+    cronjob.setWakeLock(false);
+    cronjob.off();
 });
