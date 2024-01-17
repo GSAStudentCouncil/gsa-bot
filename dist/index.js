@@ -3,7 +3,6 @@ const manager = require('DBManager').DBManager;
 const cronjob = require('cronJob').CronJob;
 const datetime = require('datetime').DateTime;
 
-cronjob.setWakeLock(true);
 let app = manager.getInstance({});
 
 // cronjob.add("* * * * *", () => {

@@ -30,7 +30,7 @@ app.on("message", (chat, channel) => {
     const command = model(chat.text.trim(), {
         date: '오늘',
         time: null,
-        what: '급식'
+        what: null
     });
 
     if (command.what === "급식") {
@@ -87,7 +87,7 @@ app.on("message", (chat, channel) => {
                 return;
         }
         channel.send(_.f("🍚 {time} 급식\n─────\n{meals}", {
-            time: command.time || date.toString('오늘 (M월 D일)'),
+            time: date.toString(command.date + ' ' + (command.time || '') + ' (M월 D일)'),
             meals: mealString
         }));
     }

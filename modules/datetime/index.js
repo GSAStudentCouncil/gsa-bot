@@ -1,4 +1,4 @@
-const property = (that, key, functions) => {
+const property = function (that, key, functions) {
     const attributes = {};
     if (functions.get)
         attributes.get = functions.get;
@@ -13,26 +13,26 @@ const property = (that, key, functions) => {
 
 function Duration(millisecond) {
     property(this, 'millisecond', {
-        get: () => {
+        get: function () {
             return millisecond % 1000;
         }
     });
 
     property(this, 'second', {
-        get: () => {
+        get: function () {
             return Math.floor(millisecond / 1000) % (60 * 60 * 24);
         }
     });
 
     property(this, 'day', {
-        get: () => {
+        get: function () {
             return Math.floor(millisecond / (1000 * 60 * 60 * 24));
         }
     });
 }
 
 Duration.prototype = {
-    toString: () => {
+    toString: function () {
         return "(" + "day=" + this.day + ", second=" + this.second + ", millisecond=" + this.millisecond + ")";
     }
 }
@@ -42,90 +42,90 @@ function DateTime(date) {
         return new DateTime(date);
 
     property(this, 'year', {
-        get: () => {
+        get: function () {
             return date.getFullYear();
         },
-        set: (value) => {
+        set: function (value) {
             date.setFullYear(value);
         }
     });
     property(this, 'month', {
-        get: () => {
+        get: function () {
             return date.getMonth() + 1;
         },
-        set: (value) => {
+        set: function (value) {
             date.setMonth(value - 1);
         }
     });
     property(this, 'day', {
-        get: () => {
+        get: function () {
             return date.getDate();
         },
-        set: (value) => {
+        set: function (value) {
             date.setDate(value);
         }
     });
     property(this, 'hour', {
-        get: () => {
+        get: function () {
             return date.getHours();
         },
-        set: (value) => {
+        set: function (value) {
             date.setHours(value);
         }
     });
     property(this, 'minute', {
-        get: () => {
+        get: function () {
             return date.getMinutes();
         },
-        set: (value) => {
+        set: function (value) {
             date.setMinutes(value);
         }
     });
     property(this, 'second', {
-        get: () => {
+        get: function () {
             return date.getSeconds();
         },
-        set: (value) => {
+        set: function (value) {
             date.setSeconds(value);
         }
     });
     property(this, 'millisecond', {
-        get: () => {
+        get: function () {
             return date.getMilliseconds();
         },
-        set: (value) => {
+        set: function (value) {
             date.setMilliseconds(value);
         }
     });
     property(this, 'dayOfWeek', {
-        get: () => {
+        get: function () {
             return date.getDay();
         }
     });
     property(this, '_date', {
-        get: () => {
+        get: function () {
             return date;
         }
     });
 }
 
 DateTime.prototype = {
-    dayOfWeekName: () => {
+    dayOfWeekName: function () {
         return this.toString('WW');
     },
 
-    timestamp: () => {
+    timestamp: function () {
         return this.toNumber();
     },
 
-    is: (value) => {
+    is: function (value) {
         if (value instanceof DateTime)
             return this.toNumber() === value.toNumber();
         else
             return new DateTime_is(this);
     },
 
-    add: (value) => {
+    add: function (value) {
         value = value || 1;
 
         if (value instanceof DateTime)
@@ -134,7 +134,7 @@ DateTime.prototype = {
             return new DateTime_add(this, value);
     },
 
-    sub: (value) => {
+    sub: function (value) {
         value = value || 1;
 
         if (value instanceof DateTime)
@@ -143,30 +143,30 @@ DateTime.prototype = {
             return new DateTime_add(this, -value);
     },
 
-    next: () => {
+    next: function () {
         return new DateTime_step(this, 1);
     },
 
-    prev: () => {
+    prev: function () {
         return new DateTime_step(this, -1);
     },
 
-    last: () => {
+    last: function () {
         return this.prev();
     },
 
-    toString: (formatString) => {
+    toString: function (formatString) {
         const locale = 'ko-KR';     // TODO: auto locale detect - DB(android data)에서 가져오기?
         if (!/[a-z]{2}-[A-Z]{2}/.test(locale))
             throw new Error('Invalid locale formatString, must be like "ko-KR"');
 
-        //const cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + locale + ".json"));     // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
-        const cultureInfo = require('./globalization/' + locale + '.json');
+        const cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + locale + ".json"));     // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
+        // const cultureInfo = require('./globalization/' + locale + '.json');
         if (!cultureInfo)
             throw new Error('Invalid locale, not found ' + locale);
 
         formatString = formatString || cultureInfo['formats']['full'];
-        return formatString.replace(/ss?s?|mm?|hh?|ii?|t|DD?|WW?|MM?M?M?|YY(?:YY)?/g, (match) => {
+        return formatString.replace(/ss?s?|mm?|hh?|ii?|t|DD?|WW?|MM?M?M?|YY(?:YY)?/g, match => {
             switch (match) {
                 case 's':
                     return this.second;
@@ -214,15 +214,15 @@ DateTime.prototype = {
         });
     },
 
-    toNumber: () => {
+    toNumber: function () {
         return this._date.getTime();
     },
 
-    toDate: () => {
+    toDate: function () {
         return this._date;
     },
 
-    toObject: () => {
+    toObject: function () {
         return {
             year: this.year,
             month: this.month,
@@ -236,207 +236,207 @@ DateTime.prototype = {
 };
 
 DateTime = Object.assign(DateTime, {
-    isLeapYear: (year) => {
+    isLeapYear: function (year) {
         return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
     },
 
-    leapYearCount: (start, end) => {
+    leapYearCount: function (start, end) {
         const l = y => Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400);
 
         return l(end) - l(start) + (DateTime.isLeapYear(start) ? 1 : 0);    // [start, end]
     },
 
-    now: () => {
+    now: function () {
         return new DateTime(new Date());
     },
 
-    today: () => {
+    today: function () {
         const now = new Date();
         return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
     },
 
-    tomorrow: () => {
+    tomorrow: function () {
         const now = new Date();
         return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
     },
 
-    yesterday: () => {
+    yesterday: function () {
         const now = new Date();
         return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
     },
 
-    sunday: () => {
+    sunday: function () {
         const diff = (0 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    sun: () => {
+    sun: function () {
         return DateTime.sunday();
     },
 
-    monday: () => {
+    monday: function () {
         const diff = (1 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    mon: () => {
+    mon: function () {
         return DateTime.monday();
     },
 
-    tuesday: () => {
+    tuesday: function () {
         const diff = (2 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    tue: () => {
+    tue: function () {
         return DateTime.tuesday();
     },
 
-    wednesday: () => {
+    wednesday: function () {
         const diff = (3 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    wed: () => {
+    wed: function () {
         return DateTime.wednesday();
     },
 
-    thursday: () => {
+    thursday: function () {
         const diff = (4 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    thu: () => {
+    thu: function () {
         return DateTime.thursday();
     },
 
-    friday: () => {
+    friday: function () {
         const diff = (5 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    fri: () => {
+    fri: function () {
         return DateTime.friday();
     },
 
-    saturday: () => {
+    saturday: function () {
         const diff = (6 - new Date().getDay() + 7) % 7;
         return DateTime.today().add(diff).day();
     },
 
-    sat: () => {
+    sat: function () {
         return DateTime.saturday();
     },
 
-    january: (day) => {
+    january: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 0, day));
     },
 
-    jan: (day) => {
+    jan: function (day) {
         return DateTime.january(day);
     },
 
-    february: (day) => {
+    february: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 1, day));
     },
 
-    feb: (day) => {
+    feb: function (day) {
         return DateTime.february(day);
     },
 
-    march: (day) => {
+    march: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 2, day));
     },
 
-    mar: (day) => {
+    mar: function (day) {
         return DateTime.march(day);
     },
 
-    april: (day) => {
+    april: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 3, day));
     },
 
-    apr: (day) => {
+    apr: function (day) {
         return DateTime.april(day);
     },
 
-    may: (day) => {
+    may: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 4, day));
     },
 
-    june: (day) => {
+    june: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 5, day));
     },
 
-    jun: (day) => {
+    jun: function (day) {
         return DateTime.june(day);
     },
 
-    july: (day) => {
+    july: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 6, day));
     },
 
-    jul: (day) => {
+    jul: function (day) {
         return DateTime.july(day);
     },
 
-    august: (day) => {
+    august: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 7, day));
     },
 
-    aug: (day) => {
+    aug: function (day) {
         return DateTime.august(day);
     },
 
-    september: (day) => {
+    september: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 8, day));
     },
 
-    sep: (day) => {
+    sep: function (day) {
         return DateTime.september(day);
     },
 
-    october: (day) => {
+    october: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 9, day));
     },
 
-    oct: (day) => {
+    oct: function (day) {
         return DateTime.october(day);
     },
 
-    november: (day) => {
+    november: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 10, day));
     },
 
-    nov: (day) => {
+    nov: function (day) {
         return DateTime.november(day);
     },
 
-    december: (day) => {
+    december: function (day) {
         day = day || 1;
         return new DateTime(new Date(new Date().getFullYear(), 11, day));
     },
 
-    dec: (day) => {
+    dec: function (day) {
         return DateTime.december(day);
     },
 
-    fromTimestamp: (timestamp) => {
+    fromTimestamp: function (timestamp) {
         return new DateTime(new Date(timestamp));
     },
 
-    fromObject: (datetimeObject) => {
+    fromObject: function (datetimeObject) {
         const now = new Date();
         const year = datetimeObject.year || now.getFullYear();
         const month = datetimeObject.month || now.getMonth() + 1;
@@ -449,21 +449,21 @@ DateTime = Object.assign(DateTime, {
         return new DateTime(new Date(year, month - 1, day, hour, minute, second, millisecond));
     },
 
-    fromString: (datetimeString) => {
+    fromString: function (datetimeString) {
         return this.parse(datetimeString);
     },
 
-    in: (year) => {
+    in: function (year) {
         return new DateTime(new Date(year, 0, 1));
     },
 
-    on: (month, day) => {
+    on: function (month, day) {
         day = day || 1;
 
         return new DateTime(new Date(new Date().getFullYear(), month - 1, day));
     },
 
-    at: (hour, minute, second, millisecond) => {
+    at: function (hour, minute, second, millisecond) {
         minute = minute || 0;
         second = second || 0;
         millisecond = millisecond || 0;
@@ -477,7 +477,7 @@ DateTime = Object.assign(DateTime, {
         return new DateTime(date);
     },
 
-    set: (year, month, day, hour, minute, second, millisecond) => {
+    set: function (year, month, day, hour, minute, second, millisecond) {
         month = month || 1;
         day = day || 1;
         hour = hour || 0;
@@ -488,7 +488,7 @@ DateTime = Object.assign(DateTime, {
         return new DateTime(new Date(year, month - 1, day, hour, minute, second, millisecond));
     },
 
-    parse: (dateString) => {
+    parse: function (dateString) {
         // TODO: globalization 사용
         return new DateTime(Date.parse(dateString));
     },
@@ -499,56 +499,56 @@ function _(value, mode) {
         return new _(value, mode);
 
     property(this, '_value', {
-        get: () => {
+        get: function () {
             return value;
         }
     });
     property(this, '_datetime', {
-        get: () => {
+        get: function () {
             return new DateTime(new Date());
         }
     });
     property(this, '_mode', {
-        get: () => {
+        get: function () {
             return mode;
         }
     });
 }
 
 _.prototype = {
-    year: () => {
+    year: function () {
         return new _(this._value, 'year');
     },
 
-    month: () => {
+    month: function () {
         return new _(this._value, 'month');
     },
 
-    day: () => {
+    day: function () {
         return new _(this._value, 'day');
     },
 
-    week: () => {
+    week: function () {
         return new _(this._value, 'week');
     },
 
-    hour: () => {
+    hour: function () {
         return new _(this._value, 'hour');
     },
 
-    minute: () => {
+    minute: function () {
         return new _(this._value, 'minute');
     },
 
-    second: () => {
+    second: function () {
         return new _(this._value, 'second');
     },
 
-    millisecond: () => {
+    millisecond: function () {
         return new _(this._value, 'millisecond');
     },
 
-    ago: () => {
+    ago: function () {
         switch (this._mode) {
             case 'year':
                 return this._datetime.sub(this._value).year();
@@ -571,7 +571,7 @@ _.prototype = {
         }
     },
 
-    fromNow: () => {
+    fromNow: function () {
         switch (this._mode) {
             case 'year':
                 return this._datetime.add(this._value).year();
@@ -597,276 +597,276 @@ _.prototype = {
 
 function DateTime_is(datetime) {
     property(this, '_datetime', {
-        get: () => {
+        get: function () {
             return datetime;
         }
     });
 }
 
 DateTime_is.prototype = {
-    sunday: () => {
+    sunday: function () {
         return this._datetime.dayOfWeek === 0;
     },
 
-    sun: () => {
+    sun: function () {
         return this.sunday();
     },
 
-    monday: () => {
+    monday: function () {
         return this._datetime.dayOfWeek === 1;
     },
 
-    mon: () => {
+    mon: function () {
         return this.monday();
     },
 
-    tuesday: () => {
+    tuesday: function () {
         return this._datetime.dayOfWeek === 2;
     },
 
-    tue: () => {
+    tue: function () {
         return this.tuesday();
     },
 
-    wednesday: () => {
+    wednesday: function () {
         return this._datetime.dayOfWeek === 3;
     },
 
-    wed: () => {
+    wed: function () {
         return this.wednesday();
     },
 
-    thursday: () => {
+    thursday: function () {
         return this._datetime.dayOfWeek === 4;
     },
 
-    thu: () => {
+    thu: function () {
         return this.thursday();
     },
 
-    friday: () => {
+    friday: function () {
         return this._datetime.dayOfWeek === 5;
     },
 
-    fri: () => {
+    fri: function () {
         return this.friday();
     },
 
-    saturday: () => {
+    saturday: function () {
         return this._datetime.dayOfWeek === 6;
     },
 
-    sat: () => {
+    sat: function () {
         return this.saturday();
     },
 
-    january: (day) => {
+    january: function (day) {
         return this._datetime.month === 1 && (day ? this._datetime.day === day : true);
     },
 
-    jan: (day) => {
+    jan: function (day) {
         return this.january(day);
     },
 
-    february: (day) => {
+    february: function (day) {
         return this._datetime.month === 2 && (day ? this._datetime.day === day : true);
     },
 
-    feb: (day) => {
+    feb: function (day) {
         return this.february(day);
     },
 
-    march: (day) => {
+    march: function (day) {
         return this._datetime.month === 3 && (day ? this._datetime.day === day : true);
     },
 
-    mar: (day) => {
+    mar: function (day) {
         return this.march(day);
     },
 
-    april: (day) => {
+    april: function (day) {
         return this._datetime.month === 4 && (day ? this._datetime.day === day : true);
     },
 
-    apr: (day) => {
+    apr: function (day) {
         return this.april(day);
     },
 
-    may: (day) => {
+    may: function (day) {
         return this._datetime.month === 5 && (day ? this._datetime.day === day : true);
     },
 
-    june: (day) => {
+    june: function (day) {
         return this._datetime.month === 6 && (day ? this._datetime.day === day : true);
     },
 
-    jun: (day) => {
+    jun: function (day) {
         return this.june(day);
     },
 
-    july: (day) => {
+    july: function (day) {
         return this._datetime.month === 7 && (day ? this._datetime.day === day : true);
     },
 
-    jul: (day) => {
+    jul: function (day) {
         return this.july(day);
     },
 
-    august: (day) => {
+    august: function (day) {
         return this._datetime.month === 8 && (day ? this._datetime.day === day : true);
     },
 
-    aug: (day) => {
+    aug: function (day) {
         return this.august(day);
     },
 
-    september: (day) => {
+    september: function (day) {
         return this._datetime.month === 9 && (day ? this._datetime.day === day : true);
     },
 
-    sep: (day) => {
+    sep: function (day) {
         return this.september(day);
     },
 
-    october: (day) => {
+    october: function (day) {
         return this._datetime.month === 10 && (day ? this._datetime.day === day : true);
     },
 
-    oct: (day) => {
+    oct: function (day) {
         return this.october(day);
     },
 
-    november: (day) => {
+    november: function (day) {
         return this._datetime.month === 11 && (day ? this._datetime.day === day : true);
     },
 
-    nov: (day) => {
+    nov: function (day) {
         return this.november(day);
     },
 
-    december: (day) => {
+    december: function (day) {
         return this._datetime.month === 12 && (day ? this._datetime.day === day : true);
     },
 
-    dec: (day) => {
+    dec: function (day) {
         return this.december(day);
     },
 
-    leapYear: () => {
+    leapYear: function () {
         return (this._datetime.year % 4 === 0 && this._datetime.year % 100 !== 0) || this._datetime.year % 400 === 0;
     },
 
-    weekend: () => {
+    weekend: function () {
         return this._datetime.dayOfWeek === 0 || this._datetime.dayOfWeek === 6;
     },
 
-    weekday: () => {
+    weekday: function () {
         return !this.weekend();
     },
 
-    today: () => {
+    today: function () {
         const now = new Date();
         return this._datetime.year === now.getFullYear() && this._datetime.month === now.getMonth() + 1 && this._datetime.day === now.getDate();
     },
 
-    year: (year) => {
+    year: function (year) {
         return this._datetime.year === year;
     },
 
-    month: (month) => {
+    month: function (month) {
         return this._datetime.month === month;
     },
 
-    day: (day) => {
+    day: function (day) {
         return this._datetime.day === day;
     },
 
-    hour: (hour) => {
+    hour: function (hour) {
         return this._datetime.hour === hour;
     },
 
-    minute: (minute) => {
+    minute: function (minute) {
         return this._datetime.minute === minute;
     },
 
-    second: (second) => {
+    second: function (second) {
         return this._datetime.second === second;
     },
 
-    millisecond: (millisecond) => {
+    millisecond: function (millisecond) {
         return this._datetime.millisecond === millisecond;
     },
 
-    dayOfWeek: (dayOfWeek) => {
+    dayOfWeek: function (dayOfWeek) {
         return this._datetime.dayOfWeek === dayOfWeek;
     },
 
-    after: (datetime) => {
+    after: function (datetime) {
         return this._datetime.toNumber() > datetime.toNumber();
     },
 
-    before: (datetime) => {
+    before: function (datetime) {
         return this._datetime.toNumber() < datetime.toNumber();
     }
 };
 
 function DateTime_add(datetime, value) {
     property(this, '_datetime', {
-        get: () => {
+        get: function () {
             return datetime;
         }
     });
     property(this, '_value', {
-        get: () => {
+        get: function () {
             return value;
         }
     });
 }
 
 DateTime_add.prototype = {
-    year: () => {
+    year: function () {
         const date = this._datetime.toDate();
         date.setFullYear(date.getFullYear() + this._value);
         return new DateTime(date);
     },
 
-    month: () => {
+    month: function () {
         const date = this._datetime.toDate();
         date.setMonth(date.getMonth() + this._value);
         return new DateTime(date);
     },
 
-    day: () => {
+    day: function () {
         const date = this._datetime.toDate();
         date.setDate(date.getDate() + this._value);
         return new DateTime(date);
     },
 
-    week: () => {
+    week: function () {
         const date = this._datetime.toDate();
         date.setDate(date.getDate() + this._value * 7);
         return new DateTime(date);
     },
 
-    hour: () => {
+    hour: function () {
         const date = this._datetime.toDate();
         date.setHours(date.getHours() + this._value);
         return new DateTime(date);
     },
 
-    minute: () => {
+    minute: function () {
         const date = this._datetime.toDate();
         date.setMinutes(date.getMinutes() + this._value);
         return new DateTime(date);
     },
 
-    second: () => {
+    second: function () {
         const date = this._datetime.toDate();
         date.setSeconds(date.getSeconds() + this._value);
         return new DateTime(date);
     },
 
-    millisecond: () => {
+    millisecond: function () {
         const date = this._datetime.toDate();
         date.setMilliseconds(date.getMilliseconds() + this._value);
         return new DateTime(date);
@@ -875,19 +875,19 @@ DateTime_add.prototype = {
 
 function DateTime_step(datetime, direction) {
     property(this, '_datetime', {
-        get: () => {
+        get: function () {
             return datetime;
         }
     });
     property(this, '_direction', {
-        get: () => {
+        get: function () {
             return direction;
         }
     });
 }
 
 DateTime_step.prototype = {
-    week: () => {
+    week: function () {
         const date = this._datetime.toDate();
         date.setDate(date.getDate() + this._direction * 7);
         return new DateTime(date);
