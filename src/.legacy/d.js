@@ -1190,7 +1190,7 @@ export const org = {
                 const $ = cheerio.load(res.getBody('utf8'));
                 return $.find('br').replaceWith('\n').end().html();
 
-                // fixme: 구현체와 앱의 출력이 다름
+                // FIXME: 구현체와 앱의 출력이 다름
                 //  - 구현체는 html 파일에서 개행을 삭제해서 반환하는데, jsoup은 코드 그 자체(개행마저 살려)를 반환함.
             }
 
@@ -1199,7 +1199,7 @@ export const org = {
                 const $ = cheerio.load(res.getBody('utf8'));
                 return $.find('br').replaceWith().text();
 
-                // fixme: 구현체와 앱의 출력이 미세하게 다름
+                // FIXME: 구현체와 앱의 출력이 미세하게 다름
                 //  - 구현체는 개행이 공백으로 변하지 않지만, jsoup은 개행이 공백으로 변함.
             }
         }

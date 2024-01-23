@@ -1,0 +1,195 @@
+class Command {
+    constructor(name, description, rooms, examples) {
+        if (this.constructor === Command)
+            throw new TypeError("Cannot construct abstract class");
+
+        if (name === undefined)
+            throw new TypeError("name is required");
+        if (description === undefined)
+            throw new TypeError("description is required");
+
+        this.name = name;
+        this.description = description;
+        this.rooms = rooms || [];
+        this.examples = examples || [];
+        this.callback = null;
+    }
+
+    on(callback) {
+        this.callback = callback;
+        return this;
+    }
+
+    // REVIEW
+    manual() {
+        return `${this.name} 명령어
+설명: ${this.description}
+사용법: ${this.usage}
+사용 가능한 방: ${this.rooms.join(', ')}
+예시:
+${this.examples.map(e => `  ${e}`).join('\n')}
+`
+    }
+}
+
+class Arg {
+    constructor(name) {
+        if (this.constructor === Arg)
+            throw new TypeError("Cannot construct abstract class");
+
+        this.name = name;
+        this.many = false;
+    }
+
+    toRegExp() {
+        throw new Error("Not implemented");
+    }
+
+    parse(value) {
+        throw new Error("Not implemented");
+    }
+}
+
+// TODO: FloatArg
+
+class IntArg extends Arg {
+    constructor(name, min, max) {
+        super(name);
+        this.min = min;
+        this.max = max;
+    }
+
+    toRegExp() {
+        if (this.min && this.max && this.min > this.max)
+            throw new RangeError("min must be less than or equal to max");
+
+        let ret = /[+-]?\d+/;
+
+        if (!this.many)
+            return ret;
+        else
+            return new RegExp(`(?:${ret.source}\\s?)+`);
+    }
+
+    parse(value) {
+        if (!this.toRegExp().test(value))
+            return false;
+        else if (this.min && value < this.min)
+            return false;
+        else if (this.max && value > this.max)
+            return false;
+
+        if (this.many)
+            return value.split(/\s+/).map(Number);
+        else
+            return Number(value);
+    }
+}
+
+class StringArg extends Arg {
+    constructor(name, length, minLength, maxLength) {
+        super(name);
+        this.length = length;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
+    }
+
+    toRegExp() {
+        if (this.length && (this.minLength || this.maxLength))
+            throw new Error("length cannot be used with minLength or maxLength");
+        if (this.minLength && this.maxLength && this.minLength > this.maxLength)
+            throw new RangeError("minLength must be less than or equal to maxLength");
+        if (this.minLength && this.minLength < 1)
+            throw new RangeError("minLength must be greater than or equal to 1");
+        if (this.maxLength && this.maxLength < 1)
+            throw new RangeError("maxLength must be greater than or equal to 1");
+        if (!this.minLength && this.maxLength)
+            this.minLength = 1;
+
+        let ret;
+
+        if (this.length)
+            ret = new RegExp(`\\S{${this.length}}`);
+        else if (this.minLength && this.maxLength)
+            ret = new RegExp(`\\S{${this.minLength},${this.maxLength}}`);
+        else if (this.minLength)
+            ret = new RegExp(`\\S{${this.minLength},}`);
+        else
+            ret = /\S+/;
+
+        if (!this.many)
+            return ret;
+        else
+            return new RegExp(`(?:${ret.source}\\s?)+`);
+    }
+
+    parse(value) {
+        if (!this.toRegExp().test(value))
+            return false;
+
+        if (this.many)
+            return value.split(/\s+/);
+        else
+            return value;
+    }
+}
+
+class StructuredCommand extends Command {
+    constructor(options) {
+        if (options.usage === undefined)
+            throw new TypeError("usage is required");
+
+        super(options.name, options.description, options.rooms, options.examples);
+        this.usage = options.usage;
+
+        let args = [];
+        let regexed = this.usage.replace(/<.+?>/g, m => {
+            let [ nameAndType, ...options ] = m.slice(1, -1).split(/\s+/);
+            let [ name, type ] = nameAndType.split(":");
+
+            options = options.map(o => {
+                let splited = o.split("=");
+                if (!isNaN(Number(splited[1]))) {
+                    splited[1] = Number(splited[1]);
+                }
+
+                return splited;
+            });
+
+            if (type.startsWith('int'))
+                args.push(new IntArg(name));
+            else if (type.startsWith('string'))
+                args.push(new StringArg(name));
+            else
+                throw new TypeError(`Invalid type: ${type}`);
+
+            for (let [key, value] of options) {
+                args[args.length - 1][key] = value;
+            }
+
+            if (type.endsWith('s')) {
+                args[args.length - 1].many = true;
+            }
+
+            return `(${args[args.length - 1].toRegExp().source})`;
+        });
+
+        this.args = args;
+        this.regex = new RegExp(`^${regexed}$`);
+    }
+}
+
+class NaturalCommand extends Command {
+    constructor(options) {
+        if (options.query === undefined)
+            throw new TypeError("query is required");
+
+        super(options.name, options.description, options.rooms, options.examples);
+        this.query = options.query;
+    }
+
+    // TODO: implement
+}
+
+exports.StructuredCommand = StructuredCommand;
+exports.NaturalCommand = NaturalCommand;

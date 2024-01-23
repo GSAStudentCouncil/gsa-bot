@@ -35,39 +35,49 @@ app.on("message", (chat, channel) => {
 
     if (command.what === "급식") {
         // TODO: datetime 모듈의 parse 메서드를 사용하도록 수정
-        let date;
+        let dt;
         switch (command.date) {
             case '그끄저께':
-                date = datetime.yesterday().sub(2).day();
+                dt = datetime.yesterday().sub(2).day();
                 break;
             case '그제':
-                date = datetime.yesterday().sub().day();
+                dt = datetime.yesterday().sub().day();
                 break;
             case '어제':
-                date = datetime.yesterday();
+                dt = datetime.yesterday();
                 break;
             case "오늘":
-                date = datetime.today();
+                dt = datetime.today();
                 break;
             case "내일":
-                date = datetime.tomorrow();
+                dt = datetime.tomorrow();
                 break;
             case "모레":
-                date = datetime.tomorrow().add().day();
+                dt = datetime.tomorrow().add().day();
                 break;
             case "글피":
-                date = datetime.tomorrow().add(2).day();
+                dt = datetime.tomorrow().add(2).day();
                 break;
             case "그글피":
-                date = datetime.tomorrow().add(3).day();
+                dt = datetime.tomorrow().add(3).day();
                 break;
             default:
                 Log.error("Invalid date: " + command.date);
                 return;
         }
+        dt.time = datetime.today().time;
 
-        const meals = getMeals(date);
+        const meals = getMeals(dt);
 
+        if (command.time === null) {
+            if (dt.is().before({ hour: 8, minute: 30 }))
+                command.time = "아침";
+            else if (dt.is().before({ hour: 13, minute: 30 }))
+                command.time = "점심";
+            else if (dt.is().before({ hour: 19, minute: 30 }))
+                command.time = "저녁";
+        }
+        
         let mealString;
         switch (command.time) {
             case "아침":
@@ -79,15 +89,13 @@ app.on("message", (chat, channel) => {
             case "저녁":
                 mealString = meals[2];
                 break;
-            case null:
-                mealString = meals.join("\n\n");
-                break;
             default:
                 Log.error("Invalid time: " + command.time);
                 return;
         }
+
         channel.send(_.f("🍚 {time} 급식\n─────\n{meals}", {
-            time: date.toString(command.date + ' ' + (command.time || '') + ' (M월 D일)'),
+            time: dt.toString(command.date + ' ' + (command.time || '') + ' (M월 D일)'),
             meals: mealString
         }));
     }
@@ -99,7 +107,7 @@ cronjob.add("0 0 * * *", () => {
 
     for (let id in i2c) {
         const channel = manager.getChannelById(id);
-        channel.send(_.f("🍚 오늘({}) 급식\n─────\n{}", date.toString('M월 D일'), meals.join("\n\n")));
+        channel.send(_.f("🍚 오늘 ({}) 급식\n─────\n{}", date.toString('M월 D일'), meals.join("\n\n")));
     }
 });
 

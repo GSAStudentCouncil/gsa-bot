@@ -34,42 +34,55 @@ bot.addListener(Event.START_COMPILE, () => {
     }
 };
 
-const [ , , api ] = process.argv;
+const [ , , api, root ] = process.argv;
 if (!(api in apis)) process.exit(1);
 
 console.log(`api ver: ${api}`);
 
-function build(originPath) {
-    const botCode = fs.readFileSync(originPath, 'utf-8')
-        .replace(/require\('\.\.\/modules\/(\w+)'\)/g, "require('$1')");    // modules 상대 경로 제거
-
-    const distPath = path.join('.', originPath.replace('src', 'dist'));
-    const directories = distPath.split(path.sep).slice(0, -1);
+function build(originPath, noBabel) {
+    const distPath = path.join('.', path.join('dist', originPath));
+    const sep = distPath.split(path.sep);
+    const directories = sep.slice(0, -1);
 
     let curr = '';
-    directories.forEach(dir => {
+    directories.forEach((dir, dep) => {
         curr = path.join(curr, dir);
         if (!fs.existsSync(curr)) {
             fs.mkdirSync(curr);
-            console.log(`directory ${curr} created`);
+            console.log(`directory\t\t${curr} created`);
         }
     });
 
-    fs.writeFileSync(distPath, apis[api].prefix + botCode + apis[api].suffix);
+    let code = fs.readFileSync(originPath, 'utf-8');
 
-    console.log(`compile ${originPath} -> ${distPath} complete`);
+    if (originPath.endsWith('.js')) {
+        code = code
+            .replace(/require\('\.\.\/modules\/(\w+)'\)/g, "require('$1')")
+            .replace('const IS_DIST = false;', 'const IS_DIST = true;');
+
+        if (originPath.includes('src'))
+            code = apis[api].prefix + code + apis[api].suffix;
+    }
+
+    fs.writeFileSync(distPath, code);
+
+    if (originPath.endsWith('.js') && !noBabel)
+        fs.writeFileSync(distPath, execSync(`babel ${distPath}`).toString());
+
+    console.log(`compile${!noBabel ? ' and transpile\t' : '\t\t\t'}${originPath} -> ${distPath}`);
 }
 
-function dfs(filePath) {
-    fs.readdirSync(filePath).forEach(child => {
+function dfs(filePath, noBabel=false) {
+    for (let child of fs.readdirSync(filePath)) {
         const childPath = path.join(filePath, child);
 
-        if (childPath.endsWith('.js'))      // is file
-            build(childPath);
-        else if (fs.lstatSync(childPath).isDirectory()) // is directory
+        if (fs.lstatSync(childPath).isDirectory()) {    // is directory
             if (!child.startsWith('.')) // ignore hidden directory (ex. src/.legacy)
-                dfs(childPath);
-    });
+                dfs(childPath, noBabel || ['cronjob', 'DBManager', 'kakao-react', 'kakaolink'].includes(child));
+        } else {
+            build(childPath, noBabel);
+        }
+    }
 }
 
-dfs(path.join('.', 'src'));
+dfs(path.join('.', root));

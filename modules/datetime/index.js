@@ -1,3 +1,5 @@
+const IS_DIST = false;
+
 const property = function (that, key, functions) {
     const attributes = {};
     if (functions.get)
@@ -35,6 +37,27 @@ Duration.prototype = {
     toString: function () {
         return "(" + "day=" + this.day + ", second=" + this.second + ", millisecond=" + this.millisecond + ")";
     }
+}
+
+function Date_(year, month, day) {
+    this.year = year;
+    this.month = month;
+    this.day = day;
+}
+
+Date_.prototype.toString = function () {
+    return "Date(" + "year=" + this.year + ", month=" + this.month + ", day=" + this.day + ")";
+}
+
+function Time_(hour, minute, second, millisecond) {
+    this.hour = hour;
+    this.minute = minute;
+    this.second = second;
+    this.millisecond = millisecond;
+}
+
+Time_.prototype.toString = function () {
+    return "Time(" + "hour=" + this.hour + ", minute=" + this.minute + ", second=" + this.second + ", millisecond=" + this.millisecond + ")";
 }
 
 function DateTime(date) {
@@ -102,9 +125,36 @@ function DateTime(date) {
             return date.getDay();
         }
     });
-    property(this, '_date', {
+    property(this, '_origin', {
         get: function () {
             return date;
+        }
+    });
+    property(this, 'date', {
+        get: function () {
+            return new Date_(this.year, this.month, this.day);
+        },
+        set: function (date) {
+            if (!(date instanceof Date_))
+                throw new TypeError('date must be Date_');
+
+            this.year = date.year;
+            this.month = date.month;
+            this.day = date.day;
+        }
+    });
+    property(this, 'time', {
+        get: function () {
+            return new Time_(this.hour, this.minute, this.second, this.millisecond);
+        },
+        set: function (time) {
+            if (!(time instanceof Time_))
+                throw new TypeError('time must be Time_');
+
+            this.hour = time.hour;
+            this.minute = time.minute;
+            this.second = time.second;
+            this.millisecond = time.millisecond;
         }
     });
 }
@@ -160,8 +210,12 @@ DateTime.prototype = {
         if (!/[a-z]{2}-[A-Z]{2}/.test(locale))
             throw new Error('Invalid locale formatString, must be like "ko-KR"');
 
-        const cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + locale + ".json"));     // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
-        // const cultureInfo = require('./globalization/' + locale + '.json');
+        let cultureInfo;
+        if (IS_DIST)
+            cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + locale + ".json"));     // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
+        else
+            cultureInfo = require('./globalization/' + locale + '.json');
+
         if (!cultureInfo)
             throw new Error('Invalid locale, not found ' + locale);
 
@@ -215,11 +269,11 @@ DateTime.prototype = {
     },
 
     toNumber: function () {
-        return this._date.getTime();
+        return this._origin.getTime();
     },
 
     toDate: function () {
-        return this._date;
+        return this._origin;
     },
 
     toObject: function () {
@@ -802,10 +856,32 @@ DateTime_is.prototype = {
     },
 
     after: function (datetime) {
+        if (datetime.constructor.name === 'Object') {
+            const year = datetime.year || this._datetime.year;
+            const month = datetime.month || this._datetime.month;
+            const day = datetime.day || this._datetime.day;
+            const hour = datetime.hour || this._datetime.hour;
+            const minute = datetime.minute || this._datetime.minute;
+            const second = datetime.second || this._datetime.second;
+            const millisecond = datetime.millisecond || this._datetime.millisecond;
+            datetime = DateTime.set(year, month, day, hour, minute, second, millisecond);
+        }
+
         return this._datetime.toNumber() > datetime.toNumber();
     },
 
     before: function (datetime) {
+        if (datetime.constructor.name === 'Object') {
+            const year = datetime.year || this._datetime.year;
+            const month = datetime.month || this._datetime.month;
+            const day = datetime.day || this._datetime.day;
+            const hour = datetime.hour || this._datetime.hour;
+            const minute = datetime.minute || this._datetime.minute;
+            const second = datetime.second || this._datetime.second;
+            const millisecond = datetime.millisecond || this._datetime.millisecond;
+            datetime = DateTime.set(year, month, day, hour, minute, second, millisecond);
+        }
+
         return this._datetime.toNumber() < datetime.toNumber();
     }
 };
