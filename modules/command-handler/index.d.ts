@@ -12,6 +12,7 @@ export declare abstract class Command {
     public readonly callback: (chat: Chat, channel: Channel, args: ArgType[]) => void;
 
     on(callback: (chat: Chat, channel: Channel, args: ArgType[]) => void): Command;
+    abstract manual(): string;
 }
 
 export declare abstract class Arg {
@@ -59,6 +60,8 @@ export declare class StructuredCommand extends Command {
     public readonly usage: string;
     public readonly args: Arg[];
     public readonly regex: RegExp;
+
+    manual(): string;
 }
 
 export declare interface NaturalCommandOptions {
@@ -71,4 +74,6 @@ export declare interface NaturalCommandOptions {
 
 export declare class NaturalCommand extends Command {
     constructor(options: NaturalCommandOptions);
+
+    manual(): string;
 }

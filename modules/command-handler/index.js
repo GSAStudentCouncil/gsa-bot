@@ -20,15 +20,8 @@ class Command {
         return this;
     }
 
-    // REVIEW
     manual() {
-        return `${this.name} 명령어
-설명: ${this.description}
-사용법: ${this.usage}
-사용 가능한 방: ${this.rooms.join(', ')}
-예시:
-${this.examples.map(e => `  ${e}`).join('\n')}
-`
+        throw new Error("Not implemented");
     }
 }
 
@@ -74,15 +67,24 @@ class IntArg extends Arg {
     parse(value) {
         if (!this.toRegExp().test(value))
             return false;
-        else if (this.min && value < this.min)
-            return false;
-        else if (this.max && value > this.max)
-            return false;
 
-        if (this.many)
-            return value.split(/\s+/).map(Number);
-        else
-            return Number(value);
+        if (this.many) {
+            let ret = value.split(/\s+/).map(Number);
+            if (this.min && ret.some(v => v < this.min))
+                return false;
+            else if (this.max && ret.some(v => v > this.max))
+                return false;
+            else
+                return ret;
+        } else {
+            let ret = Number(value);
+            if (this.min && ret < this.min)
+                return false;
+            else if (this.max && ret > this.max)
+                return false;
+            else
+                return ret;
+        }
     }
 }
 
@@ -176,6 +178,35 @@ class StructuredCommand extends Command {
 
         this.args = args;
         this.regex = new RegExp(`^${regexed}$`);
+    }
+
+    manual() {
+        return `\
+[ ${this.name} ]
+  - ${this.description}
+
+"${this.usage.replace(/<.+?>/g, m => m.slice(0, m.indexOf(":")) + ">")}"
+${this.args.map(arg => {
+    let ret = `  - <${arg.name}>: ${arg.constructor.name.slice(0, -3).toLowerCase() + (arg.many ? 's' : '')}`;
+    
+    // print options indent one more
+    Object.keys(arg).forEach(key => {
+        if (key === 'name' || key === 'many')
+            return;
+        
+        if (arg[key] !== undefined)
+            ret += `\n    - ${key}: ${arg[key]}`;
+    });
+    
+    return ret;
+}).join("\n")}
+
+활성화된 방:
+${this.rooms.map(r => `  - ${r}`).join("\n")}
+
+예시:
+${this.examples.map(e => `  - "${e}"`).join("\n")}
+`;
     }
 }
 
