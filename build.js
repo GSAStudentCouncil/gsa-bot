@@ -6,6 +6,9 @@ const apis = {
     legacy: {
         prefix: ``,
         suffix: `
+app.start();
+cronjob.setWakeLock(true);        
+
 function onNotificationPosted(sbn) {
     app.addChannel(sbn);
 }
@@ -21,6 +24,9 @@ function onStartCompile() {
         prefix: `const bot = BotManager.getCurrentBot();
 `,
         suffix: `
+app.start();
+cronjob.setWakeLock(true);    
+    
 bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
     app.addChannel(sbn);
 });

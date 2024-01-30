@@ -54,7 +54,7 @@ declare namespace BotManager {
 
     export function getRooms(packageName?: string): string[];
 
-    export function getBotList(): string[];
+    export function getBotList(): Bot[];
 
     export function getPower(botName: string): boolean;
 

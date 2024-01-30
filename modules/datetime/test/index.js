@@ -1,9 +1,9 @@
-const { DateTime, _ } = require('../index');
+const { datetime, date, time } = require('../index');
 
-const x = DateTime.now();
-console.log(x.is().before({ hour: 18 }));
-// y = DateTime.now().add(3).hour();
-// console.log(y.toString());
-// console.log(y.sub(x).toString());
+print = (x, param=undefined) => {
+    console.log(x.toString(param));
+};
 
-// TODO: $(3).month().fromNow()
+now = datetime.now();
+yes = datetime.yesterday();
+print(now.sub(yes));

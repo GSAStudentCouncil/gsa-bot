@@ -5,7 +5,7 @@ function f(str) {
     if (args.length === 0)
         return str;
 
-    if (args[0].constructor.name === 'Object' && args.length === 1) {
+    if (args.length === 1 && args[0].constructor.name === 'Object') {
         args = args[0];
 
         return str.split('{{}}')

@@ -1,18 +1,26 @@
-import {Channel, Chat} from "../DBManager/classes";
+import { Channel, Chat } from "../DBManager/classes";
 
 type ArgType = string | number
+type Execute = (
+    chat: Chat,
+    channel: Channel,
+    args: { [key: string]: ArgType | ArgType[] },
+    self: Command,
+    prevChat?: Chat,
+    prevChannel?: Channel
+) => void
 
 export declare abstract class Command {
-    protected constructor(name: string, description: string, rooms?: string[], examples?: string[]);
+    protected constructor(name: string, description: string, execute: Execute, rooms?: string[], examples?: string[]);
 
     public readonly name: string;
     public readonly description: string;
+    public readonly execute: Execute;
     public readonly rooms: string[];
     public readonly examples: string[];
-    public readonly callback: (chat: Chat, channel: Channel, args: ArgType[]) => void;
 
-    on(callback: (chat: Chat, channel: Channel, args: ArgType[]) => void): Command;
     abstract manual(): string;
+    register(): void;
 }
 
 export declare abstract class Arg {
@@ -52,6 +60,7 @@ export declare interface StructuredCommandOptions {
     usage: string;
     rooms?: string[];
     examples?: string[];
+    execute: Execute;
 }
 
 export declare class StructuredCommand extends Command {
@@ -61,19 +70,41 @@ export declare class StructuredCommand extends Command {
     public readonly args: Arg[];
     public readonly regex: RegExp;
 
+    static add(options: StructuredCommandOptions): void;
+
     manual(): string;
 }
 
 export declare interface NaturalCommandOptions {
     name: string;
     description: string;
-    query: { [key: string]: Arg };
+    query: { [position: string]: string | null | (() => string) | { [token: string]: null } };
     rooms?: string[];
+    dictionaryPath?: string;
     examples?: string[];
+    execute: Execute;
 }
 
 export declare class NaturalCommand extends Command {
     constructor(options: NaturalCommandOptions);
+    dictionary: { [token: string]: { [aliase: string]: string[] } };
+
+    static add(options: NaturalCommandOptions): void;
 
     manual(): string;
 }
+
+export declare interface ExecutableCommand {
+    execute(chat: Chat, channel: Channel): void;
+}
+
+export declare class Registry {
+    constructor();
+    _data: Command[];
+    static CommandRegistry: Registry;
+
+    register(command: Command): void;
+    get(chatText: string, channelNameOrId: string): [ Command, { [key: string]: ArgType | ArgType[] } ];
+}
+
+export declare const CommandRegistry: Registry;
