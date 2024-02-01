@@ -94,17 +94,18 @@ export declare class NaturalCommand extends Command {
     manual(): string;
 }
 
-export declare interface ExecutableCommand {
-    execute(chat: Chat, channel: Channel): void;
+export declare interface CommandInfo {
+    cmd: Command | null,
+    args: { [key: string]: ArgType | ArgType[] } | null
 }
 
 export declare class Registry {
     constructor();
-    _data: Command[];
+    public data: Command[];
     static CommandRegistry: Registry;
 
     register(command: Command): void;
-    get(chatText: string, channelNameOrId: string): [ Command, { [key: string]: ArgType | ArgType[] } ];
+    get(chatText: string, channelNameOrId: string): CommandInfo;
 }
 
 export declare const CommandRegistry: Registry;

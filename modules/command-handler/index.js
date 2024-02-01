@@ -67,10 +67,13 @@ class IntArg extends Arg {
     }
 
     parse(value) {
-        if (!this.toRegExp().test(value))
+        if (value != null && !this.toRegExp().test(value))
             return false;
 
         if (this.many) {
+            if (value == null)
+                return [];
+
             let ret = value.split(/\s+/).map(Number);
             if (this.min && ret.some(v => v < this.min))
                 return false;
@@ -79,6 +82,9 @@ class IntArg extends Arg {
             else
                 return ret;
         } else {
+            if (value == null)
+                return null;
+
             let ret = Number(value);
             if (this.min && ret < this.min)
                 return false;
@@ -128,17 +134,25 @@ class StringArg extends Arg {
     }
 
     parse(value) {
-        if (!this.toRegExp().test(value))
+        if (value != null && !this.toRegExp().test(value))
             return false;
 
-        if (this.many)
+        if (this.many) {
+            if (value == null)
+                return [];
+
             return value.split(/\s+/);
-        else
+        }
+        else {
+            if (value == null)
+                return null;
+
             return value;
+        }
     }
 }
 
-// TODO: add support for optional arguments
+// TODO: includeZero면 앞 공백 생략 허용 좀
 
 class StructuredCommand extends Command {
     constructor(options) {
@@ -150,8 +164,11 @@ class StructuredCommand extends Command {
         this.usage = options.usage;
 
         let args = [];
-        let regexed = this.usage.replace(/<.+?>/g, m => {
-            let [ nameAndType, ...options ] = m.slice(1, -1).split(/\s+/);
+        let regexed = this.usage.replace(/\s*<.+?>/g, m => {
+            const pos = m.indexOf('<');
+
+            const whitespaces = m.slice(0, pos);
+            let [ nameAndType, ...options ] = m.slice(pos + 1, -1).split(/\s+/);
             let [ name, type ] = nameAndType.split(":");
 
             options = options.map(o => {
@@ -191,7 +208,11 @@ class StructuredCommand extends Command {
             if (type.includes('0'))
                 args[args.length - 1].includeEmpty = true;
 
-            return `(${args[args.length - 1].toRegExp().source})`;
+            let ret = `${whitespaces}(${args[args.length - 1].toRegExp().source})`;
+            if (args[args.length - 1].includeEmpty)
+                return `(?:${ret})?`;
+            else
+                return ret;
         });
 
         this.args = args;
@@ -317,13 +338,13 @@ ${this.examples.map(e => `  - "${e}"`).join("\n")}
 }
 
 class Registry {
-    static CommandRegistry;
+    static CommandRegistry = new Registry();
 
     constructor() {
         if (Registry.CommandRegistry)
             return Registry.CommandRegistry;
 
-        this._data = [];
+        this.data = [];
         Registry.CommandRegistry = this;
     }
 
@@ -331,11 +352,11 @@ class Registry {
         if (!(command instanceof Command))
             throw new TypeError("command must be instance of Command");
 
-        this._data.push(command);
+        this.data.push(command);
     }
 
     get(chatName, channelNameOrId) {
-        for (let cmd of this._data) {
+        for (let cmd of this.data) {
             if (cmd.rooms.length !== 0 && !cmd.rooms.includes(channelNameOrId))    // 방이 포함되어 있지 않을 경우
                 continue;
 
@@ -380,10 +401,10 @@ class Registry {
                     continue;
             }
 
-            return [cmd, args];
+            return { cmd, args };
         }
 
-        return [null, null];
+        return { cmd: null, args: null };
     }
 }
 

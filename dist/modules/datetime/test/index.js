@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
 var _require = require('../index'),
-    DateTime = _require.DateTime,
-    _ = _require._;
-
-var x = DateTime.now();
-console.log(x.is().before({ hour: 18 }));
-// y = DateTime.now().add(3).hour();
-// console.log(y.toString());
-// console.log(y.sub(x).toString());
-
-// TODO: $(3).month().fromNow()
+  datetime = _require.datetime,
+  date = _require.date,
+  time = _require.time;
+print = function print(x) {
+  var param = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+  console.log(x.toString(param));
+};
+now = datetime.now();
+yes = datetime.yesterday();
+print(now.sub(yes));
 

@@ -1,10 +1,9 @@
 const { CommandRegistry, StructuredCommand, NaturalCommand, Position } = require('../index.js');
-const fs = require("fs");
 
 new StructuredCommand({
     name: '학생회 알림',
     description: '알림을 보냅니다.',
-    usage: '<부서:string length=3> 알림 <기수1:int max=30> <기수2:ints>',
+    usage: '<부서:string length=3> 알림 <기수:ints0 min=30>',
     rooms: ['공지방'],
     examples: [
         '학생회 알림 1 2 3',
@@ -15,7 +14,7 @@ new StructuredCommand({
     }
 }).register();
 
-cmd2 = new NaturalCommand({
+new NaturalCommand({
     name: '급식',
     description: '급식을 알려줍니다.',
     query: {
@@ -43,15 +42,13 @@ cmd2 = new NaturalCommand({
     execute: (chat, channel, args, self) => {
         console.log(args);
     }
-})
-
-fs.writeFileSync('test.txt', cmd2.manual());
+}).register();
 
 function onMessage(chat, channel) {
-    let cmd = CommandRegistry.get(chat.text, channel.name);
+    let { cmd, args } = CommandRegistry.get(chat.text, channel.name);
 
     if (cmd !== null)
-        cmd.execute(chat, channel);
+        cmd.execute(chat, channel, args, cmd);
 }
 
-onMessage({ text: '오늘 밥' }, { name: '공지방' });
+onMessage({ text: '학생회 알림 39 40 41' }, { name: '공지방' });

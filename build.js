@@ -63,7 +63,7 @@ function build(originPath, noBabel) {
 
     if (originPath.endsWith('.js')) {
         code = code
-            .replace(/require\('\.\.\/modules\/(\w+)'\)/g, "require('$1')")
+            .replace(/require\('\.\.\/modules\/([\w-]+)'\)/g, "require('$1')")
             .replace('const IS_DIST = false;', 'const IS_DIST = true;');
 
         if (originPath.includes('src'))
@@ -83,8 +83,8 @@ function dfs(filePath, noBabel=false) {
         const childPath = path.join(filePath, child);
 
         if (fs.lstatSync(childPath).isDirectory()) {    // is directory
-            if (!child.startsWith('.')) // ignore hidden directory (ex. src/.legacy)
-                dfs(childPath, noBabel || ['cronjob', 'DBManager', 'kakao-react', 'kakaolink'].includes(child));
+            if (!child.startsWith('.') && ['command-handler', 'datetime'].includes(child)) // ignore hidden directory (ex. src/.legacy)
+                dfs(childPath, noBabel);
         } else {
             build(childPath, noBabel);
         }
