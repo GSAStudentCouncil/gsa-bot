@@ -101,9 +101,10 @@ export declare interface CommandInfo {
 
 export declare class Registry {
     constructor();
-    public data: Command[];
+    public data: { [key: string]: Command };
     static CommandRegistry: Registry;
 
+    loop(callback: (command: Command) => void): void;
     register(command: Command): void;
     get(chatText: string, channelNameOrId: string): CommandInfo;
 }

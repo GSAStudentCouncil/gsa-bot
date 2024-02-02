@@ -139,7 +139,7 @@ export declare class datetime {
     toDate(): Date;
     toObject(): datetimeGetTemplate;
 
-    add(datetimeObject: datetime | duration | durationTemplate): datetime;
+    add(datetimeObject: duration | durationTemplate): datetime;
     sub(datetimeObject: datetime | duration | durationTemplate): datetime | duration;
     set(datetimeObject: datetime | datetimeSetTemplate | date | time): datetime;
     eq(datetimeObject: datetime | number | Date | datetimeSetTemplate): boolean;
@@ -153,7 +153,7 @@ export declare class datetime {
     static in(year: number): datetime;
     static on(month: number, day?: number): datetime;
     static set(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, millisecond?: number): datetime;
-    static parse(dateString: string): datetime;
+    static parse(dateString: string, locale: string = 'ko-KR'): datetime;
 
     static now(): datetime;
     static today(): datetime;

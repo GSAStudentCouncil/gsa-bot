@@ -231,7 +231,7 @@ var StructuredCommand = /*#__PURE__*/function (_Command) {
         return "  - ".concat(r);
       }).join("\n"), "\n\n\uC608\uC2DC:\n").concat(this.examples.map(function (e) {
         return "  - \"".concat(e, "\"");
-      }).join("\n"), "\n");
+      }).join("\n"));
     }
   }], [{
     key: "add",
@@ -322,7 +322,7 @@ var NaturalCommand = /*#__PURE__*/function (_Command2) {
         return "  - ".concat(r);
       }).join("\n"), "\n\n\uC608\uC2DC:\n").concat(this.examples.map(function (e) {
         return "  - \"".concat(e, "\"");
-      }).join("\n"), "\n");
+      }).join("\n"));
     }
   }], [{
     key: "add",

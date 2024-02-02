@@ -1,4 +1,5 @@
 const IS_DIST = false;
+const COMPRESS = '\u200b'.repeat(500);
 
 class Command {
     constructor(name, description, execute, rooms, examples) {
@@ -19,8 +20,32 @@ class Command {
         this.examples = examples || [];
     }
 
-    manual() {
-        throw new Error("Not implemented");
+    manual(content) {
+        let ret = [
+            `🧩 \`${this.name}\` 명령어 도움말${COMPRESS}`,
+            '——————————',
+            this.description,
+            '',
+            '📌 인자',
+            '——',
+            ...content,
+            ''
+        ];
+        
+        if (this.rooms.length > 0) {
+            ret.push('📌 활성화된 방');
+            ret.push('——');
+            ret.push(...this.rooms.map(r => `· ${r}`));
+            ret.push('');
+        }
+
+        if (this.examples.length > 0) {
+            ret.push('📌 예시');
+            ret.push('——');
+            ret.push(...this.examples.map(e => `"${e}"`));
+        }
+
+        return ret.join('\n');
     }
 
     register() {
@@ -74,7 +99,7 @@ class IntArg extends Arg {
             if (value == null)
                 return [];
 
-            let ret = value.split(/\s+/).map(Number);
+            let ret = value.split(' ').map(Number);
             if (this.min && ret.some(v => v < this.min))
                 return false;
             else if (this.max && ret.some(v => v > this.max))
@@ -141,7 +166,7 @@ class StringArg extends Arg {
             if (value == null)
                 return [];
 
-            return value.split(/\s+/);
+            return value.split(' ');
         }
         else {
             if (value == null)
@@ -163,6 +188,8 @@ class StructuredCommand extends Command {
 
         this.usage = options.usage;
 
+        this._argumentStr = [];
+
         let args = [];
         let regexed = this.usage.replace(/\s*<.+?>/g, m => {
             const pos = m.indexOf('<');
@@ -170,6 +197,7 @@ class StructuredCommand extends Command {
             const whitespaces = m.slice(0, pos);
             let [ nameAndType, ...options ] = m.slice(pos + 1, -1).split(/\s+/);
             let [ name, type ] = nameAndType.split(":");
+            this._argumentStr.push([name, type]);
 
             options = options.map(o => {
                 let splited = o.split("=");
@@ -197,17 +225,23 @@ class StructuredCommand extends Command {
                 throw new TypeError(`Invalid type: ${type}`);
 
             args.push(new map[k](name));
-            type = type.slice(k.length).split('');
 
             for (let [key, value] of options) {
                 args[args.length - 1][key] = value;
             }
 
-            if (type.includes('s'))
+            type = type.slice(k.length).trim();
+            if (type === '[]')
                 args[args.length - 1].many = true;
-            if (type.includes('0'))
+            else if (type === '?')
                 args[args.length - 1].includeEmpty = true;
-
+            else if (type === '[]?') {
+                args[args.length - 1].many = true;
+                args[args.length - 1].includeEmpty = true;
+            } else if (type !== '') {
+                throw new TypeError(`Invalid type options: ${type}`);
+            }
+            
             let ret = `${whitespaces}(${args[args.length - 1].toRegExp().source})`;
             if (args[args.length - 1].includeEmpty)
                 return `(?:${ret})?`;
@@ -224,32 +258,26 @@ class StructuredCommand extends Command {
     }
 
     manual() {
-        return `\
-[ ${this.name} ]
-  - ${this.description}
+        return super.manual([
+            `"${this.usage.replace(/<.+?>/g, m => m.slice(0, m.indexOf(':')) + '>')}"`,
+            ...this.args.map((arg, i) => {
+                let ret = `· ${this._argumentStr[i][0]}: ${this._argumentStr[i][1]}`;
+                
+                let options = [];
+                Object.keys(arg).forEach(key => {
+                    if (key === 'name' || key === 'many' || key === 'includeEmpty')
+                        return;
 
-"${this.usage.replace(/<.+?>/g, m => m.slice(0, m.indexOf(":")) + ">")}"
-${this.args.map(arg => {
-    let ret = `  - <${arg.name}>: ${arg.constructor.name.slice(0, -3).toLowerCase() + (arg.many ? 's' : '')}`;
-    
-    // print options indent one more
-    Object.keys(arg).forEach(key => {
-        if (key === 'name' || key === 'many')
-            return;
-        
-        if (arg[key] !== undefined)
-            ret += `\n    - ${key}: ${arg[key]}`;
-    });
-    
-    return ret;
-}).join("\n")}
+                    if (arg[key])
+                        options.push(`${key}=${arg[key]}`);
+                });
 
-활성화된 방:
-${this.rooms.map(r => `  - ${r}`).join("\n")}
+                if (options.length > 0)
+                    ret += ` (${options.join(', ')})`;
 
-예시:
-${this.examples.map(e => `  - "${e}"`).join("\n")}
-`;
+                return ret;
+            })
+        ]);
     }
 }
 
@@ -308,32 +336,20 @@ class NaturalCommand extends Command {
     }
 
     manual() {
-        return `\
-[ ${this.name} ]
-  - ${this.description}
+        let ret = [];
+        for (let position in this.query) {
+            let tmp = `· ${position} `;
+            if (this.query[position].constructor.name === 'Object')
+                tmp += '\n' + Object.keys(this.query[position]).map(k => `    · ${k}`).join('\n');
+            else if (typeof this.query[position] === 'function')
+                tmp += `(default=${this.query[position]()})`;
+            else if (this.query[position] !== null)
+                tmp += `(default=${this.query[position]})`;
 
-{ ${Object.keys(this.query).map(e => `${e}` + ((this.query[e].constructor.name === 'Object') ? `[${Object.keys(this.query[e])[0]}]` : ``)).join(', ')} }
-${Object.keys(this.query).map(pos => {
-    let ret = '  - ';
-    
-    if (this.query[pos] === null)
-        ret += `${pos} (required)`;
-    else if (this.query[pos].constructor.name === 'Object')
-        ret += `${pos}[${Object.keys(this.query[pos])[0]}] (required)`;
-    else if (typeof this.query[pos] === 'function')
-        ret += `${pos}: () => string (required)`;
-    else    // string || (() => string)
-        ret += `${pos}: ${this.query[pos]} (optional)`;
-    
-    return ret;
-}).join("\n")}
+            ret.push(tmp);
+        }
 
-활성화된 방:
-${this.rooms.map(r => `  - ${r}`).join("\n")}
-
-예시:
-${this.examples.map(e => `  - "${e}"`).join("\n")}
-`;
+        return super.manual(ret);
     }
 }
 
@@ -344,19 +360,30 @@ class Registry {
         if (Registry.CommandRegistry)
             return Registry.CommandRegistry;
 
-        this.data = [];
+        this.data = {};
         Registry.CommandRegistry = this;
+    }
+
+    loop(callback) {
+        for (let cmdName in this.data) {
+            callback(this.data[cmdName]);
+        }
     }
 
     register(command) {
         if (!(command instanceof Command))
             throw new TypeError("command must be instance of Command");
 
-        this.data.push(command);
+        if (command.name in this.data)
+            throw new Error("command already exists");
+
+        this.data[command.name] = command;
     }
 
     get(chatName, channelNameOrId) {
-        for (let cmd of this.data) {
+        for (let cmdName in this.data) {
+            let cmd = this.data[cmdName];
+
             if (cmd.rooms.length !== 0 && !cmd.rooms.includes(channelNameOrId))    // 방이 포함되어 있지 않을 경우
                 continue;
 

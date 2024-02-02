@@ -312,9 +312,7 @@ class datetime {
     }
 
     add(datetimeObject) {
-        if (datetimeObject instanceof datetime)
-            return new datetime(new Date(this.timestamp() + datetimeObject.timestamp()), this.locale);
-        else if (datetimeObject instanceof duration) {
+        if (datetimeObject instanceof duration) {
             let dt = this.toDate();
             dt.setMilliseconds(dt.getMilliseconds() + datetimeObject.amount);
             return new datetime(dt, this.locale);
@@ -441,15 +439,15 @@ class datetime {
         return new datetime(new Date(year, month - 1, day, hour, minute, second, millisecond));
     }
 
-    static parse(dateString) {
+    static parse(dateString, locale='ko-KR') {  // TODO: implement
         let cultureInfo;
         if (IS_DIST)
-            cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + this.locale + ".json"));     // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
+            cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + locale + ".json"));
         else
-            cultureInfo = require('./globalization/' + this.locale + '.json');
+            cultureInfo = require('./globalization/' + locale + '.json');
 
         if (!cultureInfo)
-            throw new Error('Invalid locale, not found ' + this.locale);
+            throw new Error('Invalid locale, not found ' + locale);
 
         dateString = dateString.split(' ').map(e => {
             if (e.trim() in cultureInfo.translate)
@@ -465,7 +463,7 @@ class datetime {
         else if (dateString === 'yesterday')
             return datetime.yesterday();
 
-        let [ m, n, s ] = dateString.match(/^([+-]\d+) (\w+)$/);
+        let [ m, n, s ] = dateString.match(/^([+-]\d+) (\w+)s?$/);    // 3 days, 1 month, 2 years
         n = parseInt(n);
 
         switch (s) {

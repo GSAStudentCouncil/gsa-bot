@@ -1,9 +1,11 @@
 "use strict";
 
+var _templateObject;
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -14,11 +16,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var bot = BotManager.getCurrentBot();
 var manager = require('DBManager').DBManager;
 var cronjob = require('cronJob').CronJob;
-var datetime = require('datetime').datetime;
-var _require = require('command-handler'),
-  CommandRegistry = _require.CommandRegistry,
-  NaturalCommand = _require.NaturalCommand,
-  StructuredCommand = _require.StructuredCommand;
+var _require = require('datetime'),
+  datetime = _require.datetime;
+var _require2 = require('command-handler'),
+  CommandRegistry = _require2.CommandRegistry,
+  NaturalCommand = _require2.NaturalCommand,
+  StructuredCommand = _require2.StructuredCommand;
 FileStream.writeObject = function (path, data) {
   return FileStream.write(path, JSON.stringify(data));
 };
@@ -50,6 +53,8 @@ var DB = {
   }
 };
 var lazyArguments = [];
+app.start();
+cronjob.setWakeLock(true);
 app.on('message', function (chat, channel) {
   if (lazyArguments.length !== 0) {
     var _lazyArguments = lazyArguments,
@@ -91,31 +96,37 @@ app.on('message', function (chat, channel) {
     cmd = _CommandRegistry$get.cmd,
     args = _CommandRegistry$get.args;
   if (cmd !== null) {
-    if (cmd.name === '학생회 공지') lazyArguments = [chat, channel, args, cmd];else cmd.execute(chat, channel, args, cmd);
+    if (cmd.name === '학생회 공지') {
+      lazyArguments = [chat, channel, args, cmd];
+      channel.send("".concat(chat.user.name, "\uB2D8, ").concat(args.부서, " \uACF5\uC9C0\uAE00\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694."));
+    } else cmd.execute(chat, channel, args, cmd);
   }
   if (!(channel.id in DB.channels.i2c) || !(channel.name in DB.channels.c2i) || !(DB.channels.i2c[channel.id] === channel.name && DB.channels.c2i[channel.name] === channel.id)) {
     DB.channelReload(channel);
-    FileStream.writeObject(DB.paths.channels, DB.channels);
+    FileStream.writeObject(paths.channels, DB.channels);
     channel.members.forEach(function (user) {
       return DB.userReload(user, channel);
     });
-    FileStream.writeObject(DB.paths.users, DB.users);
+    FileStream.writeObject(paths.users, DB.users);
   }
   if (!(chat.user.id in DB.users) || !(DB.users[chat.user.id].name === chat.user.name && DB.users[chat.user.id].channelId === channel.id)) {
     DB.userReload(chat.user, channel);
-    FileStream.writeObject(DB.paths.users, DB.users);
+    FileStream.writeObject(paths.users, DB.users);
   }
 });
 
 ////////////////////// 급식 알리미 //////////////////////
 
+function web(string, options) {
+  return JSON.parse(org.jsoup.Jsoup.connect(string[0].concat(options.map(function (option) {
+    return option.join("=");
+  }).join("&"))).get().text());
+}
+
 /** @param {datetime} date */
 var getMeals = function getMeals(date) {
-  var options = [["ATPT_OFCDC_SC_CODE", "F10"], ["SD_SCHUL_CODE", 7380031], ["MLSV_YMD", date.toString('YYMMDD')], ["Type", "json"]];
-  var apiLink = "https://open.neis.go.kr/hub/mealServiceDietInfo?" + options.map(function (option) {
-    return option.join("=");
-  }).join("&");
-  var data = JSON.parse(org.jsoup.Jsoup.connect(apiLink).get().text());
+  var options = [["ATPT_OFCDC_SC_CODE", "F10"], ["SD_SCHUL_CODE", 7380031], ["MLSV_YMD", '240110'], ["Type", "json"]];
+  var data = web(_templateObject || (_templateObject = _taggedTemplateLiteral(["https://open.neis.go.kr/hub/mealServiceDietInfo?", ""])), options);
   return [0, 1, 2].map(function (i) {
     return data["mealServiceDietInfo"][1]["row"][i]["DDISH_NM"].replace(/\(\d+(?:.\d+)*\)/g, "").replace(/ +/g, "\n").trim();
   });
@@ -177,7 +188,7 @@ StructuredCommand.add({
   name: '학생회 공지',
   description: "학생회 공지를 전송합니다. 기수를 지정하지 않으면 최신 기수 톡방에 전송됩니다.\n명령어를 작성한 뒤, 다음 메시지 내용을 공지 메시지로 처리합니다.",
   usage: "<부서:string length=3> 알림 <기수:ints0 min=39>",
-  // rooms: [channels.c2i['공지방']],    // NOTE: 공지방 등록되고 나서 주석 해제하기
+  rooms: [DB.channels.c2i['공지방']],
   examples: ['생체부 알림\n기숙사 3월 기상곡입니다 ...', '정책부 알림 39\n정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'],
   execute: function execute(chat, channel, args, self, prevChat, prevChannel) {
     if (!["학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"].includes(args.부서)) {
@@ -221,8 +232,6 @@ StructuredCommand.add({
     }
   }
 });
-app.start();
-cronjob.setWakeLock(true);
 bot.addListener(Event.NOTIFICATION_POSTED, function (sbn, rm) {
   app.addChannel(sbn);
 });

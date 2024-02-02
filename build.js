@@ -5,10 +5,7 @@ const { execSync } = require("child_process");
 const apis = {
     legacy: {
         prefix: ``,
-        suffix: `
-app.start();
-cronjob.setWakeLock(true);        
-
+        suffix: `      
 function onNotificationPosted(sbn) {
     app.addChannel(sbn);
 }
@@ -23,10 +20,7 @@ function onStartCompile() {
     api2: {
         prefix: `const bot = BotManager.getCurrentBot();
 `,
-        suffix: `
-app.start();
-cronjob.setWakeLock(true);    
-    
+        suffix: ` 
 bot.addListener(Event.NOTIFICATION_POSTED, (sbn, rm) => {
     app.addChannel(sbn);
 });

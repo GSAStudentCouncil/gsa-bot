@@ -494,10 +494,11 @@ var datetime = /*#__PURE__*/function () {
   }, {
     key: "parse",
     value: function parse(dateString) {
+      var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ko-KR';
       var cultureInfo;
-      if (IS_DIST) cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + this.locale + ".json")); // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
-      else cultureInfo = require('./globalization/' + this.locale + '.json');
-      if (!cultureInfo) throw new Error('Invalid locale, not found ' + this.locale);
+      if (IS_DIST) cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + locale + ".json")); // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
+      else cultureInfo = require('./globalization/' + locale + '.json');
+      if (!cultureInfo) throw new Error('Invalid locale, not found ' + locale);
       dateString = dateString.split(' ').map(function (e) {
         if (e.trim() in cultureInfo.translate) return cultureInfo.translate[e.trim()];else return e.trim();
       }).join(' ').trim();
@@ -506,7 +507,7 @@ var datetime = /*#__PURE__*/function () {
         _dateString$match2 = _slicedToArray(_dateString$match, 3),
         m = _dateString$match2[0],
         n = _dateString$match2[1],
-        s = _dateString$match2[2];
+        s = _dateString$match2[2]; // 3 days, 1 month, 2 years
       n = parseInt(n);
       switch (s) {
         case 'year':
