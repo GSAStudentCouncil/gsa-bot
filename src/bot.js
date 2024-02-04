@@ -28,6 +28,14 @@ const DB = {
     }
 };
 
+const students_room = {};
+const channels = {};
+for (let name in DB.channels.c2i) {
+    if (/^\d+$/.test(name))     // 채널명이 '39', '40' 과 같은 경우
+        students_room[Number(name)] = manager.getChannelById(DB.channels.c2i[name]);
+    channels[name] = manager.getChannelById(DB.channels.c2i[name]);
+}
+
 let lazyArguments = [];
 
 app.start();
@@ -64,7 +72,7 @@ app.on('message', (chat, channel) => {
         return;
     }
 
-    const { cmd, args } = CommandRegistry.get(chat.text, channel.id);
+    const { cmd, args } = CommandRegistry.get(chat, channel);
 
     if (cmd !== null) {
         if (cmd.name === '학생회 공지') {
@@ -75,6 +83,7 @@ app.on('message', (chat, channel) => {
             cmd.execute(chat, channel, args, cmd);
     }
 
+    // 채널 업데이트.
     if (!(channel.id in DB.channels.i2c) || !(channel.name in DB.channels.c2i) ||
         !(DB.channels.i2c[channel.id] === channel.name && DB.channels.c2i[channel.name] === channel.id)) {
         DB.channelReload(channel);
@@ -96,7 +105,7 @@ app.on('message', (chat, channel) => {
 StructuredCommand.add({
     name: '도움말',
     description: '도움말을 표시합니다. 세부 도움말을 보고 싶은 경우, "도움말 [명령어]"를 입력하세요.',
-    usage: '도움말 <명령어:strings0>',
+    usage: '도움말 <명령어:string[]?>',
     examples: [
         '도움말',
         '도움말 급식',
@@ -178,6 +187,7 @@ NaturalCommand.add({
         'date': '오늘',
         'time': () => {
             const dt = datetime.now();
+
             if (dt.lt({ hour: 8, minute: 30 }))
                 return "아침";
             else if (dt.lt({ hour: 13, minute: 30 }))
@@ -209,8 +219,8 @@ NaturalCommand.add({
 StructuredCommand.add({
     name: '공지',
     description: "학생회 공지를 전송합니다. 기수를 지정하지 않으면 최신 기수 톡방에 전송됩니다.\n명령어를 작성한 뒤, 다음 메시지 내용을 공지 메시지로 처리합니다.",
-    usage: "<부서:string length=3> 알림 <기수:ints0 min=39>",
-    rooms: [DB.channels.c2i['공지방']],
+    usage: "<부서:string length=3> 알림 <기수:int[]? min=39>",
+    channels: [channels['공지방']],
     examples: [
         '생체부 알림\n기숙사 3월 기상곡입니다 ...',
         '정책부 알림 39\n정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'

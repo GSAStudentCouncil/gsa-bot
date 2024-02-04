@@ -2,7 +2,7 @@ const IS_DIST = false;
 const COMPRESS = '\u200b'.repeat(500);
 
 class Command {
-    constructor(name, description, execute, rooms, examples) {
+    constructor(name, description, execute, channels, examples) {
         if (this.constructor === Command)
             throw new TypeError("Cannot construct abstract class");
 
@@ -16,7 +16,7 @@ class Command {
         this.name = name;
         this.description = description;
         this.execute = execute;
-        this.rooms = rooms || [];
+        this.channels = channels || [];
         this.examples = examples || [];
     }
 
@@ -32,10 +32,10 @@ class Command {
             ''
         ];
         
-        if (this.rooms.length > 0) {
+        if (this.channels.length > 0) {
             ret.push('📌 활성화된 방');
             ret.push('——');
-            ret.push(...this.rooms.map(r => `· ${r}`));
+            ret.push(...this.channels.map(r => `· ${r}`));
             ret.push('');
         }
 
@@ -184,7 +184,7 @@ class StructuredCommand extends Command {
         if (options.usage === undefined)
             throw new TypeError("usage is required");
 
-        super(options.name, options.description, options.execute, options.rooms, options.examples);
+        super(options.name, options.description, options.execute, options.channels, options.examples);
 
         this.usage = options.usage;
 
@@ -286,7 +286,7 @@ class NaturalCommand extends Command {
         if (options.query === undefined)
             throw new TypeError("query is required");
 
-        super(options.name, options.description, options.execute, options.rooms, options.examples);
+        super(options.name, options.description, options.execute, options.channels, options.examples);
 
         this.query = options.query;
         options.dictionaryPath = options.dictionaryPath || 'dict.json';
@@ -380,11 +380,11 @@ class Registry {
         this.data[command.name] = command;
     }
 
-    get(chatName, channelNameOrId) {
+    get(chat, channel) {
         for (let cmdName in this.data) {
             let cmd = this.data[cmdName];
 
-            if (cmd.rooms.length !== 0 && !cmd.rooms.includes(channelNameOrId))    // 방이 포함되어 있지 않을 경우
+            if (cmd.channels.length !== 0 && !cmd.channels.map(c => c.id).includes(channel.id))    // 방이 포함되어 있지 않을 경우
                 continue;
 
             let args;
@@ -392,7 +392,7 @@ class Registry {
             if (cmd instanceof StructuredCommand) {
                 args = {};
 
-                let matched = chatName.match(cmd.regex);
+                let matched = chat.text.match(cmd.regex);
                 if (matched == null)
                     continue;
 
@@ -412,7 +412,7 @@ class Registry {
                     continue;
             }
             else if (cmd instanceof NaturalCommand) {
-                args = cmd.input(chatName);
+                args = cmd.input(chat.text);
 
                 let is_full = true;
                 for (let key in args) {

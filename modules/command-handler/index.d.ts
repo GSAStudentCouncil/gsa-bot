@@ -11,12 +11,12 @@ type Execute = (
 ) => void
 
 export declare abstract class Command {
-    protected constructor(name: string, description: string, execute: Execute, rooms?: string[], examples?: string[]);
+    protected constructor(name: string, description: string, execute: Execute, channels?: Channel[], examples?: string[]);
 
     public readonly name: string;
     public readonly description: string;
     public readonly execute: Execute;
-    public readonly rooms: string[];
+    public readonly channels: Channel[];
     public readonly examples: string[];
 
     abstract manual(): string;
@@ -58,7 +58,7 @@ export declare interface StructuredCommandOptions {
     name: string;
     description: string;
     usage: string;
-    rooms?: string[];
+    channels?: Channel[];
     examples?: string[];
     execute: Execute;
 }
@@ -79,7 +79,7 @@ export declare interface NaturalCommandOptions {
     name: string;
     description: string;
     query: { [position: string]: string | null | (() => string) | { [token: string]: null } };
-    rooms?: string[];
+    channels?: Channel[];
     dictionaryPath?: string;
     examples?: string[];
     execute: Execute;
@@ -106,7 +106,7 @@ export declare class Registry {
 
     loop(callback: (command: Command) => void): void;
     register(command: Command): void;
-    get(chatText: string, channelNameOrId: string): CommandInfo;
+    get(chat: Chat, channel: Channel): CommandInfo;
 }
 
 export declare const CommandRegistry: Registry;
