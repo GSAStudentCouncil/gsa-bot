@@ -3,37 +3,38 @@ const cronjob = require('../modules/cronJob').CronJob;
 const { datetime } = require('../modules/datetime');
 const { CommandRegistry, NaturalCommand, StructuredCommand } = require('../modules/command-handler');
 
+const app = manager.getInstance({});
+
 FileStream.writeObject = (path, data) => FileStream.write(path, JSON.stringify(data));
 FileStream.readObject = (path, offset={}) => {
     const read = FileStream.read(path);
     return read == null ? offset : JSON.parse(read);
 };
 
-const app = manager.getInstance({});
-
 const paths = {
     users: "/sdcard/msgbot/users.json",
     channels: "/sdcard/msgbot/channels.json"
 };
 
-const DB = {
+const db = {
     users: FileStream.readObject(paths.users),
     channels: FileStream.readObject(paths.channels, { i2c: {}, c2i: {} }),
     userReload: (user, channel) => {
-        DB.users[user.id] = { name: user.name, channelId: channel.id }
+        db.users[user.id] = { name: user.name, channelId: channel.id }
     },
     channelReload: channel => {
-        DB.channels.i2c[channel.id] = channel.name;
-        DB.channels.c2i[channel.name] = channel.id;
+        db.channels.i2c[channel.id] = channel.name;
+        db.channels.c2i[channel.name] = channel.id;
     }
 };
 
 const students_room = {};
 const channels = {};
-for (let name in DB.channels.c2i) {
+for (let name in db.channels.c2i) {
     if (/^\d+$/.test(name))     // 채널명이 '39', '40' 과 같은 경우
-        students_room[Number(name)] = manager.getChannelById(DB.channels.c2i[name]);
-    channels[name] = manager.getChannelById(DB.channels.c2i[name]);
+        students_room[Number(name)] = manager.getChannelById(db.channels.c2i[name]);
+
+    channels[name] = manager.getChannelById(db.channels.c2i[name]);
 }
 
 let lazyArguments = [];
@@ -42,6 +43,13 @@ app.start();
 cronjob.setWakeLock(true);
 
 app.on('message', (chat, channel) => {
+
+});
+
+app.on('message', (chat, channel) => {
+    CommandRegistry.run(chat, channel);
+
+    // 지연 명령어 실행 처리
     if (lazyArguments.length !== 0) {
         const [ prevChat, prevChannel, args, cmd ] = lazyArguments;
 
@@ -53,50 +61,38 @@ app.on('message', (chat, channel) => {
         }
     }
 
-    if (chat.text.startsWith('도움말')) {
-        const subcommand = chat.text.substring(3).trim();
-        let found = null;
-
-        for (let cmd of CommandRegistry.data) {
-            if (subcommand === cmd.name) {
-                found = cmd;
-                break;
-            }
-        }
-
-        if (found == null)
-            channel.send(`[세부 도움말]\n${CommandRegistry.data.map(d => `도움말 ${d.name}`).join('\n')}`);
-        else
-            channel.send(found.manual());
-
-        return;
-    }
-
     const { cmd, args } = CommandRegistry.get(chat, channel);
 
     if (cmd !== null) {
+        // 지연 명령어 처리
         if (cmd.name === '학생회 공지') {
-            lazyArguments = [chat, channel, args, cmd];
-            channel.send(`${chat.user.name}님, ${args.부서} 공지글을 작성해주세요.`);
+            if (!["학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"].includes(args.부서)) {
+                channel.send("학생회 종류가 잘못되었습니다.");  
+                return;
+            }
+
+            lazyArguments = [ chat, channel, args, cmd ];
+            channel.send(`${chat.user.name}님, ${args.부서} 공지글을 작성해주세요. 취소하려면 "취소"를 입력하세요.`);
         }
         else
             cmd.execute(chat, channel, args, cmd);
     }
 
-    // 채널 업데이트.
-    if (!(channel.id in DB.channels.i2c) || !(channel.name in DB.channels.c2i) ||
-        !(DB.channels.i2c[channel.id] === channel.name && DB.channels.c2i[channel.name] === channel.id)) {
-        DB.channelReload(channel);
-        FileStream.writeObject(paths.channels, DB.channels);
+    // 채널이 없으면 추가하고, 이름이나 아이디가 달라지면 업데이트. 채널의 멤버도 업데이트.
+    if (!(channel.id in db.channels.i2c) || !(channel.name in db.channels.c2i) ||
+        !(db.channels.i2c[channel.id] === channel.name && db.channels.c2i[channel.name] === channel.id)) {
+        db.channelReload(channel);
+        FileStream.writeObject(paths.channels, db.channels);
 
-        channel.members.forEach(user => DB.userReload(user, channel));
-        FileStream.writeObject(paths.users, DB.users);
+        channel.members.forEach(user => db.userReload(user, channel));
+        FileStream.writeObject(paths.users, db.users);
     }
 
-    if (!(chat.user.id in DB.users) ||
-        !(DB.users[chat.user.id].name === chat.user.name && DB.users[chat.user.id].channelId === channel.id)) {
-        DB.userReload(chat.user, channel);
-        FileStream.writeObject(paths.users, DB.users);
+    // 유저가 없으면 추가하고, 이름이나 채널이 달라지면 업데이트.
+    if (!(chat.user.id in db.users) ||
+        !(db.users[chat.user.id].name === chat.user.name && db.users[chat.user.id].channelId === channel.id)) {
+        db.userReload(chat.user, channel);
+        FileStream.writeObject(paths.users, db.users);
     }
 });
 
@@ -104,7 +100,7 @@ app.on('message', (chat, channel) => {
 
 StructuredCommand.add({
     name: '도움말',
-    description: '도움말을 표시합니다. 세부 도움말을 보고 싶은 경우, "도움말 [명령어]"를 입력하세요.',
+    description: '도움말을 표시합니다.',
     usage: '도움말 <명령어:string[]?>',
     examples: [
         '도움말',
@@ -119,6 +115,7 @@ StructuredCommand.add({
                 '📦 명령어 목록',
                 '——————'
             ];
+
             CommandRegistry.loop(cmd => {
                 if (cmd.name !== '도움말')
                     ret.push(`· ${cmd.name}`)
@@ -170,9 +167,8 @@ const mealCronjob = time => {
     else
         return;
 
-    for (let id in DB.channels.i2c) {
-        const channel = manager.getChannelById(id);
-        channel.send(`🍚 ${time} 급식\n─────\n${meal}`);
+    for (let 기수 in students_room) {
+        students_room[기수].send(`🍚 오늘 ${time} 급식\n—————\n${meal}`);
     }
 };
 
@@ -184,8 +180,8 @@ NaturalCommand.add({
     name: '급식',
     description: "급식을 안내합니다. 날짜와 시간대, '식사'를 지칭하는 단어를 포함한 메시지를 보내면 호출됩니다.\n날짜는 생략할 시 '오늘'로 처리됩니다.",
     query: {
-        'date': '오늘',
-        'time': () => {
+        '날짜': '오늘',
+        '시간': () => {
             const dt = datetime.now();
 
             if (dt.lt({ hour: 8, minute: 30 }))
@@ -197,7 +193,7 @@ NaturalCommand.add({
             else
                 return "아침";
         },
-        'what': { '급식': null }  // FIXME: optional로 들어감
+        '대상': [ '급식' ]
     },
     examples: [
         '오늘 밥',
@@ -207,10 +203,10 @@ NaturalCommand.add({
         '모레 점심 밥'
     ],
     execute: (chat, channel, args, self) => {
-        const date = datetime.parse(args.date).set(datetime.today().time);
-        const meal = getMeals(date)[["아침", "점심", "저녁"].indexOf(args.time)];
+        const date = datetime.parse(args.날짜).set(datetime.today().시간);
+        const meal = getMeals(date)[["아침", "점심", "저녁"].indexOf(args.시간)];
 
-        channel.send(`🍚 ${args.date} ${args.time} 급식\n─────\n${meal}`);
+        channel.send(`🍚 ${args.날짜} ${args.시간} 급식\n—————\n${meal}`);
     }
 });
 
@@ -226,28 +222,25 @@ StructuredCommand.add({
         '정책부 알림 39\n정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'
     ],
     execute: (chat, channel, args, self, prevChat, prevChannel) => {
-        if (!["학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"].includes(args.부서)) {
-            channel.send("학생회 종류가 잘못되었습니다.");
+        if (chat.content === '취소') {
+            channel.send('공지 전송이 취소되었습니다.');
             return;
         }
 
         if (args.기수.length === 0) {
-            const max = Math.max(...Object.keys(DB.channels.c2i).filter(x => /\d+/.test(x)).map(Number));
+            const max = Math.max(...Object.keys(students_room));
             args.기수 = [max - 2, max - 1, max];
         }
 
-        for (let n of args.기수) {
-            n = String(n);
-
-            if (!(n in DB.channels.c2i)) {
-                channel.send(`${n} 에 전송 실패하였습니다.\n"${n}" 채널이 존재하지 않습니다.`);
+        for (let 기수 of args.기수) {
+            if (!(기수 in students_room)) {
+                channel.send(`${기수} 에 전송 실패하였습니다.\n"${기수}" 채널이 존재하지 않습니다.`);
                 return;
             }
 
-            const idChannel = manager.getChannelById(DB.channels.c2i[n]);
-            idChannel.send(`🔔 ${args.부서}\n─────\n${chat.text}`).then(
-                _ => channel.send(`${idChannel.name} 에 전송하였습니다.`),
-                e => channel.send(`${idChannel.name} 에 전송 실패하였습니다.\n${e.toString()}`)
+            students_room[기수].send(`🔔 ${args.부서}\n—————\n${chat.text}`).then(
+                _ => channel.send(`${기수} 에 전송하였습니다.`),
+                e => channel.send(`${기수} 에 전송 실패하였습니다.\n${e.toString()}`)
             );
         }
     }

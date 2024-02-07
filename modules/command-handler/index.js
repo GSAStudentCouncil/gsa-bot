@@ -35,7 +35,7 @@ class Command {
         if (this.channels.length > 0) {
             ret.push('📌 활성화된 방');
             ret.push('——');
-            ret.push(...this.channels.map(r => `· ${r}`));
+            ret.push(...this.channels.map(c => `· ${c.name}`));
             ret.push('');
         }
 
@@ -268,7 +268,7 @@ class StructuredCommand extends Command {
                     if (key === 'name' || key === 'many' || key === 'includeEmpty')
                         return;
 
-                    if (arg[key])
+                    if (arg[key])   // null, undefined, 0, false 등이 아닐 경우
                         options.push(`${key}=${arg[key]}`);
                 });
 
@@ -325,6 +325,10 @@ class NaturalCommand extends Command {
                         if (token in query[position]) {
                             query[position] = token;
                         }
+                    } else if (Array.isArray(query[position])) {
+                        if (query[position].includes(token)) {
+                            query[position] = token;
+                        }
                     } else {    // string || null || (() => string)
                         query[position] = token;
                     }
@@ -339,8 +343,11 @@ class NaturalCommand extends Command {
         let ret = [];
         for (let position in this.query) {
             let tmp = `· ${position} `;
+
             if (this.query[position].constructor.name === 'Object')
                 tmp += '\n' + Object.keys(this.query[position]).map(k => `    · ${k}`).join('\n');
+            else if (Array.isArray(this.query[position]))
+                tmp += '\n' + this.query[position].map(k => `    · ${k}`).join('\n');
             else if (typeof this.query[position] === 'function')
                 tmp += `(default=${this.query[position]()})`;
             else if (this.query[position] !== null)
@@ -416,7 +423,7 @@ class Registry {
 
                 let is_full = true;
                 for (let key in args) {
-                    if (args[key] === null || args[key].constructor.name === 'Object') {
+                    if (args[key] === null || args[key].constructor.name === 'Object' || Array.isArray(args[key])) {
                         is_full = false;
                         break;
                     } else if (typeof args[key] === 'function') {

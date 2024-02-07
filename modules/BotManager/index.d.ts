@@ -1,0 +1,1 @@
+// TODO: implement this file. `bot.on`은 특별히 keyof로 구현하기.

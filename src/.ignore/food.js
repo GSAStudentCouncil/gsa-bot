@@ -1,5 +1,5 @@
 const manager = require('../../modules/DBManager').DBManager;
-const cronjob = require('../../modules/cronjob').CronJob;
+const cronjob = require('../../modules/CronJob').CronJob;
 const datetime = require('../../modules/datetime').DateTime;
 const tokenizer = require('../../modules/tokenizer').Tokenizer;
 var _ = require('../../modules/utils');

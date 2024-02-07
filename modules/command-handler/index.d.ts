@@ -78,7 +78,7 @@ export declare class StructuredCommand extends Command {
 export declare interface NaturalCommandOptions {
     name: string;
     description: string;
-    query: { [position: string]: string | null | (() => string) | { [token: string]: null } };
+    query: { [position: string]: null | string | string[] | (() => string) | { [token: string]: null } };
     channels?: Channel[];
     dictionaryPath?: string;
     examples?: string[];
@@ -94,11 +94,6 @@ export declare class NaturalCommand extends Command {
     manual(): string;
 }
 
-export declare interface CommandInfo {
-    cmd: Command | null,
-    args: { [key: string]: ArgType | ArgType[] } | null
-}
-
 export declare class Registry {
     constructor();
     public data: { [key: string]: Command };
@@ -106,7 +101,7 @@ export declare class Registry {
 
     loop(callback: (command: Command) => void): void;
     register(command: Command): void;
-    get(chat: Chat, channel: Channel): CommandInfo;
+    get(chat: Chat, channel: Channel): { cmd: Command | null, args: { [key: string]: ArgType | ArgType[] } | null };
 }
 
 export declare const CommandRegistry: Registry;

@@ -1,5 +1,6 @@
-const { CommandRegistry, StructuredCommand, NaturalCommand, Position } = require('../index.js');
-fs = require('fs');
+const { CommandRegistry, StructuredCommand, NaturalCommand } = require('../index.js');
+const { datetime } = require('../../datetime');
+const fs = require('fs');
 
 class Channel {
     constructor(name, id) {
@@ -8,12 +9,12 @@ class Channel {
     }
 }
 
-공지방 = new Channel('공지방', 1);
+공지방 = new Channel('공지방', 18768574);
 
 cmd1 = new StructuredCommand({
     name: '학생회 알림',
     description: '알림을 보냅니다.',
-    usage: '<부서:string length=3> 알림 <기수:int[]? min=30>',
+    usage: '<부서:string length=3> 알림 <기수:int[]?>',
     channels: [공지방],
     examples: [
         '학생회 알림 1 2 3',
@@ -27,31 +28,33 @@ cmd1.register();
 
 cmd2 = new NaturalCommand({
     name: '급식',
-    description: '급식을 알려줍니다.',
+    description: "급식을 안내합니다. 날짜와 시간대, '식사'를 지칭하는 단어를 포함한 메시지를 보내면 호출됩니다.\n날짜는 생략할 시 '오늘'로 처리됩니다.",
     query: {
-        date: '오늘',
-        time: () => {
-            let now = new Date();
-            if (now.getHours() < 8)
-                return '아침';
-            else if (now.getHours() < 13)
-                return '점심';
-            else if (now.getHours() < 19)
-                return '저녁';
+        '날짜': '오늘',
+        '시간': () => {
+            const dt = datetime.now();
+
+            if (dt.lt({ hour: 8, minute: 30 }))
+                return "아침";
+            else if (dt.lt({ hour: 13, minute: 30 }))
+                return "점심";
+            else if (dt.lt({ hour: 19, minute: 30 }))
+                return "저녁";
             else
-                return null;
+                return "아침";
         },
-        what: { 급식: null }
+        '대상': [ '급식' ]
     },
-    channels: [공지방],
     examples: [
-        '급식',
-        '급식 2019-01-01',
-        '급식 2019-01-01 점심',
-        '급식 2019-01-01 점심 1'
+        '오늘 밥',
+        '오늘 급식',
+        '내일 식사',
+        '내일 저녁 식사',
+        '모레 점심 밥'
     ],
     execute: (chat, channel, args, self) => {
         console.log(args);
+        console.log(datetime.parse(args.날짜).toString());
     }
 });
 cmd2.register();
@@ -63,4 +66,4 @@ function onMessage(chat, channel) {
         cmd.execute(chat, channel, args, cmd);
 }
 
-onMessage({ text: '밥 오늘' }, { name: '공지방' });
+onMessage({ text: '내일 점심' }, 공지방);
