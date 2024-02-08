@@ -15,10 +15,10 @@ bot.addCommand(new StructuredCommand.Builder()
         '학생회 알림 1 2 3',
         '정보부 알림 1'
     )
-    .setExecute((chat, channel, self, args) => {
+    .setExecute((self, chat, channel, args) => {
         공지방.send('execute: ' + JSON.stringify(args, null, 4));
     })
-    .setExecuteLazy((chat, prevChat, channel, prevChannel, self, args) => {
+    .setExecuteLazy((self, chat, prevChat, channel, prevChannel, args) => {
         공지방.send('executeLazy: ' + JSON.stringify(args, null, 4));
     })
     .setCronjobs({
