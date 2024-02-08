@@ -1,15 +1,17 @@
 import { Channel, Chat } from "../DBManager/classes";
+import { CronJobFactor } from "../CronJob/cron-job-manager/lib/cron-job-factor";
 
-type ArgType = string | number;
-type Query = { [position: string]: null | string | string[] | (() => string) | { [token: string]: null } };
-type Execute = (chat: Chat, channel: Channel, self: Command, args: { [key: string]: ArgType | ArgType[] }) => void;
-type ExecuteLazy = (chat: Chat, prevChat: Chat, channel: Channel, prevChannel: Channel, self: Command, args: { [key: string]: ArgType | ArgType[] }) => void;
-type ExecuteCron = (tag: string | number) => void;
+export type ArgType = string | number;
+export type Query = { [position: string]: null | string | string[] | (() => string) | { [token: string]: null } };
+export type Args = { [key: string]: ArgType | ArgType[] };
+export type Execute = (self: Command, chat: Chat, channel: Channel, args: Args) => void;
+export type ExecuteLazy = (self: Command, chat: Chat, prevChat: Chat, channel: Channel, prevChannel: Channel, args: Args) => void;
+export type ExecuteCron = (tag: string | number) => void;
 
 export declare abstract class Command {
     protected constructor(
         name: string, description: string,
-        execute: Execute, executeLazy?: ExecuteLazy, executeCron?: ExecuteCron,
+        execute?: Execute, executeLazy?: ExecuteLazy, executeCron?: ExecuteCron,
         cronjobs?: { [tag: string]: string }, channels?: Channel[], examples?: string[]
     );
 
@@ -18,9 +20,11 @@ export declare abstract class Command {
     public readonly channels: Channel[];
     public readonly cronjobs: { [tag: string]: string };
     public readonly examples: string[];
-    public readonly execute: Execute;
-    public readonly executeLazy: ExecuteLazy | null;
-    public readonly executeCron: ExecuteCron | null;
+    private readonly _execute: Execute;
+    public readonly execute: (chat: Chat, channel: Channel, args: Args) => void;
+    private readonly _executeLazy: ExecuteLazy;
+    public readonly executeLazy: (chat: Chat, prevChat: Chat, channel: Channel, prevChannel: Channel, args: Args) => void;
+    public readonly executeCron: ExecuteCron;
     public readonly lazy: boolean;
 
     abstract manual(): string;
@@ -65,7 +69,7 @@ export declare interface StructuredCommandOptions {
     channels?: Channel[];
     cronjobs?: { [tag: string]: string };
     examples?: string[];
-    execute: Execute;
+    execute?: Execute;
     executeLazy?: ExecuteLazy;
     executeCron?: ExecuteCron;
 }
@@ -82,28 +86,30 @@ export declare class StructuredCommand extends Command {
     manual(): string;
 }
 
-export declare class StructuredCommandBuilder {
-    constructor();
-    public name: string;
-    public description: string;
-    public usage: string;
-    public channels: Channel[];
-    public cronjobs: { [tag: string]: string };
-    public examples: string[];
-    public execute: Execute;
-    public executeLazy: ExecuteLazy | null;
-    public executeCron: ExecuteCron | null;
+export declare namespace StructuredCommand {
+    export class Builder {
+        constructor();
+        public name: string;
+        public description: string;
+        public usage: string;
+        public channels: Channel[];
+        public cronjobs: { [tag: string]: string };
+        public examples: string[];
+        public execute: Execute | null;
+        public executeLazy: ExecuteLazy | null;
+        public executeCron: ExecuteCron | null;
 
-    setName(name: string): this;
-    setDescription(description: string): this;
-    setUsage(usage: string): this;
-    setChannels(...channels: Channel[]): this;
-    setCronjobs(cronjobs: { [tag: string]: string }): this;
-    setExamples(...examples: string[]): this;
-    setExecute(execute: Execute): this;
-    setExecuteLazy(executeLazy: ExecuteLazy): this;
-    setExecuteCron(executeCron: ExecuteCron): this;
-    build(): StructuredCommand;
+        setName(name: string): this;
+        setDescription(description: string): this;
+        setUsage(usage: string): this;
+        setChannels(...channels: Channel[]): this;
+        setCronjobs(cronjobs: { [tag: string]: string }): this;
+        setExamples(...examples: string[]): this;
+        setExecute(execute: Execute): this;
+        setExecuteLazy(executeLazy: ExecuteLazy): this;
+        setExecuteCron(executeCron: ExecuteCron): this;
+        build(): StructuredCommand;
+    }
 }
 
 export declare interface NaturalCommandOptions {
@@ -114,7 +120,7 @@ export declare interface NaturalCommandOptions {
     cronjobs?: { [tag: string]: string };
     dictionaryPath?: string;
     examples?: string[];
-    execute: Execute;
+    execute?: Execute;
     executeLazy?: ExecuteLazy;
     executeCron?: ExecuteCron;
 }
@@ -128,30 +134,32 @@ export declare class NaturalCommand extends Command {
     manual(): string;
 }
 
-export declare class NaturalCommandBuilder {
-    constructor();
-    public name: string;
-    public description: string;
-    public query: Query;
-    public channels: Channel[];
-    public cronjobs: { [tag: string]: string };
-    public dictionaryPath: string;
-    public examples: string[];
-    public execute: Execute;
-    public executeLazy: ExecuteLazy | null;
-    public executeCron: ExecuteCron | null;
+export declare namespace NaturalCommand {
+    export class Builder {
+        constructor();
+        public name: string;
+        public description: string;
+        public query: Query;
+        public channels: Channel[];
+        public cronjobs: { [tag: string]: string };
+        public dictionaryPath: string;
+        public examples: string[];
+        public execute: Execute | null;
+        public executeLazy: ExecuteLazy | null;
+        public executeCron: ExecuteCron | null;
 
-    setName(name: string): this;
-    setDescription(description: string): this;
-    setQuery(query: Query): this;
-    setChannels(...channels: Channel[]): this;
-    setCronjobs(cronjobs: { [tag: string]: string }): this;
-    setDictionaryPath(dictionaryPath: string): this;
-    setExamples(...examples: string[]): this;
-    setExecute(execute: Execute): this;
-    setExecuteLazy(executeLazy: ExecuteLazy): this;
-    setExecuteCron(executeCron: ExecuteCron): this;
-    build(): NaturalCommand;
+        setName(name: string): this;
+        setDescription(description: string): this;
+        setQuery(query: Query): this;
+        setChannels(...channels: Channel[]): this;
+        setCronjobs(cronjobs: { [tag: string]: string }): this;
+        setDictionaryPath(dictionaryPath: string): this;
+        setExamples(...examples: string[]): this;
+        setExecute(execute: Execute): this;
+        setExecuteLazy(executeLazy: ExecuteLazy): this;
+        setExecuteCron(executeCron: ExecuteCron): this;
+        build(): NaturalCommand;
+    }
 }
 
 export declare class Registry {
@@ -159,7 +167,7 @@ export declare class Registry {
     public data: { [key: string]: Command };
     static CommandRegistry: Registry;
 
-    setCronManager(cronManager: any): void;
+    setCronManager(cronManager: CronJobFactor): void;
     loop(callback: (command: Command) => void): void;
     register(command: Command): void;
     get(chat: Chat, channel: Channel): { cmd: Command | null, args: { [key: string]: ArgType | ArgType[] } | null };

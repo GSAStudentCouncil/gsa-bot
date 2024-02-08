@@ -10,17 +10,20 @@ class Command {
             throw new TypeError("name is required");
         if (description === undefined)
             throw new TypeError("description is required");
-        if (execute === undefined)
-            throw new TypeError("execute is required");
 
         this.name = name;
         this.description = description;
         this.channels = channels || [];
         this.cronjobs = cronjobs || {};
         this.examples = examples || [];
-        this.execute = execute;
-        this.executeLazy = executeLazy;
-        this.executeCron = executeCron;
+
+        this._execute = execute || ((command, chat, channel, args) => {});
+        this.execute = (chat, channel, args) => this._execute(this, chat, channel, args);
+
+        this._executeLazy = executeLazy || ((command, chat, prevChat, channel, prevChannel, args) => {});
+        this.executeLazy = (chat, prevChat, channel, prevChannel, args) => this._executeLazy(this, chat, prevChat, channel, prevChannel, args);
+
+        this.executeCron = executeCron || (tag => {});
         this.lazy = executeLazy !== undefined;
     }
 
@@ -255,6 +258,88 @@ class StructuredCommand extends Command {
         this.regex = new RegExp(`^${regexed}$`);
     }
 
+    static Builder = class {
+        constructor() {
+            this.name = null;
+            this.description = null;
+            this.usage = null;
+            this.execute = null;
+            this.executeLazy = null;
+            this.executeCron = null;
+            this.cronjobs = {};
+            this.channels = [];
+            this.examples = [];
+        }
+
+        setName(name) {
+            this.name = name;
+            return this;
+        }
+
+        setDescription(description) {
+            this.description = description;
+            return this;
+        }
+
+        setUsage(usage) {
+            this.usage = usage;
+            return this;
+        }
+
+        setExecute(execute) {
+            this.execute = execute;
+            return this;
+        }
+
+        setExecuteLazy(executeLazy) {
+            this.executeLazy = executeLazy;
+            return this;
+        }
+
+        setExecuteCron(executeCron) {
+            this.executeCron = executeCron;
+            return this;
+        }
+
+        setCronjobs(cronjobs) {
+            this.cronjobs = cronjobs;
+            return this;
+        }
+
+        setChannels(...channels) {
+            this.channels = channels;
+            return this;
+        }
+
+        setExamples(...examples) {
+            this.examples = examples;
+            return this;
+        }
+
+        build() {
+            if (this.name === null)
+                throw new TypeError("name is required");
+            if (this.description === null)
+                throw new TypeError("description is required");
+            if (this.usage === null)
+                throw new TypeError("usage is required");
+            if (this.execute === null)
+                throw new TypeError("execute is required");
+
+            return new StructuredCommand({
+                name: this.name,
+                description: this.description,
+                usage: this.usage,
+                execute: this.execute,
+                executeLazy: this.executeLazy,
+                executeCron: this.executeCron,
+                cronjobs: this.cronjobs,
+                channels: this.channels,
+                examples: this.examples
+            });
+        }
+    }
+
     static add(options) {
         new StructuredCommand(options).register();
     }
@@ -283,74 +368,6 @@ class StructuredCommand extends Command {
     }
 }
 
-class StructuredCommandBuilder {
-    constructor() {
-        this.name = null;
-        this.description = null;
-        this.usage = null;
-        this.execute = null;
-        this.executeLazy = null;
-        this.channels = [];
-        this.examples = [];
-    }
-
-    setName(name) {
-        this.name = name;
-        return this;
-    }
-
-    setDescription(description) {
-        this.description = description;
-        return this;
-    }
-
-    setUsage(usage) {
-        this.usage = usage;
-        return this;
-    }
-
-    setExecute(execute) {
-        this.execute = execute;
-        return this;
-    }
-
-    setExecuteLazy(executeLazy) {
-        this.executeLazy = executeLazy;
-        return this;
-    }
-
-    setChannels(...channels) {
-        this.channels = channels;
-        return this;
-    }
-
-    setExamples(...examples) {
-        this.examples = examples;
-        return this;
-    }
-
-    build() {
-        if (this.name === null)
-            throw new TypeError("name is required");
-        if (this.description === null)
-            throw new TypeError("description is required");
-        if (this.usage === null)
-            throw new TypeError("usage is required");
-        if (this.execute === null)
-            throw new TypeError("execute is required");
-
-        return new StructuredCommand({
-            name: this.name,
-            description: this.description,
-            usage: this.usage,
-            execute: this.execute,
-            executeLazy: this.executeLazy,
-            channels: this.channels,
-            examples: this.examples
-        });
-    }
-}
-
 class NaturalCommand extends Command {
     constructor(options) {
         if (options.query === undefined)
@@ -374,6 +391,95 @@ class NaturalCommand extends Command {
                     this.map[alias] = { token: tok, position: position };
                 }
             }
+        }
+    }
+
+    static Builder = class {
+        constructor() {
+            this.name = null;
+            this.description = null;
+            this.query = null;
+            this.dictionaryPath = null;
+            this.execute = null;
+            this.executeLazy = null;
+            this.executeCron = null;
+            this.cronjobs = {};
+            this.channels = [];
+            this.examples = [];
+        }
+
+        setName(name) {
+            this.name = name;
+            return this;
+        }
+
+        setDescription(description) {
+            this.description = description;
+            return this;
+        }
+
+        setQuery(query) {
+            this.query = query;
+            return this;
+        }
+
+        setDictionaryPath(dictionaryPath) {
+            this.dictionaryPath = dictionaryPath;
+            return this;
+        }
+
+        setExecute(execute) {
+            this.execute = execute;
+            return this;
+        }
+
+        setExecuteLazy(executeLazy) {
+            this.executeLazy = executeLazy;
+            return this;
+        }
+
+        setExecuteCron(executeCron) {
+            this.executeCron = executeCron;
+            return this;
+        }
+
+        setCronjobs(cronjobs) {
+            this.cronjobs = cronjobs;
+            return this;
+        }
+
+        setChannels(...channels) {
+            this.channels = channels;
+            return this;
+        }
+
+        setExamples(...examples) {
+            this.examples = examples;
+            return this;
+        }
+
+        build() {
+            if (this.name === null)
+                throw new TypeError("name is required");
+            if (this.description === null)
+                throw new TypeError("description is required");
+            if (this.query === null)
+                throw new TypeError("query is required");
+            if (this.execute === null)
+                throw new TypeError("execute is required");
+
+            return new NaturalCommand({
+                name: this.name,
+                description: this.description,
+                query: this.query,
+                dictionaryPath: this.dictionaryPath,
+                execute: this.execute,
+                executeLazy: this.executeLazy,
+                executeCron: this.executeCron,
+                cronjobs: this.cronjobs,
+                channels: this.channels,
+                examples: this.examples
+            });
         }
     }
 
@@ -430,80 +536,6 @@ class NaturalCommand extends Command {
     }
 }
 
-class NaturalCommandBuilder {
-    constructor() {
-        this.name = null;
-        this.description = null;
-        this.query = null;
-        this.dictionaryPath = null;
-        this.execute = null;
-        this.executeLazy = null;
-        this.channels = [];
-        this.examples = [];
-    }
-
-    setName(name) {
-        this.name = name;
-        return this;
-    }
-
-    setDescription(description) {
-        this.description = description;
-        return this;
-    }
-
-    setQuery(query) {
-        this.query = query;
-        return this;
-    }
-
-    setDictionaryPath(dictionaryPath) {
-        this.dictionaryPath = dictionaryPath;
-        return this;
-    }
-
-    setExecute(execute) {
-        this.execute = execute;
-        return this;
-    }
-
-    setExecuteLazy(executeLazy) {
-        this.executeLazy = executeLazy;
-        return this;
-    }
-
-    setChannels(...channels) {
-        this.channels = channels;
-        return this;
-    }
-
-    setExamples(...examples) {
-        this.examples = examples;
-        return this;
-    }
-
-    build() {
-        if (this.name === null)
-            throw new TypeError("name is required");
-        if (this.description === null)
-            throw new TypeError("description is required");
-        if (this.query === null)
-            throw new TypeError("query is required");
-        if (this.execute === null)
-            throw new TypeError("execute is required");
-
-        return new NaturalCommand({
-            name: this.name,
-            description: this.description,
-            query: this.query,
-            execute: this.execute,
-            executeLazy: this.executeLazy,
-            channels: this.channels,
-            examples: this.examples
-        });
-    }
-}
-
 class Registry {
     static CommandRegistry = new Registry();
 
@@ -517,6 +549,7 @@ class Registry {
 
     setCronManager(cronManager) {
         this.cronManager = cronManager;
+        this.cronManager.setWakeLock(true); // REVIEW: 이거 맞나?
     }
 
     loop(callback) {
@@ -525,7 +558,6 @@ class Registry {
         }
     }
 
-    // TEST: cronjob 테스트
     register(command) {
         if (!(command instanceof Command))
             throw new TypeError("command must be instance of Command");
@@ -534,11 +566,12 @@ class Registry {
             throw new Error("command already exists");
 
         this.data[command.name] = command;
-        for (let tag in command.cronjobs) {
-            // REVIEW: NPE 개많이 뜰 듯. this.cronManager에서 하나, command.cronjobs에서 하나, command.executeCron에서 하나.
-            this.cronManager.add(command.cronjobs[tag], () => command.executeCron(tag));
+
+        if (this.cronManager != null && Object.keys(command.cronjobs).length > 0 && command.executeCron != null) {
+            for (let tag in command.cronjobs) {
+                this.cronManager.add(command.cronjobs[tag], () => command.executeCron(tag));
+            }
         }
-        this.cronManager.setWakeLock(true); // REVIEW: 이거 맞나?
     }
 
     get(chat, channel) {
@@ -599,4 +632,3 @@ class Registry {
 exports.StructuredCommand = StructuredCommand;
 exports.NaturalCommand = NaturalCommand;
 exports.CommandRegistry = Registry.CommandRegistry;
-exports.Builder = { StructuredCommandBuilder, NaturalCommandBuilder };

@@ -16,6 +16,7 @@
   "author": "rhseung",
   "dependencies": {
     "@babel/core": "^7.23.9",
-    "@babel/preset-env": "^7.23.9"
+    "@babel/preset-env": "^7.23.9",
+    "babel-plugin-object-values-to-object-keys": "^1.0.2"
   }
 }

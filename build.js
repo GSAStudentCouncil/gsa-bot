@@ -49,7 +49,7 @@ function build(originPath, noBabel) {
         curr = path.join(curr, dir);
         if (!fs.existsSync(curr)) {
             fs.mkdirSync(curr);
-            console.log(`directory\t\t${curr} created`);
+            console.log(`mkdir\t\t\t${curr}`);
         }
     });
 
@@ -57,10 +57,10 @@ function build(originPath, noBabel) {
 
     if (originPath.endsWith('.js')) {
         code = code
-            .replace(/require\('\.\.\/modules\/([\w-]+)'\)/g, "require('$1')")
+            .replace(/require\((?:'|")\.\.\/modules\/((?:[\w-]+\/)*[\w-]+)(?:'|")\)/g, "require('$1')") 
             .replace('const IS_DIST = false;', 'const IS_DIST = true;');
 
-        if (originPath.includes('src'))
+        if (!originPath.includes('modules'))
             code = apis[api].prefix + code + apis[api].suffix;
     }
 
@@ -69,7 +69,7 @@ function build(originPath, noBabel) {
     if (originPath.endsWith('.js') && !noBabel)
         fs.writeFileSync(distPath, execSync(`babel ${distPath}`).toString());
 
-    console.log(`compile${!noBabel ? ' and transpile\t' : '\t\t\t'}${originPath} -> ${distPath}`);
+    console.log(`copy${(originPath.endsWith('.js') && !noBabel) ? ' and transpile\t' : '\t\t\t'}${originPath} -> ${distPath}`);
 }
 
 function dfs(filePath, noBabel=false) {
@@ -77,8 +77,8 @@ function dfs(filePath, noBabel=false) {
         const childPath = path.join(filePath, child);
 
         if (fs.lstatSync(childPath).isDirectory()) {    // is directory
-            if (!child.startsWith('.') && ['command-handler', 'datetime'].includes(child)) // ignore hidden directory (ex. src/.legacy)
-                dfs(childPath, noBabel);
+            if (!child.startsWith('.'))     // ignore hidden directory (ex. src/.legacy)
+                dfs(childPath, noBabel || ['cronjob', 'dbmanager'].includes(child.toLowerCase()));
         } else {
             build(childPath, noBabel);
         }
