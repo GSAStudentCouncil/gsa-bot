@@ -1,9 +1,10 @@
 const BotManager = require('../../BotManager').get(BotManager);
-const bot = BotManager.getCurrentBot({});
+const bot = BotManager.getCurrentBot();
 
+// TODO: member permission command
 // TODO: natural command와 date parser의 합작
-let { StructuredCommand, NaturalCommand } = require('BotManager/Command');
-let Event = require('BotManager/Event').Event;
+let { StructuredCommand, NaturalCommand } = require('../../BotManager/Command');
+let Event = require('../../BotManager/Event').Event;
 
 let 공지방 = BotManager.getChannelById('394288262769869');
 

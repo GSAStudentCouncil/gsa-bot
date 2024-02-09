@@ -1,4 +1,4 @@
 {
   "presets": ["@babel/preset-env"],
-  "plugins": ["babel-plugin-object-values-to-object-keys"]
+  "plugins": ["babel-plugin-object-values-to-object-keys", "@babel/plugin-transform-named-capturing-groups-regex"]
 }

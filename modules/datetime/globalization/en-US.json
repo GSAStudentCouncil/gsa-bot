@@ -1,6 +1,7 @@
 {
 	"locale": "en-US",
-	
+	"isTurnReversed": true,
+
 	"t": ["AM", "PM"],
 	"W": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 	"WW": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],

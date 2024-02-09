@@ -153,7 +153,7 @@ export declare class datetime {
     static in(year: number): datetime;
     static on(month: number, day?: number): datetime;
     static set(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, millisecond?: number): datetime;
-    static parse(dateString: string, locale: string = 'ko-KR'): datetime;
+    static parse(dateString: string, locale?: string): datetime;
 
     static now(): datetime;
     static today(): datetime;
@@ -184,8 +184,15 @@ export declare class datetime {
     static isLeapYear(year: number): boolean;
     static leapYearCount(start: number, end: number): number;
 
+    static lengthOfMonth(year: number, month: number): number;
+    static lengthOfYear(year: number): number;
+    static getWeekDay(weekDayName: string, locale?: string): number;
+
     isLeapYear(): boolean;
     isWeekend(): boolean;
     isWeekday(): boolean;
     isToday(): boolean;
+
+    lengthOfMonth(): number;
+    lengthOfYear(): number;
 }
