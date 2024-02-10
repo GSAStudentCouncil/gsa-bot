@@ -23,6 +23,7 @@
 		"주": "week",
 		"일": "day",
 		"시": "hour",
+		"시간": "hour",
 		"분": "minute",
 		"초": "second",
 		"밀리초": "millisecond",
@@ -86,6 +87,7 @@
 
 		"전": "ago",
 		"후": "after",
+		"뒤": "after",
 
 		"작년": ["#-1", "year"],
 		"올해": ["#+0", "year"],

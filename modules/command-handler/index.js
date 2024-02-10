@@ -177,8 +177,6 @@ class StringArg extends Arg {
     }
 }
 
-// TODO: includeZero면 앞 공백 생략 허용 좀
-
 class StructuredCommand extends Command {
     constructor(options) {
         if (options.usage === undefined)

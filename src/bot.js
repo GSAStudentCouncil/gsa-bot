@@ -1,6 +1,6 @@
 const manager = require('../modules/DBManager').DBManager;
 const cronjob = require('../modules/cronJob').CronJob;
-const { datetime } = require('../modules/datetime');
+const { Datetime } = require('../modules/datetime');
 const { CommandRegistry, NaturalCommand, StructuredCommand } = require('../modules/command-handler');
 
 const app = manager.getInstance({});
@@ -137,7 +137,7 @@ function web(string, options) {
     return JSON.parse(org.jsoup.Jsoup.connect(string[0].concat(options.map(option => option.join("=")).join("&"))).get().text());
 }
 
-/** @param {datetime} date */
+/** @param {Datetime} date */
 const getMeals = date => {
     const options = [
         ["ATPT_OFCDC_SC_CODE", "F10"],
@@ -155,7 +155,7 @@ const getMeals = date => {
 };
 
 const mealCronjob = time => {
-    const date = datetime.today();
+    const date = Datetime.today();
 
     let meal;
     if (time === "오늘") {
@@ -182,7 +182,7 @@ NaturalCommand.add({
     query: {
         '날짜': '오늘',
         '시간': () => {
-            const dt = datetime.now();
+            const dt = Datetime.now();
 
             if (dt.lt({ hour: 8, minute: 30 }))
                 return "아침";
@@ -203,7 +203,7 @@ NaturalCommand.add({
         '모레 점심 밥'
     ],
     execute: (chat, channel, args, self) => {
-        const date = datetime.parse(args.날짜).set(datetime.today().시간);
+        const date = Datetime.parse(args.날짜).set(Datetime.today().시간);
         const meal = getMeals(date)[["아침", "점심", "저녁"].indexOf(args.시간)];
 
         channel.send(`🍚 ${args.날짜} ${args.시간} 급식\n—————\n${meal}`);

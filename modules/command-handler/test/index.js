@@ -1,5 +1,5 @@
 const { CommandRegistry, StructuredCommand, NaturalCommand } = require('../index.js');
-const { datetime } = require('../../datetime');
+const { Datetime } = require('../../datetime');
 const fs = require('fs');
 
 class Channel {
@@ -32,7 +32,7 @@ cmd2 = new NaturalCommand({
     query: {
         '날짜': '오늘',
         '시간': () => {
-            const dt = datetime.now();
+            const dt = Datetime.now();
 
             if (dt.lt({ hour: 8, minute: 30 }))
                 return "아침";
@@ -54,7 +54,7 @@ cmd2 = new NaturalCommand({
     ],
     execute: (chat, channel, args, self) => {
         console.log(args);
-        console.log(datetime.parse(args.날짜).toString());
+        console.log(Datetime.parse(args.날짜).toString());
     }
 });
 cmd2.register();
