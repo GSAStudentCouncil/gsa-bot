@@ -232,11 +232,9 @@ class Datetime {
 	}
 	
 	toString(formatString) {
-		let cultureInfo;
-		if (IS_DIST)
-			cultureInfo = JSON.parse(FileStream.read("/sdcard/msgbot/global_modules/datetime/globalization/" + this.locale + ".json"));     // TODO: 모듈에서 .json 파일 가져올 때 Filestream 사용 되나?
-		else
-			cultureInfo = require('./globalization/' + this.locale + '.json');
+		const cultureInfo = IS_DIST
+			? JSON.parse(FileStream.read(`/sdcard/msgbot/global_modules/datetime/globalization/${this.locale}.json`))
+			: require(`./globalization/${this.locale}.json`);
 		
 		if (!cultureInfo)
 			throw new Error('Invalid locale, not found ' + this.locale);
@@ -330,74 +328,81 @@ class Datetime {
 		return dt;
 	}
 	
-	static fromObject(datetimeObject) {
-		const now = new $D();
+	static fromObject(datetimeObject, standard=undefined) {
+		const now = standard ? standard : new Datetime();
 		
-		let year = datetimeObject.year ?? now.getFullYear();
-		let month = datetimeObject.month;
-		let day = datetimeObject.day;
-		let hour = datetimeObject.hour;
-		let minute = datetimeObject.minute;
-		let second = datetimeObject.second;
-		let millisecond = datetimeObject.millisecond;
+		const ret = {};
+		ret.year = datetimeObject.year;
+		ret.month = datetimeObject.month;
+		ret.day = datetimeObject.day;
+		ret.hour = datetimeObject.hour;
+		ret.minute = datetimeObject.minute;
+		ret.second = datetimeObject.second;
+		ret.millisecond = datetimeObject.millisecond;
 		
-		if (month > 12 ||
-			day > Datetime.lengthOfMonth(year, month || now.getMonth() + 1) ||
-			hour > 23 ||
-			minute > 59 ||
-			second > 59 ||
-			millisecond > 999
-		) {
-			month ??= 1;
-			day ??= 1;
-			hour ??= 0;
-			minute ??= 0;
-			second ??= 0;
-			millisecond ??= 0;
-		}
-		else {
-			month ??= now.getMonth() + 1;
-			day ??= now.getDate();
-			hour ??= now.getHours();
-			minute ??= now.getMinutes();
-			second ??= now.getSeconds();
-			millisecond ??= now.getMilliseconds();
+		const defaults = {
+			year: (standard ? standard.year : now.year),
+			month: (standard ? standard.month : 1),
+			day: (standard ? standard.day : 1),
+			hour: (standard ? standard.hour : 0),
+			minute: (standard ? standard.minute : 0),
+			second: (standard ? standard.second : 0),
+			millisecond: (standard ? standard.millisecond : 0)
 		}
 		
-		if (year % 1 !== 0) {
-			month += year % 1 * 12;
-			year = year >= 0 ? Math.floor(year) : Math.ceil(year);
+		const units = ['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond'];
+		
+		/**
+		 * "오전 6시" 는 year, month, day는 현재 or 기준(standard)으로, hour는 6, minute, second, millisecond는 0으로 정해지는 것이 합당하다.
+		 * 아래의 코드는 if (year == null) else if (month == null) ... else if (millisecond == null) 에 대해 각각 for 문으로
+		 * 전의 unit을 기준(standard)의 값으로, 후의 unit을 시작으로 지정하는 코드다.
+		 */
+		for (let unit of units) {
+			if (ret[unit] != null) {
+				let x = units.indexOf(unit);
+				for (let i = 0; i < x; i++)
+					ret[units[i]] ??= now[units[i]];
+				for (let i = x; i < units.length; i++)
+					ret[units[i]] ??= defaults[units[i]];
+				
+				break;
+			}
 		}
 		
-		if (month % 1 !== 0) {
-			day += month % 1 * Datetime.lengthOfMonth(year, Math.floor(month));
-			month = month >= 0 ? Math.floor(month) : Math.ceil(month);
+		if (ret.year % 1 !== 0) {
+			ret.month += ret.year % 1 * 12;
+			ret.year = ret.year >= 0 ? Math.floor(ret.year) : Math.ceil(ret.year);
 		}
 		
-		if (day % 1 !== 0) {
-			hour += day % 1 * 24;
-			day = day >= 0 ? Math.floor(day) : Math.ceil(day);
+		if (ret.month % 1 !== 0) {
+			ret.day += ret.month % 1 * Datetime.lengthOfMonth(ret.year, Math.floor(ret.month));
+			ret.month = ret.month >= 0 ? Math.floor(ret.month) : Math.ceil(ret.month);
 		}
 		
-		if (hour % 1 !== 0) {
-			minute += hour % 1 * 60;
-			hour = hour >= 0 ? Math.floor(hour) : Math.ceil(hour);
+		if (ret.day % 1 !== 0) {
+			ret.hour += ret.day % 1 * 24;
+			ret.day = ret.day >= 0 ? Math.floor(ret.day) : Math.ceil(ret.day);
 		}
 		
-		if (minute % 1 !== 0) {
-			second += minute % 1 * 60;
-			minute = minute >= 0 ? Math.floor(minute) : Math.ceil(minute);
+		if (ret.hour % 1 !== 0) {
+			ret.minute += ret.hour % 1 * 60;
+			ret.hour = ret.hour >= 0 ? Math.floor(ret.hour) : Math.ceil(ret.hour);
 		}
 		
-		if (second % 1 !== 0) {
-			millisecond += second % 1 * 1000;
-			second = second >= 0 ? Math.floor(second) : Math.ceil(second);
+		if (ret.minute % 1 !== 0) {
+			ret.second += ret.minute % 1 * 60;
+			ret.minute = ret.minute >= 0 ? Math.floor(ret.minute) : Math.ceil(ret.minute);
 		}
 		
-		if (millisecond % 1 !== 0)
+		if (ret.second % 1 !== 0) {
+			ret.millisecond += ret.second % 1 * 1000;
+			ret.second = ret.second >= 0 ? Math.floor(ret.second) : Math.ceil(ret.second);
+		}
+		
+		if (ret.millisecond % 1 !== 0)
 			throw new Error('millisecond must be integer');
 		
-		return Datetime.fromDate(new $D(year, month - 1, day, hour, minute, second, millisecond));
+		return Datetime.set(ret);
 	}
 	
 	add(datetimeObject) {
@@ -534,6 +539,29 @@ class Datetime {
 		// '  2020년  3월  2일  ' -> '2020년 3월 2일'
 		dateString = dateString.trim().replace(/\s+/g, ' ');
 		
+		const cultureInfo = IS_DIST
+			? JSON.parse(FileStream.read(`/sdcard/msgbot/global_modules/datetime/globalization/${locale}.json`))
+			: require(`./globalization/${locale}.json`);
+		
+		if (!cultureInfo)
+			throw new Error('Invalid locale, not found ' + locale);
+		
+		const isNumberRegex = /^[+-]?\d+(?:\.\d*)?$/;
+		const isRelativeObject = obj => obj.constructor === Object && 'diff' in obj && typeof obj.diff === 'number' && Object.keys(obj).length === 1;
+		const isHomonymObject = obj => obj.constructor === Object && 'homonym' in obj && Array.isArray(obj.homonym) && Object.keys(obj).length === 1;
+		
+		const keywords = {
+			units: new Set([ 'year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond' ]),
+			meridiems: new Set([ 'am', 'pm' ]),
+			weekdays: new Set([ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ]),
+			times: new Set([ 'morning', 'noon', 'afternoon', 'evening', 'night', 'midnight' ]),
+			counts: new Set([ 'th', 'half', 'end' ]),
+			relative: new Set([ 'ago', 'after' ]),
+			standard: new Set(['from']),
+		};
+		
+		const homonyms = new Set(Object.keys(cultureInfo.translate).map(k => isHomonymObject(cultureInfo.translate[k]) ? k : null).filter(e => e !== null));
+		
 		// 1. parse ISO 8601 format
 		const parse1 = () => {
 			const RE_ISO = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})T(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})(?:\.(?<millisecond>\d{3}))?Z$/;
@@ -554,20 +582,30 @@ class Datetime {
 		
 		// 2. parse common date format
 		const parse2 = () => {
-			const RE_DATE = /^(?:(?<year>\d{4})[-.\/])?(?<month>\d{1,2})[-.\/](?<day>\d{1,2})\.?$/;
-			const RE_TIME = /^(?<hour>\d{1,2}):(?<minute>\d{1,2})(?::(?<second>\d{1,2})(?:\.(?<millisecond>\d{1,3}))?)?$/;
+			let meridiem = 'pm';
+			
+			for (let key in cultureInfo.translate) {
+				if (keywords.meridiems.has(cultureInfo.translate[key])) // am, pm이 value인 key들
+					meridiem = cultureInfo.translate[key];
+			}
+			
+			const RE_DATE = /(?:(?<year>\d{4})[-.\/])? *(?<month>\d{1,2})[-.\/] *(?<day>\d{1,2})\.?/;
+			const RE_TIME = /(?<hour>\d{1,2}):(?<minute>\d{1,2})(?::(?<second>\d{1,2})(?:\.(?<millisecond>\d{1,3}))?)?/;
 			
 			const dateMatch = dateString.match(RE_DATE);
 			const timeMatch = dateString.match(RE_TIME);
 			
 			if (dateMatch || timeMatch) {
-				const year = dateMatch?.groups?.year;
-				const month = dateMatch?.groups?.month;
-				const day = dateMatch?.groups?.day;
-				const hour = timeMatch?.groups?.hour;
-				const minute = timeMatch?.groups?.minute;
-				const second = timeMatch?.groups?.second;
-				const millisecond = timeMatch?.groups?.millisecond;
+				let year = dateMatch?.groups?.year;
+				let month = dateMatch?.groups?.month;
+				let day = dateMatch?.groups?.day;
+				let hour = timeMatch?.groups?.hour;
+				let minute = timeMatch?.groups?.minute;
+				let second = timeMatch?.groups?.second;
+				let millisecond = timeMatch?.groups?.millisecond;
+				
+				if (hour !== undefined && hour < 12 && meridiem === 'pm')
+					hour += 12;
 				
 				return new Datetime({ year, month, day, hour, minute, second, millisecond });
 			}
@@ -575,29 +613,12 @@ class Datetime {
 		
 		// 3. analyze in tokens
 		const parse3 = () => {
-			const keywords = {
-				units: new Set([ 'year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond' ]),
-				meridiems: new Set([ 'am', 'pm' ]),
-				weekdays: new Set([ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ]),
-				times: new Set([ 'morning', 'noon', 'afternoon', 'evening', 'night', 'midnight' ]),
-				counts: new Set([ 'th', 'half', 'end' ]),
-				relative: new Set([ 'ago', 'after' ])
-			};
-			
-			const cultureInfo = IS_DIST
-				? JSON.parse(FileStream.read(`/sdcard/msgbot/global_modules/datetime/globalization/${locale}.json`))
-				: require(`./globalization/${locale}.json`);
-			
-			if (!cultureInfo)
-				throw new Error('Invalid locale, not found ' + locale);
+			let standard;
 			
 			// sort by length (desc), then by dictionary order (asc)
 			// desc로 정렬하기 때문에, '매주' 와 '주' 에서 '매주'에 먼저 매칭될 수 있게 함.
 			const keys = Object.keys(cultureInfo.translate);
 			keys.sort((a, b) => a.length !== b.length ? b.length - a.length : a.localeCompare(b));
-			
-			const RE_NUMBER = /^[+-]?\d+(?:\.\d*)?$/;
-			const RE_RELATIVE = /^#[+-]\d+(?:\.\d*)?$/;
 			
 			// tokenize dateString
 			// '2020년 3월 2일 12시 34분 56초' -> [2020, 'year', 3, 'month', 2, 'day', 12, 'hour', 34, 'minute', 56, 'second']
@@ -615,8 +636,20 @@ class Datetime {
 						if (dstr.startsWith(key, startIdx)) {
 							let value = cultureInfo.translate[key];
 							
-							if (chucks.length > 0 && typeof chucks[chucks.length - 1] === 'number' && typeof value === 'number')
-								chucks[chucks.length - 1] += value;
+							if (chucks.length >= 1 && typeof chucks[chucks.length - 1] === 'number' && typeof value === 'number') {
+								// 십이 -> [10, 2] -> 10+2
+								// 이십 -> [2, 10] -> 2*10
+								if (chucks[chucks.length - 1] > value)
+									chucks[chucks.length - 1] += value;
+								else
+									chucks[chucks.length - 1] *= value;
+							}
+							else if (chucks.length >= 1 && isRelativeObject(chucks[chucks.length - 1]) && isRelativeObject(value)) {
+								// 다음 내일 -> [{diff: 1}, {diff: 2}] -> {diff: 1+2}
+								// 내일 다음 -> [{diff: 2}, {diff: 1}] -> {diff: 2+1}
+								
+								chucks[chucks.length - 1].diff += value.diff;
+							}
 							else if (Array.isArray(value))
 								chucks.push(...value);
 							else
@@ -640,10 +673,36 @@ class Datetime {
 					}
 				}
 				
-				return chucks.map(e => RE_NUMBER.test(e) ? parseFloat(e) : e);
+				return chucks.map(e => isNumberRegex.test(e) ? parseFloat(e) : e);
 			};
 			
-			let tokens = dateString.split(' ').map(getTokens).flat();
+			let splited = dateString.split(' ').map(getTokens).flat();
+			let tokens = [];
+			
+			/**
+			 * 공백이 없는 문자열에서의 토큰들끼리는 잘 merge 되었으나, 공백이 없는 문자열들끼리의 토큰들끼리의 merge를 처리해야함.
+			 * ex. 다음 다음다음 날 -> [다음, 다음다음, 날] -> [{diff: 1}, {diff: 2}, 'day'] -> [{diff: 1+2}, 'day']
+			 * 위의 예시에서 1+2를 하는 작업을 아래 코드에서 수행함.
+			 */
+			while (splited.length > 0) {
+				let value = splited.shift();
+				
+				if (tokens.length >= 1 && typeof tokens[tokens.length - 1] === 'number' && typeof value === 'number') {
+					if (tokens[tokens.length - 1] > value)
+						tokens[tokens.length - 1] += value;
+					else
+						tokens[tokens.length - 1] *= value;
+				}
+				else if (tokens.length >= 1 && isRelativeObject(tokens[tokens.length - 1]) && isRelativeObject(value)) {
+					tokens[tokens.length - 1].diff += value.diff;
+				}
+				else if (Array.isArray(value))
+					tokens.push(...value);
+				else
+					tokens.push(value);
+			}
+			
+			console.log(tokens);    // FIXME: debug
 			
 			// 세 시간 반 -> 3.5시간
 			for (let i = 2; i < tokens.length; i++) {
@@ -658,22 +717,28 @@ class Datetime {
 				}
 			}
 			
-			// [3.5, '시간', '뒤'] -> ['#+3.5', '시간']
+			// [3.5, '시간', '뒤'] -> [{ diff: 3.5 }, '시간']
 			let i = 0;
 			while (i < tokens.length) {
 				if (keywords.relative.has(tokens[i])) {
+					if (!standard)
+						standard = Datetime.now();
+					
 					const multiplier = tokens[i] === 'ago' ? -1 : 1;
 					
 					for (let j = i - 1; j >= 0; j--) {
-						let value;
+						if (keywords.standard.has(tokens[j]))
+							break;
+						
+						let diff;
 						
 						if (typeof tokens[j] === 'number')
-							value = tokens[j] * multiplier;
-						else if (RE_RELATIVE.test(tokens[j]))
-							value = parseFloat(tokens[j].slice(1)) * multiplier;
+							diff = tokens[j] * multiplier;
+						else if (isRelativeObject(tokens[j]))
+							diff = tokens[j].diff * multiplier;
 						
-						if (value !== undefined)
-							tokens[j] = `#${value >= 0 ? '+' : '-'}${Math.abs(value)}`;
+						if (diff !== undefined)
+							tokens[j] = { diff };
 					}
 					
 					tokens.splice(i, 1);
@@ -723,13 +788,16 @@ class Datetime {
 			// [3, 'year', 'ago']
 			const relativeParse = () => {
 				const dateObject = {};
-				
-				const now = Datetime.now();
+				let standard_now = Datetime.now();
 				
 				for (let i = 0; i < tokens.length; i++) {
 					let token = tokens[i];
 					
-					if (keywords.counts.has(token)) {    // [half] week, [end] month, 11 [th] month, 11 [th] sunday, ...
+					if (keywords.standard.has(token)) {     // 3월 3일로부터
+						standard_now = Datetime.parse(tokens.slice(0, i).join(' '), locale);
+						standard = standard_now;
+					}
+					else if (keywords.counts.has(token)) {    // [half] week, [end] month, 11 [th] month, 11 [th] sunday, ...
 						if (keywords.units.has(tokens[i + 1]) || keywords.weekdays.has(tokens[i + 1])) {
 							let tokenFront = tokens[i - 1]; // 11, 3, 1, ...
 							// token;  // th, half, end
@@ -749,7 +817,7 @@ class Datetime {
 							switch (tokenBack) {
 								case 'year': {
 									if (token === 'half')
-										dateObject['day'] = amount(Datetime.lengthOfYear(dateObject['year'] ?? now.year));
+										dateObject['day'] = amount(Datetime.lengthOfYear(dateObject['year'] ?? standard_now.year));
 									else
 										throw new Error('invalid format: "th/end 해"');
 									
@@ -761,7 +829,7 @@ class Datetime {
 								}
 								case 'month': {
 									if (token === 'half') {
-										dateObject['day'] = amount(Datetime.lengthOfMonth(dateObject['year'] ?? now.year, dateObject['month'] ?? now.month));
+										dateObject['day'] = amount(Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month));
 										dateObject['hour'] = 0;
 										dateObject['minute'] = 0;
 										dateObject['second'] = 0;
@@ -779,15 +847,15 @@ class Datetime {
 								}
 								case 'week': {
 									if (token === 'half') {
-										dateObject['day'] = now.day + (amount(7) - now.weekday + 7) % 7;
+										dateObject['day'] = standard_now.day + (amount(7) - standard_now.weekday + 7) % 7;
 										dateObject['hour'] = 0;
 										dateObject['minute'] = 0;
 										dateObject['second'] = 0;
 										dateObject['millisecond'] = 0;
 									}
 									else {
-										dateObject['day'] = now.day + (0 - dateObject['weekday'] + 7) % 7;
-										let lengthOfMonth = Datetime.lengthOfMonth(dateObject['year'] ?? now.year, dateObject['month'] ?? now.month);
+										dateObject['day'] = standard_now.day + (0 - dateObject['weekday'] + 7) % 7;
+										let lengthOfMonth = Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month);
 										
 										// 만약 23일이 일요일이라면 16, 9, 2일이 셋째주, 둘째주, 셋째주가 됨
 										// 23 % 7 == 2 이므로 2일이 첫주의 시작이 되어야 함
@@ -813,7 +881,7 @@ class Datetime {
 										dateObject['millisecond'] = 0;
 									}
 									else {
-										dateObject['day'] = amount(Datetime.lengthOfMonth(dateObject['year'] ?? now.year, dateObject['month'] ?? now.month));
+										dateObject['day'] = amount(Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month));
 										dateObject['hour'] = 0;
 										dateObject['minute'] = 0;
 										dateObject['second'] = 0;
@@ -868,8 +936,8 @@ class Datetime {
 									if (token === 'half')
 										throw new Error('invalid format: "half 요일"');
 									else {
-										dateObject['day'] = now.day + (Datetime.getWeekDay(tokenBack, locale = 'en-US') - now.weekday + 7) % 7;
-										let lengthOfMonth = Datetime.lengthOfMonth(dateObject['year'] ?? now.year, dateObject['month'] ?? now.month);
+										dateObject['day'] = standard_now.day + (Datetime.getWeekDay(tokenBack, locale = 'en-US') - standard_now.weekday + 7) % 7;
+										let lengthOfMonth = Datetime.lengthOfMonth(dateObject['year'] ?? standard_now.year, dateObject['month'] ?? standard_now.month);
 										
 										let first = dateObject['day'] % 7;
 										let weeks = [ first ];
@@ -904,9 +972,9 @@ class Datetime {
 						else if (token === 'midnight')
 							dateObject['hour'] = 0;
 					}
-					else if (RE_RELATIVE.test(token)) {
+					else if (isRelativeObject(token)) {
 						if (keywords.units.has(tokens[i + 1])) {
-							dateObject[tokens[i + 1]] = now[tokens[i + 1]] + parseFloat(token.slice(1));
+							dateObject[tokens[i + 1]] = standard_now[tokens[i + 1]] + token.diff;
 						}
 					}
 				}
@@ -919,10 +987,11 @@ class Datetime {
 			const result = Object.assign(absolute, relative);
 			
 			if (Object.keys(result).length > 0)
-				return new Datetime(result);
+				return Datetime.fromObject(result, standard);
 		};
 		
 		const parsed = parse1() ?? parse2() ?? parse3();
+		
 		if (parsed)
 			return parsed;
 		else
