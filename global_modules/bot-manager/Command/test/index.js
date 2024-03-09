@@ -50,24 +50,24 @@ const fs = require('fs');
 //     })
 //     .build().register();
 
-new StructuredCommand.Builder()
-    .setName('todo1')
-    .setDescription('할 일 추가 명령어, StructuredCommand')
-    .setUsage('todo <날짜:date duration=true>')
-    .setExecute((self, chat, channel, { 날짜: { from, to } }) => {
-        console.log('todo1:', from.humanize(), '~', to.humanize());
-    })
-    .build().register();
+// new StructuredCommand.Builder()
+//     .setName('todo1')
+//     .setDescription('할 일 추가 명령어, StructuredCommand')
+//     .setUsage('todo <날짜:date duration=true>')
+//     .setExecute((self, chat, channel, { 날짜: { from, to } }) => {
+//         channel.send('todo1:', from.humanize(), '~', to.humanize());
+//     })
+//     .build().register();
 
-new NaturalCommand.Builder()
-    .setName('todo2')
-    .setDescription('할 일 추가 명령어, NaturalCommand')
-    .setQuery({})
-    .setUseDateParse(true, true)
-    .setExecute((self, chat, channel, { datetime: { from, to } }) => {
-        console.log('todo2:', from.humanize(), '~', to.humanize(), chat.text);
-    })
-    .build().register();
+// new NaturalCommand.Builder()
+//     .setName('todo2')
+//     .setDescription('할 일 추가 명령어, NaturalCommand')
+//     .setQuery({})
+//     .setUseDateParse(true, true)
+//     .setExecute((self, chat, channel, { datetime: { from, to } }) => {
+//         channel.send('todo2: ' + from.humanize() + '~' + to.humanize() + chat.filteredText);
+//     })
+//     .build().register();
 
 new NaturalCommand.Builder()
     .setName('event')
@@ -75,7 +75,7 @@ new NaturalCommand.Builder()
     .setQuery({ school_event: null })
     .setUseDateParse(true, true)
     .setExecute((self, chat, channel, { school_event, datetime: { from, to } }) => {
-        const events = JSON.parse(fs.readFileSync('school_events.json', 'utf-8'));
+        const events = JSON.parse(fs.readFileSync('global_modules/bot-manager/Command/test/school_events.json', 'utf-8'));
         const satisfied = [];
         
         for (let date in events) {
@@ -86,15 +86,24 @@ new NaturalCommand.Builder()
             }
         }
         
-        console.log(`📅 ${from.humanize()} ~ ${to.humanize()} 학사일정\n—————\n${satisfied.join('\n')}`);
+        channel.send(`📅 ${from.humanize()} ~ ${to.humanize()} 학사일정\n—————\n${satisfied.join('\n')}`);
     })
     .build().register();
+
+// new NaturalCommand.Builder()
+//     .setName('test')
+//     .setDescription('test command')
+//     .setQuery({ meal: null, datetime: () => DateTime.now() })
+//     .setUseDateParse(true, false, false)
+//     .setExecute((self, chat, channel, { datetime }) => {
+//         channel.send(datetime.humanize(), chat.filteredText);
+//     })
+//     .build().register();
 
 function onMessage(chat, channel) {
     const { cmd, args } = CommandRegistry.get(chat, channel);
 
-    if (cmd) {
+    if (cmd)
         cmd.execute(chat, channel, args);
-    }
 }
-onMessage({ text: '어제부터 4월 5일까지 행사' }, { name: 'test room', id: 982981398 });
+onMessage({ text: '행사 3월 3일부터 다음 주 까지' }, { name: 'test room', id: 982981398, send: (...msg) => console.log(...msg) });

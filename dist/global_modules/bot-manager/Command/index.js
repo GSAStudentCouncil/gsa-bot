@@ -1,257 +1,40 @@
 "use strict";
 
-function _typeof(o) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var _StructuredCommand, _NaturalCommand, _Registry;
-function _createForOfIteratorHelper(o, allowArrayLike) {
-  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
-  if (!it) {
-    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it) o = it;
-      var i = 0;
-      var F = function F() {};
-      return {
-        s: F,
-        n: function n() {
-          if (i >= o.length) return {
-            done: true
-          };
-          return {
-            done: false,
-            value: o[i++]
-          };
-        },
-        e: function e(_e) {
-          throw _e;
-        },
-        f: F
-      };
-    }
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-  var normalCompletion = true,
-    didErr = false,
-    err;
-  return {
-    s: function s() {
-      it = it.call(o);
-    },
-    n: function n() {
-      var step = it.next();
-      normalCompletion = step.done;
-      return step;
-    },
-    e: function e(_e2) {
-      didErr = true;
-      err = _e2;
-    },
-    f: function f() {
-      try {
-        if (!normalCompletion && it["return"] != null) it["return"]();
-      } finally {
-        if (didErr) throw err;
-      }
-    }
-  };
+function _objectEntries(obj) {
+  var entries = [];
+  var keys = Object.keys(obj);
+  for (var k = 0; k < keys.length; k++) entries.push([keys[k], obj[keys[k]]]);
+  return entries;
 }
-function _toArray(arr) {
-  return _arrayWithHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableRest();
-}
-function _get() {
-  if (typeof Reflect !== "undefined" && Reflect.get) {
-    _get = Reflect.get.bind();
-  } else {
-    _get = function _get(target, property, receiver) {
-      var base = _superPropBase(target, property);
-      if (!base) return;
-      var desc = Object.getOwnPropertyDescriptor(base, property);
-      if (desc.get) {
-        return desc.get.call(arguments.length < 3 ? target : receiver);
-      }
-      return desc.value;
-    };
-  }
-  return _get.apply(this, arguments);
-}
-function _superPropBase(object, property) {
-  while (!Object.prototype.hasOwnProperty.call(object, property)) {
-    object = _getPrototypeOf(object);
-    if (object === null) break;
-  }
-  return object;
-}
-function _defineProperty(obj, key, value) {
-  key = _toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-function _callSuper(t, o, e) {
-  return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e));
-}
-function _possibleConstructorReturn(self, call) {
-  if (call && (_typeof(call) === "object" || typeof call === "function")) {
-    return call;
-  } else if (call !== void 0) {
-    throw new TypeError("Derived constructors may only return object or undefined");
-  }
-  return _assertThisInitialized(self);
-}
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-  return self;
-}
-function _isNativeReflectConstruct() {
-  try {
-    var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-  } catch (t) {}
-  return (_isNativeReflectConstruct = function _isNativeReflectConstruct() {
-    return !!t;
-  })();
-}
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) {
-    return o.__proto__ || Object.getPrototypeOf(o);
-  };
-  return _getPrototypeOf(o);
-}
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  Object.defineProperty(subClass, "prototype", {
-    writable: false
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
-}
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-  return _setPrototypeOf(o, p);
-}
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-function _iterableToArrayLimit(r, l) {
-  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
-  if (null != t) {
-    var e,
-      n,
-      i,
-      u,
-      a = [],
-      f = !0,
-      o = !1;
-    try {
-      if (i = (t = t.call(r)).next, 0 === l) {
-        if (Object(t) !== t) return;
-        f = !1;
-      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
-    } catch (r) {
-      o = !0, n = r;
-    } finally {
-      try {
-        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
-      } finally {
-        if (o) throw n;
-      }
-    }
-    return a;
-  }
-}
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-  return arr2;
-}
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);
-  }
-}
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  Object.defineProperty(Constructor, "prototype", {
-    writable: false
-  });
-  return Constructor;
-}
-function _toPropertyKey(t) {
-  var i = _toPrimitive(t, "string");
-  return "symbol" == _typeof(i) ? i : String(i);
-}
-function _toPrimitive(t, r) {
-  if ("object" != _typeof(t) || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r || "default");
-    if ("object" != _typeof(i)) return i;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r ? String : Number)(t);
-}
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _toArray(arr) { return _arrayWithHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableRest(); }
+function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get.bind(); } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var _require = require('../DateTime'),
   DateTime = _require.DateTime;
 var $ = "/sdcard/msgbot/global_modules/bot-manager/Command";
@@ -271,7 +54,7 @@ var Command = /*#__PURE__*/function () {
     this._execute = _execute !== null && _execute !== void 0 ? _execute : function (self, chat, channel, args) {};
     this._executeLazy = _executeLazy !== null && _executeLazy !== void 0 ? _executeLazy : function (self, chat, prevChat, channel, prevChannel, args) {};
     this._executeCron = _executeCron !== null && _executeCron !== void 0 ? _executeCron : function (self, tag) {};
-    this.lazy = _executeLazy !== undefined;
+    this.lazy = _executeLazy != null;
   }
   _createClass(Command, [{
     key: "execute",
@@ -300,7 +83,7 @@ var Command = /*#__PURE__*/function () {
       if (Object.keys(this.cronJobs).length > 0) {
         ret.push('📌 자동 실행 주기');
         ret.push('——');
-        ret.push.apply(ret, _toConsumableArray(Object.entries(this.cronJobs).map(function (_ref) {
+        ret.push.apply(ret, _toConsumableArray(_objectEntries(this.cronJobs).map(function (_ref) {
           var _ref2 = _slicedToArray(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
@@ -438,7 +221,7 @@ var DateArg = /*#__PURE__*/function (_Arg3) {
   _createClass(DateArg, [{
     key: "toRegExp",
     value: function toRegExp() {
-      return /[0-9+\-ㄱ-ㅎ가-힣 ]+/;
+      return /[0-9+\-ㄱ-ㅎㅏ-ㅣ가-힣:./ ]+/;
     }
   }, {
     key: "parse",
@@ -613,7 +396,7 @@ _defineProperty(StructuredCommand, "Builder", /*#__PURE__*/function () {
       for (var _len = arguments.length, channels = new Array(_len), _key2 = 0; _key2 < _len; _key2++) {
         channels[_key2] = arguments[_key2];
       }
-      this.channels = channels;
+      this.channels = channels.filter(Boolean);
       return this;
     }
   }, {
@@ -657,8 +440,9 @@ var NaturalCommand = /*#__PURE__*/function (_Command2) {
     _this7.query = options.query;
     _this7.useDateParse = options.useDateParse;
     _this7.useDuration = options.useDuration;
-    options.dictionaryPath = options.dictionaryPath || 'dict.json';
-    var dictionary = IS_DIST ? JSON.parse(FileStream.read("".concat($, "/").concat(options.dictionaryPath))) : require("./".concat(options.dictionaryPath));
+    _this7.filterIncludeEnding = options.filterIncludeEnding;
+    _this7.dictionaryPath = options.dictionaryPath || 'dict.json';
+    var dictionary = IS_DIST ? JSON.parse(FileStream.read("".concat($, "/").concat(_this7.dictionaryPath))) : require("./".concat(_this7.dictionaryPath));
     _this7.map = {};
     for (var tok in dictionary) {
       var _iterator2 = _createForOfIteratorHelper(dictionary[tok]),
@@ -708,6 +492,7 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
     this.executeCron = null;
     this.useDateParse = false;
     this.useDuration = false;
+    this.filterIncludeEnding = true;
     this.cronJobs = {};
     this.channels = [];
     this.examples = [];
@@ -725,22 +510,25 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
       return this;
     }
   }, {
-    key: "setQuery",
-    value: function setQuery(query) {
-      this.query = query;
-      return this;
-    }
-  }, {
     key: "setDictionaryPath",
     value: function setDictionaryPath(dictionaryPath) {
       this.dictionaryPath = dictionaryPath;
       return this;
     }
   }, {
+    key: "setQuery",
+    value: function setQuery(query) {
+      this.query = query;
+      return this;
+    }
+  }, {
     key: "setUseDateParse",
-    value: function setUseDateParse(useDateParse, useDuration) {
-      this.useDateParse = useDuration;
+    value: function setUseDateParse(useDateParse) {
+      var useDuration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var filterIncludeEnding = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      this.useDateParse = useDateParse;
       this.useDuration = useDuration;
+      this.filterIncludeEnding = filterIncludeEnding;
       return this;
     }
   }, {
@@ -763,7 +551,7 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
       for (var _len3 = arguments.length, channels = new Array(_len3), _key4 = 0; _key4 < _len3; _key4++) {
         channels[_key4] = arguments[_key4];
       }
-      this.channels = channels;
+      this.channels = channels.filter(Boolean);
       return this;
     }
   }, {
@@ -794,7 +582,8 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
         channels: this.channels,
         examples: this.examples,
         useDateParse: this.useDateParse,
-        useDuration: this.useDuration
+        useDuration: this.useDuration,
+        filterIncludeEnding: this.filterIncludeEnding
       });
     }
   }]);
@@ -803,6 +592,7 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
 var Registry = /*#__PURE__*/function () {
   function Registry() {
     _classCallCheck(this, Registry);
+    // 싱글톤 클래스
     if (Registry.CommandRegistry) return Registry.CommandRegistry;
     this.data = [];
     Registry.CommandRegistry = this;
@@ -867,9 +657,9 @@ var Registry = /*#__PURE__*/function () {
             var cmd = _step4.value;
             if (cmd.channels.length !== 0 && !cmd.channels.map(function (c) {
               return c.id;
-            }).includes(channel.id))
-              // 방이 포함되어 있지 않을 경우
+            }).includes(channel.id)) // 방이 포함되어 있지 않을 경우
               return 0; // continue
+            var ret = {};
             var args;
             if (cmd instanceof StructuredCommand) {
               args = {};
@@ -885,39 +675,43 @@ var Registry = /*#__PURE__*/function () {
                 }
                 args[arg.name] = ret;
               });
-              if (!is_satisfy)
-                // 세부 속성을 만족하지 못했을 경우
+              if (!is_satisfy) // 세부 속성을 만족하지 못했을 경우
                 return 0; // continue
             } else if (cmd instanceof NaturalCommand) {
-              var rawText = chat.text;
-              var text = chat.text.replace(/ +/g, ' ').replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, ""); // 구두점 제거
-
+              var filteredText = chat.text.replace(/\s+/g, ' ');
               args = Object.assign({}, cmd.query); // 기본값을 가진 객체를 깊은 복사
 
               if (cmd.useDateParse) {
                 if (cmd.useDuration) {
-                  var _DateTime$parseDurati = DateTime.parseDurationWithFilteredString(text),
+                  var _DateTime$parseDurati = DateTime.parseDuration(filteredText, true, cmd.filterIncludeEnding),
                     _DateTime$parseDurati2 = _DateTime$parseDurati.parse,
                     from = _DateTime$parseDurati2.from,
                     to = _DateTime$parseDurati2.to,
                     string = _DateTime$parseDurati.string;
-                  args.datetime = {
-                    from: from,
-                    to: to
-                  };
-                  if (from != null && to != null) text = string;
+                  if (from != null && to != null) {
+                    args.datetime = {
+                      from: from,
+                      to: to
+                    };
+                    filteredText = string;
+                  }
                 } else {
-                  var _DateTime$parseWithFi = DateTime.parseWithFilteredString(text),
-                    parse = _DateTime$parseWithFi.parse,
-                    _string = _DateTime$parseWithFi.string;
-                  args.datetime = parse;
-                  if (parse != null) text = _string;
+                  var _DateTime$parse = DateTime.parse(filteredText, true, cmd.filterIncludeEnding),
+                    parse = _DateTime$parse.parse,
+                    _string = _DateTime$parse.string;
+                  if (parse != null) {
+                    args.datetime = parse;
+                    filteredText = _string;
+                  }
                 }
+                chat.filteredText = filteredText;
+                // Log.debug(`filteredText: ${chat.filteredText}`);	// FIXME
               }
 
               // 기본값만 있던 cmd.query 에서 쿼리할 대상으로 보낸 토큰들에 대응되는 단어들을 매칭
               // 매칭이 실패하면 기본값이 있는 경우 그대로 남고, 아니면 null로 남게 된다
-              var _iterator5 = _createForOfIteratorHelper(text.split(' ')),
+              filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, ""); // 구두점 제거
+              var _iterator5 = _createForOfIteratorHelper(filteredText.split(' ')),
                 _step5;
               try {
                 for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
@@ -944,8 +738,6 @@ var Registry = /*#__PURE__*/function () {
                 }
               }
               if (!is_full) return 0; // continue
-              chat.text = text;
-              chat.rawText = rawText;
             }
             return {
               v: {

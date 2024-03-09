@@ -17,7 +17,20 @@ export declare class Bot {
 
     static getCurrentBot(botManager: any, dbManager: DBManager, init?: InstanceType): Bot;
     
-    on<E extends keyof EventMap>(event: E, listener: EventMap[E]): void;
+    on<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;
+    addListener<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;
+
+    off<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;
+    removeListener<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;
+
+    eventNames(): (keyof EventMap | string | symbol)[];
+    rawListeners<E extends keyof EventMap> (event: E): EventMap[E][];
+    listeners<E extends keyof EventMap> (event: E): EventMap[E][];
+    listenerCount<E extends keyof EventMap> (event: E): number;
+
+    getMaxListeners(): number;
+    setMaxListeners(maxListeners: number): this;
+
     start(): void;
     stop(): void;
     close(): void;

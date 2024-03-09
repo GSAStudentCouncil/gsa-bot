@@ -4,6 +4,9 @@ var _require = require('../index'),
   StructuredCommand = _require.StructuredCommand,
   NaturalCommand = _require.NaturalCommand,
   CommandRegistry = _require.CommandRegistry;
+var _require2 = require('../../DateTime'),
+  DateTime = _require2.DateTime;
+var fs = require('fs');
 
 // new StructuredCommand.Builder()
 //     .setName('add')
@@ -53,29 +56,66 @@ var _require = require('../index'),
 //     })
 //     .build().register();
 
-new StructuredCommand.Builder().setName('todo1').setDescription('할 일 추가 명령어, StructuredCommand').setUsage('todo <날짜:date duration=true>').setExecute(function (self, chat, channel, _ref) {
-  var _ref$날짜 = _ref.날짜,
-    from = _ref$날짜.from,
-    to = _ref$날짜.to;
-  console.log('todo1:', from.humanize(), '~', to.humanize());
+// new StructuredCommand.Builder()
+//     .setName('todo1')
+//     .setDescription('할 일 추가 명령어, StructuredCommand')
+//     .setUsage('todo <날짜:date duration=true>')
+//     .setExecute((self, chat, channel, { 날짜: { from, to } }) => {
+//         channel.send('todo1:', from.humanize(), '~', to.humanize());
+//     })
+//     .build().register();
+
+// new NaturalCommand.Builder()
+//     .setName('todo2')
+//     .setDescription('할 일 추가 명령어, NaturalCommand')
+//     .setQuery({})
+//     .setUseDateParse(true, true)
+//     .setExecute((self, chat, channel, { datetime: { from, to } }) => {
+//         channel.send('todo2: ' + from.humanize() + '~' + to.humanize() + chat.filteredText);
+//     })
+//     .build().register();
+
+new NaturalCommand.Builder().setName('event').setDescription('event command').setQuery({
+  school_event: null
+}).setUseDateParse(true, true).setExecute(function (self, chat, channel, _ref) {
+  var school_event = _ref.school_event,
+    _ref$datetime = _ref.datetime,
+    from = _ref$datetime.from,
+    to = _ref$datetime.to;
+  var events = JSON.parse(fs.readFileSync('global_modules/bot-manager/Command/test/school_events.json', 'utf-8'));
+  var satisfied = [];
+  for (var date in events) {
+    var dt = DateTime.parse(date);
+    if (from.le(dt) && dt.le(to)) {
+      satisfied.push("".concat(dt.toString('M월 D일'), ": ").concat(events[date]));
+    }
+  }
+  channel.send("\uD83D\uDCC5 ".concat(from.humanize(), " ~ ").concat(to.humanize(), " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\u2014\u2014\u2014\n").concat(satisfied.join('\n')));
 }).build().register();
-new NaturalCommand.Builder().setName('todo2').setDescription('할 일 추가 명령어, NaturalCommand').setQuery({}).setUseDateParse(true, true).setExecute(function (self, chat, channel, _ref2) {
-  var _ref2$datetime = _ref2.datetime,
-    from = _ref2$datetime.from,
-    to = _ref2$datetime.to;
-  console.log('todo2:', from.humanize(), '~', to.humanize(), chat.text);
-}).build().register();
+
+// new NaturalCommand.Builder()
+//     .setName('test')
+//     .setDescription('test command')
+//     .setQuery({ meal: null, datetime: () => DateTime.now() })
+//     .setUseDateParse(true, false, false)
+//     .setExecute((self, chat, channel, { datetime }) => {
+//         channel.send(datetime.humanize(), chat.filteredText);
+//     })
+//     .build().register();
+
 function onMessage(chat, channel) {
   var _CommandRegistry$get = CommandRegistry.get(chat, channel),
     cmd = _CommandRegistry$get.cmd,
     args = _CommandRegistry$get.args;
-  if (cmd) {
-    cmd.execute(chat, channel, args);
-  }
+  if (cmd) cmd.execute(chat, channel, args);
 }
 onMessage({
-  text: '어제부터 내일까지 병원 가기'
+  text: '행사 3월 3일부터 다음 주 까지'
 }, {
   name: 'test room',
-  id: 982981398
+  id: 982981398,
+  send: function send() {
+    var _console;
+    return (_console = console).log.apply(_console, arguments);
+  }
 });

@@ -1,14 +1,6 @@
 'use strict';
 
-function _typeof(o) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function D() {
   var g = ['lue\x20', '252940wmiEcR', 'nfJJM', 'operty', 'construc', 'profile', 'call', '__extend', '11GtXrIy', '301648MzGxbq', 'wIrRW', 'MtqHC', 'ProfileC', 'HBLTz', 'hasOwnPr', '__esModu', 'typeOf', '\x20is\x20not\x20', 'DssaI', 'hat', '242938EDyxJF', 'Class\x20ex', 'Chat', 'raw', 'prototyp', 'attachme', 'a\x20constr', 'tor', '56UkMqzM', 'definePr', '657RwMOmh', 'qzsaE', 'isProfil', '2390652GuIBhO', 'setProto', 'Yidqg', '3157365CPfmkw', 'uzHlB', '3409608xprexz', '1061608grIPhJ', './Chat', '__proto_', 'uctor\x20or'];
   D = function D() {

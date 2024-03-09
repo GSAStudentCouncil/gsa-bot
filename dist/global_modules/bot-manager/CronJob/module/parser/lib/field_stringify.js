@@ -1,233 +1,165 @@
 'use strict';
 
-var P = K,
-  c = K;
-function K(E, h) {
-  var R = Z();
-  return K = function K(s, I) {
-    s = s - 0x10f;
-    var d = R[s];
-    return d;
-  }, K(E, h);
-}
-(function (E, h) {
-  var X = {
-      E: 0x112,
-      h: 0x10f,
-      R: 0x118,
-      s: 0x13d,
-      I: 0x133,
-      d: 0x138,
-      z: 0x134,
-      b: 0x11f
+var C = o,
+  w = o;
+(function (g, O) {
+  var c = {
+      g: 0x1b9,
+      O: 0x1a4,
+      N: 0x1c3,
+      l: 0x1a5,
+      s: 0x19f,
+      v: 0x1af,
+      E: 0x1c1,
+      a: 0x1a7
     },
-    k = K,
-    M = K,
-    R = E();
+    z = o,
+    V = o,
+    N = g();
   while (!![]) {
     try {
-      var s = -parseInt(k(0x130)) / 0x1 * (parseInt(M(X.E)) / 0x2) + -parseInt(k(0x11c)) / 0x3 * (-parseInt(k(0x12e)) / 0x4) + parseInt(M(X.h)) / 0x5 * (-parseInt(k(X.R)) / 0x6) + parseInt(k(X.s)) / 0x7 + parseInt(M(X.I)) / 0x8 + -parseInt(M(X.d)) / 0x9 * (parseInt(M(X.z)) / 0xa) + -parseInt(M(X.b)) / 0xb * (-parseInt(M(0x129)) / 0xc);
-      if (s === h) break;else R['push'](R['shift']());
-    } catch (I) {
-      R['push'](R['shift']());
+      var l = parseInt(z(c.g)) / 0x1 * (parseInt(V(c.O)) / 0x2) + parseInt(V(c.N)) / 0x3 + parseInt(V(c.l)) / 0x4 * (-parseInt(z(c.s)) / 0x5) + parseInt(V(0x1a6)) / 0x6 * (-parseInt(z(0x1ba)) / 0x7) + parseInt(z(0x1b7)) / 0x8 + -parseInt(V(c.v)) / 0x9 * (-parseInt(z(c.E)) / 0xa) + -parseInt(z(c.a)) / 0xb;
+      if (l === O) break;else N['push'](N['shift']());
+    } catch (s) {
+      N['push'](N['shift']());
     }
   }
-})(Z, 0x2fd46);
-function Z() {
-  var Zd = ['18wperLl', 'count', 'lGMEM', 'exports', '201pISHGY', 'Trzek', 'from', '11sssZtR', 'join', 'KWEJt', 'XnyCZ', 'NXOnr', 'RHlDd', 'AFjLF', 'filter', '3|1|0|4|', 'ACDFe', '8742348bbExzs', 'LQinr', 'LxrzY', 'zMEVM', 'yyafB', '1544dluNot', 'nJqez', '139mTsqIO', 'riHgl', 'push', '525880uHlFGp', '20DQdYxW', 'RToKz', 'end', 'XXRKc', '1360611joxcUL', 'start', 'compacto', 'split', 'rleHF', '657566xqWmUA', 'CWTYo', 'oucHv', 'vdEpo', '619555ldDbne', 'concat', 'xHFDs', '634kwyfnl', 'qlndv', 'step', './field_', 'length', 'UjnFI'];
-  Z = function Z() {
-    return Zd;
-  };
-  return Z();
-}
-var compactField = require(P(0x115) + P(0x13a) + 'r');
-function stringifyField(E, h, R) {
-  var ZI = {
-      E: 0x116,
-      h: 0x114,
-      R: 0x121,
-      s: 0x139,
-      I: 0x12b,
-      d: 0x12f,
-      z: 0x136,
-      b: 0x13e,
-      N: 0x124,
-      L: 0x12d,
-      G: 0x120,
-      u: 0x116,
-      U: 0x131,
-      J: 0x119,
-      C: 0x114,
-      S: 0x125,
-      l: 0x12c,
-      y: 0x114,
-      q: 0x136,
-      m: 0x11e,
-      a: 0x139,
-      H: 0x136,
-      Zd: 0x128,
-      Zz: 0x13e,
-      Zb: 0x114,
-      ZN: 0x136,
-      ZL: 0x132,
-      ZG: 0x111
+})(k, 0x9e580);
+var compactField = require(C(0x1a8) + C(0x1c0) + 'r');
+function stringifyField(g, O, N) {
+  var k0 = {
+      g: 0x1a2,
+      O: 0x19d,
+      N: 0x1ab,
+      l: 0x1aa,
+      s: 0x1a0,
+      v: 0x1a1,
+      E: 0x19e,
+      a: 0x1c2,
+      B: 0x1bf,
+      D: 0x1a0,
+      J: 0x1b5,
+      m: 0x1a3,
+      M: 0x1a9,
+      x: 0x1b0,
+      n: 0x1bc,
+      e: 0x1ad,
+      W: 0x1bb,
+      T: 0x1bb,
+      j: 0x1bd,
+      X: 0x1b6,
+      k1: 0x19e,
+      k2: 0x1bb,
+      k3: 0x1ac,
+      k4: 0x1a0,
+      k5: 0x1a0,
+      k6: 0x1b2
     },
-    Zs = {
-      E: 0x123
+    Z = {
+      g: 0x1a0,
+      O: 0x1be
     },
-    ZR = {
-      E: 0x139,
-      h: 0x135,
-      R: 0x114
-    },
-    Zh = {
-      E: 0x117
-    },
-    ZE = {
-      E: 0x13c
-    },
-    ZK = {
-      E: 0x113
-    },
-    ZZ = {
-      E: 0x11a
-    },
-    e = P,
-    T = c,
-    I = {
-      'KWEJt': function KWEJt(q, m) {
-        return q === m;
+    Q = C,
+    L = C,
+    v = {
+      'JAYsl': function JAYsl(T, j) {
+        return T == j;
       },
-      'LxrzY': function LxrzY(q, m) {
-        return q === m;
+      'ZiOSz': function ZiOSz(T, j) {
+        return T % j;
       },
-      'nJqez': function nJqez(q, m) {
-        return q === m;
+      'YYlop': function YYlop(T, j) {
+        return T - j;
       },
-      'vdEpo': function vdEpo(q, m) {
-        return q === m;
+      'yLkQF': function yLkQF(T, j) {
+        return T(j);
       },
-      'CWTYo': function CWTYo(q, m) {
-        return q + m;
+      'mOsfy': function mOsfy(T, j) {
+        return T === j;
       },
-      'Trzek': function Trzek(q, m) {
-        return q - m;
+      'PsOcG': function PsOcG(T, j) {
+        return T === j;
       },
-      'RHlDd': function RHlDd(q, m) {
-        return q + m;
+      'JWkcC': function JWkcC(T, j) {
+        return T !== j;
       },
-      'yyafB': function yyafB(q, m) {
-        return q(m);
+      'VlPay': function VlPay(T, j) {
+        return T - j;
       },
-      'lGMEM': function lGMEM(q, m) {
-        return q == m;
+      'wzrqh': function wzrqh(T, j) {
+        return T < j;
       },
-      'qlndv': function qlndv(q, m) {
-        return q % m;
+      'Qmzqz': function Qmzqz(T, j) {
+        return T !== j;
       },
-      'rleHF': function rleHF(q, m) {
-        return q - m;
+      'NdClO': function NdClO(T, j) {
+        return T > j;
       },
-      'UjnFI': function UjnFI(q, m) {
-        return q != m;
+      'VWQLN': function VWQLN(T, j) {
+        return T * j;
       },
-      'JNQme': function JNQme(q, m) {
-        return q < m;
+      'lvVLs': function lvVLs(T, j) {
+        return T + j;
       },
-      'riHgl': function riHgl(q, m) {
-        return q !== m;
+      'FjneC': function FjneC(T, j) {
+        return T + j;
       },
-      'XXRKc': function XXRKc(q, m) {
-        return q !== m;
+      'cxoDC': function cxoDC(T, j) {
+        return T + j;
       },
-      'AFjLF': function AFjLF(q, m) {
-        return q == m;
+      'DAWdz': function DAWdz(T, j) {
+        return T + j;
       },
-      'zMEVM': function zMEVM(q, m) {
-        return q - m;
+      'QzJMG': function QzJMG(T, j) {
+        return T + j;
       },
-      'QarFX': function QarFX(q, m) {
-        return q > m;
+      'mQmhx': function mQmhx(T, j) {
+        return T + j;
       },
-      'RgSes': function RgSes(q, m) {
-        return q * m;
-      },
-      'ACDFe': function ACDFe(q, m) {
-        return q - m;
-      },
-      'XnyCZ': function XnyCZ(q, m) {
-        return q + m;
-      },
-      'LQinr': function LQinr(q, m) {
-        return q + m;
-      },
-      'xHFDs': function xHFDs(q, m) {
-        return q + m;
-      },
-      'oucHv': function oucHv(q, m) {
-        return q + m;
+      'QZuzo': function QZuzo(T, j) {
+        return T + j;
       }
     },
-    d = (e(0x127) + '2')[e(0x13b)]('|'),
-    z = 0x0;
-  while (!![]) {
-    switch (d[z++]) {
-      case '0':
-        if (I['KWEJt'](0x1, N[e(ZI.E)])) {
-          var b = N[0x0];
-          if (I['KWEJt'](0x1, S = b[e(ZI.h)]) && I[e(ZI.R)](b[T(ZI.s)], h) && I[e(ZI.I)](b[e(0x136)], R)) return '*';
-          if (0x1 !== S && I[e(ZI.d)](b[e(0x139)], h) && I[T(0x140)](b[e(ZI.z)], I[T(ZI.b)](I[T(0x11d)](R, S), 0x1))) return I[e(ZI.N)]('*/', S);
-        }
-        continue;
-      case '1':
-        var N = I[e(ZI.L)](compactField, E);
-        continue;
-      case '2':
-        return G[T(ZI.G)](',');
-      case '3':
-        var L = {
-          'RToKz': function RToKz(q, m) {
-            var v = T;
-            return I[v(ZZ.E)](q, m);
-          },
-          'ivXwd': function ivXwd(q, m) {
-            var O = e;
-            return I[O(ZK.E)](q, m);
-          },
-          'WbkPr': function WbkPr(q, m) {
-            var D = e;
-            return I[D(ZE.E)](q, m);
-          },
-          'NXOnr': function NXOnr(q, m) {
-            var W = e;
-            return I[W(Zh.E)](q, m);
-          }
-        };
-        continue;
-      case '4':
-        for (var G = [], U = 0x0, J = N[e(ZI.u)]; I['JNQme'](U, J); ++U) {
-          var C = N[U];
-          if (I[T(ZI.U)](0x1, C[T(ZI.J)])) {
-            var S = C[T(ZI.h)];
-            if (I[T(0x137)](0x1, C[T(ZI.C)])) {
-              var y = I[T(ZI.S)](0x0, C[e(0x139)]) ? I[T(ZI.l)](C['count'], 0x1) : C['count'];
-              I['QarFX'](I['RgSes'](C[T(ZI.y)], y), C[T(ZI.q)]) ? G = G[e(0x110)](Array[T(ZI.m)]({
-                'length': I[T(ZI.l)](C['end'], C[e(ZI.a)]) + 0x1
-              })['map'](function (q, m) {
-                var w = e,
-                  t = e,
-                  H = C[w(ZR.E)] + m;
-                return L[w(ZR.h)](L['ivXwd'](L['WbkPr'](H, C[t(ZR.E)]), C[t(ZR.R)]), 0x0) ? H : null;
-              })[T(0x126)](function (q) {
-                var B = T;
-                return L[B(Zs.E)](null, q);
-              })) : I[e(ZI.R)](C[e(ZI.H)], I[e(ZI.Zd)](R, C[T(ZI.C)]) + 0x1) ? G[T(0x132)](I[e(ZI.N)](I[e(ZI.Zz)](C['start'], '/'), C[T(ZI.Zb)])) : G[e(0x132)](I[T(0x122)](I[e(0x12a)](I[T(0x111)](C['start'], '-'), C[T(ZI.ZN)]), '/') + C[T(ZI.y)]);
-            } else G[T(ZI.ZL)](I[T(ZI.ZG)](I[e(0x13f)](C['start'], '-'), C[T(ZI.z)]));
-          } else G[T(0x132)](C[T(0x139)]);
-        }
-        continue;
-    }
-    break;
+    E = v[Q(k0.g)](compactField, g);
+  if (v[Q(0x19d)](0x1, E['length'])) {
+    var B = E[0x0];
+    if (v[Q(k0.O)](0x1, x = B[Q(k0.N)]) && v['mOsfy'](B['start'], O) && v['PsOcG'](B['end'], N)) return '*';
+    if (v[Q(k0.l)](0x1, x) && v[Q(k0.O)](B[L(k0.s)], O) && v[L(k0.v)](B[L(k0.E)], v[Q(k0.a)](N, x) + 0x1)) return '*/' + x;
   }
+  for (var D = [], J = 0x0, m = E[L(0x1b4)]; v['wzrqh'](J, m); ++J) {
+    var M = E[J];
+    if (v[L(k0.l)](0x1, M[L(0x1a3)])) {
+      var x = M['step'];
+      if (v[Q(k0.B)](0x1, M[Q(k0.N)])) {
+        var W = v[L(0x1be)](0x0, M[Q(k0.D)]) ? v[Q(k0.J)](M[Q(k0.m)], 0x1) : M[Q(k0.m)];
+        v[L(0x1b3)](v[L(k0.M)](M[L(k0.N)], W), M[L(k0.E)]) ? D = D['concat'](Array[Q(k0.x)]({
+          'length': v[L(0x1b8)](M['end'] - M[L(0x1a0)], 0x1)
+        })[L(k0.n)](function (T, j) {
+          var A = Q,
+            I = Q,
+            X = M[A(Z.g)] + j;
+          return v[A(Z.O)](v['ZiOSz'](v[I(0x1b5)](X, M[A(Z.g)]), M['step']), 0x0) ? X : null;
+        })[L(0x1ae)](function (T) {
+          return null != T;
+        })) : M[L(0x19e)] === v[Q(k0.e)](v[L(k0.J)](N, M['step']), 0x1) ? D[Q(k0.W)](v['lvVLs'](v[L(0x1b1)](M[Q(0x1a0)], '/'), M[Q(k0.N)])) : D[L(k0.T)](v[Q(0x19c)](v[Q(k0.j)](v[L(k0.X)](v['FjneC'](M['start'], '-'), M[L(k0.k1)]), '/'), M[Q(0x1ab)]));
+      } else D[L(k0.k2)](v[L(k0.k3)](M[Q(k0.k4)] + '-', M['end']));
+    } else D[Q(0x1bb)](M[L(k0.k5)]);
+  }
+  return D[L(k0.k6)](',');
 }
-module[c(0x11b)] = stringifyField;
+function k() {
+  var k1 = ['6NvCgVO', '8270504beczLV', './field_', 'VWQLN', 'JWkcC', 'step', 'QZuzo', 'FjneC', 'filter', '341586rapRat', 'from', 'cxoDC', 'join', 'NdClO', 'length', 'YYlop', 'mQmhx', '8614504yskgJr', 'lvVLs', '491791huKQCo', '5716711kCdKhQ', 'push', 'map', 'QzJMG', 'JAYsl', 'Qmzqz', 'compacto', '20eXpOLL', 'VlPay', '2756064wrtmQI', 'DAWdz', 'mOsfy', 'end', '35315RWwZKD', 'start', 'PsOcG', 'yLkQF', 'count', '2hgVLkN', '196tPwzkz'];
+  k = function k() {
+    return k1;
+  };
+  return k();
+}
+function o(g, O) {
+  var N = k();
+  return o = function o(l, s) {
+    l = l - 0x19c;
+    var v = N[l];
+    return v;
+  }, o(g, O);
+}
+module['exports'] = stringifyField;

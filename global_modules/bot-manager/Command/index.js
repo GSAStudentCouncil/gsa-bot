@@ -1,19 +1,23 @@
 const { DateTime } = require('../DateTime');
+
 const $ = `/sdcard/msgbot/global_modules/bot-manager/Command`;
 const IS_DIST = false;
 const COMPRESS = '\u200b'.repeat(500);
 
 class Command {
-	constructor(name, description, _execute, _executeLazy, _executeCron, cronJobs, channels, examples) {
+	constructor(name, icon, description, _execute, _executeLazy, _executeCron, cronJobs, channels, examples) {
 		if (this.constructor === Command)
 			throw new TypeError("Cannot construct abstract class");
 		
 		if (name == null)
 			throw new TypeError("name is required");
+		if (icon == null)
+			throw new TypeError("icon is required");
 		if (description == null)
 			throw new TypeError("description is required");
 		
 		this.name = name;
+		this.icon = icon;
 		this.description = description;
 		this.channels = channels ?? [];
 		this.cronJobs = cronJobs ?? {};
@@ -26,7 +30,7 @@ class Command {
 		this._executeCron = _executeCron ?? ((self, tag) => {
 		});
 		
-		this.lazy = _executeLazy !== undefined;
+		this.lazy = _executeLazy != null;
 	}
 	
 	execute(chat, channel, args) {
@@ -213,7 +217,7 @@ class DateArg extends Arg {
 	}
 	
 	toRegExp() {
-		return /[0-9+\-ㄱ-ㅎ가-힣 ]+/;
+		return /[0-9+\-ㄱ-ㅎㅏ-ㅣ가-힣:./ ]+/;
 	}
 	
 	parse(value) {
@@ -249,7 +253,7 @@ class StructuredCommand extends Command {
 		if (options.usage == null)
 			throw new TypeError("usage is required");
 		
-		super(options.name, options.description, options.execute, options.executeLazy, options.executeCron, options.cronJobs, options.channels, options.examples);
+		super(options.name, options.icon, options.description, options.execute, options.executeLazy, options.executeCron, options.cronJobs, options.channels, options.examples);
 		
 		this.usage = options.usage;
 		
@@ -323,6 +327,7 @@ class StructuredCommand extends Command {
 	static Builder = class {
 		constructor() {
 			this.name = null;
+			this.icon = null;
 			this.description = null;
 			this.usage = null;
 			this.execute = null;
@@ -333,8 +338,9 @@ class StructuredCommand extends Command {
 			this.examples = [];
 		}
 		
-		setName(name) {
+		setName(name, icon) {
 			this.name = name;
+			this.icon = icon;
 			return this;
 		}
 		
@@ -364,18 +370,20 @@ class StructuredCommand extends Command {
 		}
 		
 		setChannels(...channels) {
-			this.channels = channels;
+			this.channels = channels.filter(Boolean);
 			return this;
 		}
 		
 		setExamples(...examples) {
-			this.examples = examples;
+			this.examples = examples.map(e => Array.isArray(e) ? ['\n', ...e, '\n'] : e).flat();
 			return this;
 		}
 		
 		build() {
 			if (this.name == null)
 				throw new TypeError("name is required");
+			if (this.icon == null)
+				throw new TypeError("icon is required");
 			if (this.description == null)
 				throw new TypeError("description is required");
 			if (this.usage == null)
@@ -385,6 +393,7 @@ class StructuredCommand extends Command {
 			
 			return new StructuredCommand({
 				name: this.name,
+				icon: this.icon,
 				description: this.description,
 				usage: this.usage,
 				execute: this.execute,
@@ -430,16 +439,17 @@ class NaturalCommand extends Command {
 		if (options.query == null)
 			throw new TypeError("query is required");
 		
-		super(options.name, options.description, options.execute, options.executeLazy, options.executeCron, options.cronJobs, options.channels, options.examples);
+		super(options.name, options.icon, options.description, options.execute, options.executeLazy, options.executeCron, options.cronJobs, options.channels, options.examples);
 		
 		this.query = options.query;
 		this.useDateParse = options.useDateParse;
 		this.useDuration = options.useDuration;
-		options.dictionaryPath = options.dictionaryPath || 'dict.json';
+		this.filterIncludeEnding = options.filterIncludeEnding;
+		this.dictionaryPath = options.dictionaryPath || 'dict.json';
 		
 		let dictionary = IS_DIST ?
-			JSON.parse(FileStream.read(`${$}/${options.dictionaryPath}`)) :
-			require(`./${options.dictionaryPath}`);
+			JSON.parse(FileStream.read(`${$}/${this.dictionaryPath}`)) :
+			require(`./${this.dictionaryPath}`);
 		
 		this.map = {};
 		for (let tok in dictionary) {
@@ -452,6 +462,7 @@ class NaturalCommand extends Command {
 	static Builder = class {
 		constructor() {
 			this.name = null;
+			this.icon = null;
 			this.description = null;
 			this.query = null;
 			this.dictionaryPath = null;
@@ -460,18 +471,25 @@ class NaturalCommand extends Command {
 			this.executeCron = null;
 			this.useDateParse = false;
 			this.useDuration = false;
+			this.filterIncludeEnding = true;
 			this.cronJobs = {};
 			this.channels = [];
 			this.examples = [];
 		}
 		
-		setName(name) {
+		setName(name, icon) {
 			this.name = name;
+			this.icon = icon;
 			return this;
 		}
 		
 		setDescription(description) {
 			this.description = description;
+			return this;
+		}
+		
+		setDictionaryPath(dictionaryPath) {
+			this.dictionaryPath = dictionaryPath;
 			return this;
 		}
 		
@@ -485,9 +503,10 @@ class NaturalCommand extends Command {
 			return this;
 		}
 		
-		setUseDateParse(useDateParse, useDuration) {
-			this.useDateParse = useDuration;
+		setUseDateParse(useDateParse, useDuration = false, filterIncludeEnding = true) {
+			this.useDateParse = useDateParse;
 			this.useDuration = useDuration;
+			this.filterIncludeEnding = filterIncludeEnding;
 			return this;
 		}
 		
@@ -507,18 +526,20 @@ class NaturalCommand extends Command {
 		}
 		
 		setChannels(...channels) {
-			this.channels = channels;
+			this.channels = channels.filter(Boolean);
 			return this;
 		}
 		
 		setExamples(...examples) {
-			this.examples = examples;
+			this.examples = examples.map(e => Array.isArray(e) ? ['\n', ...e, '\n'] : e).flat();
 			return this;
 		}
 		
 		build() {
 			if (this.name == null)
 				throw new TypeError("name is required");
+			if (this.icon == null)
+				throw new TypeError("icon is required");
 			if (this.description == null)
 				throw new TypeError("description is required");
 			if (this.query == null)
@@ -528,6 +549,7 @@ class NaturalCommand extends Command {
 			
 			return new NaturalCommand({
 				name: this.name,
+				icon: this.icon,
 				description: this.description,
 				query: this.query,
 				dictionaryPath: this.dictionaryPath,
@@ -538,7 +560,8 @@ class NaturalCommand extends Command {
 				channels: this.channels,
 				examples: this.examples,
 				useDateParse: this.useDateParse,
-				useDuration: this.useDuration
+				useDuration: this.useDuration,
+				filterIncludeEnding: this.filterIncludeEnding
 			});
 		}
 	}
@@ -568,6 +591,7 @@ class Registry {
 	static CommandRegistry = new Registry();
 	
 	constructor() {
+		// 싱글톤 클래스
 		if (Registry.CommandRegistry)
 			return Registry.CommandRegistry;
 		
@@ -626,6 +650,7 @@ class Registry {
 			if (cmd.channels.length !== 0 && !cmd.channels.map(c => c.id).includes(channel.id))    // 방이 포함되어 있지 않을 경우
 				continue;
 			
+			let ret = {};
 			let args;
 			
 			if (cmd instanceof StructuredCommand) {
@@ -651,31 +676,13 @@ class Registry {
 					continue;
 			}
 			else if (cmd instanceof NaturalCommand) {
-				let rawText = chat.text;
-				let text = chat.text.replace(/ +/g, ' ').replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, ""); // 구두점 제거
+				let filteredText = chat.text.replace(/\s+/g, ' ');
 				
 				args = Object.assign({}, cmd.query);    // 기본값을 가진 객체를 깊은 복사
-				
-				if (cmd.useDateParse) {
-					if (cmd.useDuration) {
-						let { parse: { from, to }, string } = DateTime.parseDurationWithFilteredString(text);
-						args.datetime = { from, to };
-						
-						if (from != null && to != null)
-							text = string;
-					}
-					else {
-						let { parse, string } = DateTime.parseWithFilteredString(text);
-						args.datetime = parse;
-						
-						if (parse != null)
-							text = string;
-					}
-				}
-				
+
 				// 기본값만 있던 cmd.query 에서 쿼리할 대상으로 보낸 토큰들에 대응되는 단어들을 매칭
 				// 매칭이 실패하면 기본값이 있는 경우 그대로 남고, 아니면 null로 남게 된다
-				for (let word of text.split(' ')) {
+				for (let word of filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "").split(' ')) {	// 구두점 제거
 					if (word in cmd.map) {
 						let token = cmd.map[word];
 						
@@ -683,6 +690,28 @@ class Registry {
 							args[token] = word;
 					}
 				}
+				
+				if (cmd.useDateParse) {
+					if (cmd.useDuration) {
+						let { parse: { from, to }, string } = DateTime.parseDuration(filteredText, true, cmd.filterIncludeEnding);
+						
+						if (from != null && to != null) {
+							args.datetime = { from, to };
+							filteredText = string;
+						}
+					}
+					else {
+						let { parse, string } = DateTime.parse(filteredText, true, cmd.filterIncludeEnding);
+						
+						if (parse != null) {
+							args.datetime = parse;
+							filteredText = string;
+						}
+					}
+					
+					chat.filteredText = filteredText;
+					// Log.debug(`filteredText: ${chat.filteredText}`);	// FIXME
+				}				
 				
 				let is_full = true;
 				
@@ -699,9 +728,6 @@ class Registry {
 				
 				if (!is_full)
 					continue;
-				
-				chat.text = text;
-				chat.rawText = rawText;
 			}
 			
 			return { cmd, args };
