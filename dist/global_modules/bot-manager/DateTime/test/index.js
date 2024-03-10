@@ -96,8 +96,12 @@ parseDuration = function parseDuration(string) {
 // parseDuration`3월 3일부터 다음 주 까지`	// ✅
 // parse`이번주 일요일`	// ✅
 
-// TODO: `부터` 없어도 `까지`가 있으면 `부터`를 자동으로 `오늘`로 처리하는 기능 추가
-
 // parse`이번주 일요일`	// ✅
 // parse`이번주 일요일까지`	// ✅
-// parseDuration`오늘부터 이번주 일요일까지`
+// parseDuration`이번주 일요일까지`	// ✅
+// parseDuration`오늘부터 이번주 일요일까지`	// ✅
+
+// 기준 날짜에서 다시 parse
+// datetime = DateTime.parse('이번주 일요일');
+// console.log(datetime.toString());
+// console.log(datetime.parse('3일 후').toString());	// 이번주 일요일에서 3일 후 ✅

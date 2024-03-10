@@ -213,6 +213,13 @@ export declare class DateTime {
 
 	static parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true, locale?: string): DateTime | undefined;
 	
+	parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true): {
+		parse: DateTime | undefined, string: string
+	};
+
+	parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true): DateTime | undefined;
+	
+
 	// private static _parse(dateString: string, locale?: string): [ SetDateTimeTemplate, string? ];
 	
 	static now(): DateTime;

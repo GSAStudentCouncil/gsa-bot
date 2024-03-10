@@ -99,3 +99,8 @@ parseDuration = string => {
 // parse`이번주 일요일까지`	// ✅
 // parseDuration`이번주 일요일까지`	// ✅
 // parseDuration`오늘부터 이번주 일요일까지`	// ✅
+
+// 기준 날짜에서 다시 parse
+// datetime = DateTime.parse('이번주 일요일');
+// console.log(datetime.toString());
+// console.log(datetime.parse('3일 후').toString());	// 이번주 일요일에서 3일 후 ✅

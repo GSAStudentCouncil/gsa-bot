@@ -1,8 +1,33 @@
 const { DateTime } = require('../DateTime');
+require('../polyfill');
 
 const $ = `/sdcard/msgbot/global_modules/bot-manager/Command`;
 const IS_DIST = false;
 const COMPRESS = '\u200b'.repeat(500);
+
+function josa(str, josa) {
+	const hasJong = (str.charCodeAt(str.length - 1) - '가'.charCodeAt(0)) % 28 !== 0;
+
+	switch (josa) {
+		case '이가':
+		case '가':
+			return str + (hasJong ? '이가' : '가');
+		case '을':
+		case '를':
+			return str + (hasJong ? '을' : '를');
+		case '은':
+		case '는':
+			return str + (hasJong ? '은' : '는');
+		case '으로':
+		case '로':
+			return str + (hasJong ? '으로' : '로');
+		case '과':
+		case '와':
+			return str + (hasJong ? '과' : '와');
+		default:
+			return str + josa;
+	}
+};
 
 class Command {
 	constructor(name, icon, description, _execute, _executeLazy, _executeCron, cronJobs, channels, examples) {
@@ -27,7 +52,7 @@ class Command {
 		});
 		this._executeLazy = _executeLazy ?? ((self, chat, prevChat, channel, prevChannel, args) => {
 		});
-		this._executeCron = _executeCron ?? ((self, tag) => {
+		this._executeCron = _executeCron ?? ((self, index, datetime) => {
 		});
 		
 		this.lazy = _executeLazy != null;
@@ -41,47 +66,49 @@ class Command {
 		return this._executeLazy(this, chat, prevChat, channel, prevChannel, args);
 	}
 	
-	executeCron(tag) {
-		return this._executeCron(this, tag);
+	executeCron(index, datetime) {
+		return this._executeCron(this, index, datetime);
 	}
 	
 	register() {
 		Registry.CommandRegistry.register(this);
 	}
 	
-	manual(contents) {
+	createManual(contents) {
 		let ret = [
 			`🧩 \`${this.name}\` 명령어 도움말${COMPRESS}`,
 			'——————————',
 			this.description,
 			'',
-			'📌 인자',
-			'——',
 			...contents,
 			''
 		];
 		
-		if (Object.keys(this.cronJobs).length > 0) {
+		if (this.cronJobs.length > 0) {
 			ret.push('📌 자동 실행 주기');
 			ret.push('——');
-			ret.push(...Object.entries(this.cronJobs).map(([k, v]) => `· ${k}: ${v}`));
+			ret.push(...this.cronJobs.map(({ comment }) => `· ${comment}`));
 			ret.push('');
 		}
 		
 		if (this.channels.length > 0) {
 			ret.push('📌 활성화된 방');
 			ret.push('——');
-			ret.push(...this.channels.map(c => `· ${c.name}`));
+			ret.push(...this.channels.map(channel => `· ${channel.customName}`));
 			ret.push('');
 		}
 		
 		if (this.examples.length > 0) {
 			ret.push('📌 예시');
 			ret.push('——');
-			ret.push(...this.examples.map(e => `"${e}"`));
+			ret.push(...this.examples.map(e => `${e}`));
 		}
 		
 		return ret.join('\n');
+	}
+
+	manual(formats) {
+		throw new Error("Not implemented");
 	}
 }
 
@@ -109,6 +136,9 @@ class IntArg extends Arg {
 		super(name);
 		this.min = min;
 		this.max = max;
+
+		this._min_str = '이상';
+		this._max_str = '이하';
 	}
 	
 	toRegExp() {
@@ -160,6 +190,10 @@ class StrArg extends Arg {
 		this.length = length;
 		this.minLength = minLength;
 		this.maxLength = maxLength;
+
+		this._length_str_ = '글자';
+		this._minlength_str = '글자 이상';
+		this._maxlength_str = '글자 이하';
 	}
 	
 	toRegExp() {
@@ -242,11 +276,17 @@ class DateArg extends Arg {
 	}
 }
 
-const map = {
+const mapType = {
 	'int': IntArg,
 	'str': StrArg,
 	'date': DateArg
 };
+
+const mapStr = {
+	'int': '숫자',
+	'str': '문자열',
+	'date': ['날짜', '기간']
+}
 
 class StructuredCommand extends Command {
 	constructor(options) {
@@ -257,28 +297,35 @@ class StructuredCommand extends Command {
 		
 		this.usage = options.usage;
 		
-		this._argumentStr = [];
+		this._arguments = [];
 		
 		let args = [];
 		let regexApplied = this.usage.replace(/\s*<.+?>/g, m => {
 			const pos = m.indexOf('<');
 			
 			const whitespaces = m.slice(0, pos);
-			let [ nameAndType, ...options ] = m.slice(pos + 1, -1).split(/\s+/);
+			let [ nameAndType, ...properties ] = m.slice(pos + 1, -1).split(/\s+/);
 			let [ name, type ] = nameAndType.split(":");
-			this._argumentStr.push([ name, type ]);
+			this._arguments.push([ name, type ]);
 			
-			options = options.map(o => {
+			properties = properties.map(o => {
 				let splited = o.split("=");
-				if (!isNaN(Number(splited[1]))) {
+
+				if (!Number.isNaN(Number(splited[1]))) {
 					splited[1] = Number(splited[1]);
+				}
+				else if (splited[1] === 'true') {
+					splited[1] = true;
+				}
+				else if (splited[1] === 'false') {
+					splited[1] = false;
 				}
 				
 				return splited;
 			});
 			
 			let k;
-			for (let key in map) {
+			for (let key in mapType) {
 				if (type.startsWith(key)) {
 					k = key;
 					break;
@@ -288,13 +335,14 @@ class StructuredCommand extends Command {
 			if (k == null)
 				throw new TypeError(`Invalid type: ${type}`);
 			
-			args.push(new map[k](name));
+			args.push(new mapType[k](name));
 			
-			for (let [ key, value ] of options) {
+			for (let [ key, value ] of properties) {
 				args[args.length - 1][key] = value;
 			}
 			
 			type = type.slice(k.length).trim();
+			this._arguments[this._arguments.length - 1][1] = k;
 			
 			if (type === '[]') {
 				if (k !== 'date')
@@ -333,7 +381,7 @@ class StructuredCommand extends Command {
 			this.execute = null;
 			this.executeLazy = null;
 			this.executeCron = null;
-			this.cronJobs = {};
+			this.cronJobs = [];
 			this.channels = [];
 			this.examples = [];
 		}
@@ -356,7 +404,7 @@ class StructuredCommand extends Command {
 		
 		setExecute(execute, executeLazy) {
 			this.execute = execute;
-			if (executeLazy !== undefined)
+			if (executeLazy != null)
 				this.executeLazy = executeLazy;
 			
 			return this;
@@ -375,7 +423,7 @@ class StructuredCommand extends Command {
 		}
 		
 		setExamples(...examples) {
-			this.examples = examples.map(e => Array.isArray(e) ? ['\n', ...e, '\n'] : e).flat();
+			this.examples = examples.map(e => Array.isArray(e) ? e.map((e2, i) => i == 0 ? e2 : '┗' + '━'.repeat(i - 1) + ' ' + e2).join('\n') + '\n' : e);
 			return this;
 		}
 		
@@ -410,27 +458,52 @@ class StructuredCommand extends Command {
 		new StructuredCommand(options).register();
 	}
 	
-	manual() {
-		return super.manual([
-			`"${this.usage.replace(/<.+?>/g, m => m.slice(0, m.indexOf(':')) + '>')}"`,
-			...this.args.map((arg, i) => {
-				let ret = `· ${this._argumentStr[i][0]}: ${this._argumentStr[i][1]}`;
-				
-				let options = [];
-				Object.keys(arg).forEach(key => {
-					if (key === 'name' || key === 'many' || key === 'includeEmpty')
-						return;
-					
-					if (arg[key])   // null, undefined, 0, false 등이 아닐 경우
-						options.push(`${key}=${arg[key]}`);
-				});
-				
-				if (options.length > 0)
-					ret += ` (${options.join(', ')})`;
-				
-				return ret;
-			})
-		]);
+	manual(formats) {
+		let ret = [
+			'📌 입력 양식',
+			'——',
+		];
+
+		let usage = this.usage.replace(/<.+?>/g, m => {
+			let name = m.slice(1, m.indexOf(':'));
+			
+			if (this.args.find(arg => arg.name === name).many)
+				name = `${name}...`;
+
+			return `<${name}>`;
+		});
+		ret.push(usage);
+
+		let args = this.args.map((arg, i) => {
+			let argStr = this._arguments[i];
+
+			let name = argStr[0];
+			let typename = argStr[1] === 'date' ? mapStr['date'][Number(arg.duration)] : mapStr[argStr[1]];
+			let properties = [];
+			let endProperties = [];
+
+			Object.keys(arg).forEach(key => {
+				if (arg[key] && `_${key}_str` in arg)   // null, undefined, 0, false 등이 아닐 경우
+					properties.push(`${arg[key]}${arg[`_${key}_str`]}`);
+				else {
+					if (key === 'many' && arg[key] === true)
+						endProperties.push('여러 개 입력 가능');
+					else if (key === 'includeEmpty' && arg[key] === true)
+						endProperties.push('생략 허용');
+				}
+			});
+			
+			return `· ${name}: ${(properties.join(' ') + ' ' + typename).trim()} ${endProperties.length > 0 ? ('(' + endProperties.join(', ') + ')') : ''}`;
+		});
+		ret.push(...args);
+
+		let manual = super.createManual(ret);
+
+		for (let fmt in formats) {
+			manual = manual.replaceAll(`$${fmt}`, formats[fmt]);
+		}
+
+		return manual;
 	}
 }
 
@@ -457,6 +530,8 @@ class NaturalCommand extends Command {
 				this.map[alias] = tok;
 			}
 		}
+
+		this.map = Object.entries(this.map).sort((a, b) => b[0].length - a[0].length);
 	}
 	
 	static Builder = class {
@@ -472,7 +547,7 @@ class NaturalCommand extends Command {
 			this.useDateParse = false;
 			this.useDuration = false;
 			this.filterIncludeEnding = true;
-			this.cronJobs = {};
+			this.cronJobs = [];
 			this.channels = [];
 			this.examples = [];
 		}
@@ -531,7 +606,7 @@ class NaturalCommand extends Command {
 		}
 		
 		setExamples(...examples) {
-			this.examples = examples.map(e => Array.isArray(e) ? ['\n', ...e, '\n'] : e).flat();
+			this.examples = examples.map(e => Array.isArray(e) ? e.map((e2, i) => i == 0 ? e2 : '┗' + '━'.repeat(i - 1) + ' ' + e2).join('\n') + '\n' : e);
 			return this;
 		}
 		
@@ -570,20 +645,51 @@ class NaturalCommand extends Command {
 		new NaturalCommand(options).register();
 	}
 	
-	manual() {
-		let ret = [];
+	manual(formats) {
+		let ret = [
+			'📌 필수 포함 용어',
+			'——',
+		];
+
 		for (let key in this.query) {
-			let tmp = `· ${key} `;
-			
+			if (key === 'datetime')
+				continue;
+
+			let tmp = `· ${josa(key, '를')} 의미하는 용어 (ex. ${this.map.filter(e => e[1] === key).map(e => e[0]).slice(0, 4).join(', ')}, ...) `;
+			let humanize = value => value instanceof DateTime ? value.humanize() : value;
+
 			if (typeof this.query[key] === 'function')
-				tmp += `(default = function -> ${this.query[key]()})`;
-			else if (this.query[key] !== null)
-				tmp += `(default = ${this.query[key]})`;
+				tmp += `(생략 시 기본값 = ${humanize(this.query[key]())})`;
+			else if (this.query[key] != null && !Number.isNaN(this.query[key]))
+				tmp += `(생략 시 기본값 = ${humanize(this.query[key])})`;
 			
 			ret.push(tmp);
 		}
+
+		if (this.useDateParse) {
+			let tmp;
+			if (this.useDuration)
+				tmp = `· '기간'을 의미하는 용어 (ex. 다음 주까지, 내일부터 모레 저녁까지, ...)`;
+			else
+				tmp = `· '날짜 및 시간'을 의미하는 용어 (ex. 3월 14일, 내일 저녁, 4일 뒤 5시, ...)`;
+
+			let humanize = value => value instanceof DateTime ? value.humanize() : value;
+			
+			if (typeof this.query['datetime'] === 'function')
+				tmp += `(생략 시 기본값 = ${humanize(this.query['datetime']())})`;
+			else if (this.query['datetime'] != null && !Number.isNaN(this.query['datetime']))
+				tmp += `(생략 시 기본값 = ${humanize(this.query['datetime'])})`;
+
+			ret.push(tmp);
+		}
 		
-		return super.manual(ret);
+		let manual = super.createManual(ret);
+
+		for (let fmt in formats) {
+			manual = manual.replaceAll(`$${fmt}`, formats[fmt]);
+		}
+
+		return manual;
 	}
 }
 
@@ -605,13 +711,13 @@ class Registry {
 	}
 	
 	loop(callback) {
-		for (let cmdName in this.data) {
-			callback(this.data[cmdName]);
+		for (let cmd of this.data) {
+			callback(cmd);
 		}
 	}
 	
 	register(command) {
-		if (!(command instanceof Command))
+		if (!(command instanceof Command))	
 			throw new TypeError("command must be instance of Command");
 		
 		for (let cmd of this.data) {
@@ -639,8 +745,9 @@ class Registry {
 		});
 		
 		if (this.cronManager != null) {
-			for (let tag in command.cronJobs) {
-				this.cronManager.add(command.cronJobs[tag], () => command.executeCron(tag));
+			for (let i = 0; i < command.cronJobs.length; i++) {
+				let { cron } = command.cronJobs[i];
+				this.cronManager.add(cron, () => command.executeCron(i, DateTime.now()));
 			}
 		}
 	}
@@ -682,13 +789,21 @@ class Registry {
 
 				// 기본값만 있던 cmd.query 에서 쿼리할 대상으로 보낸 토큰들에 대응되는 단어들을 매칭
 				// 매칭이 실패하면 기본값이 있는 경우 그대로 남고, 아니면 null로 남게 된다
-				for (let word of filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "").split(' ')) {	// 구두점 제거
-					if (word in cmd.map) {
-						let token = cmd.map[word];
-						
-						if (token in args)
+				let startIdx = 0;
+				const foundTokens = new Set();
+				
+				while (filteredText.length > startIdx) {
+					for (let [word, token] of cmd.map) {
+						if (token in args && !foundTokens.has(token) && filteredText.startsWith(word, startIdx)) {
 							args[token] = word;
+							foundTokens.add(token);
+							startIdx += word.length - 1;
+
+							break;
+						}
 					}
+
+					startIdx++;
 				}
 				
 				if (cmd.useDateParse) {
@@ -708,10 +823,12 @@ class Registry {
 							filteredText = string;
 						}
 					}
-					
-					chat.filteredText = filteredText;
-					// Log.debug(`filteredText: ${chat.filteredText}`);	// FIXME
-				}				
+				}	
+				
+				chat.filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+				foundTokens.forEach(token => {
+					chat.filteredText = chat.filteredText.replace(token, '');
+				});
 				
 				let is_full = true;
 				

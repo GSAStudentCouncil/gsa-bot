@@ -21,7 +21,7 @@ app.on("message", function (chat, channel) {
     command = _chat$text$trim$split2[0],
     type = _chat$text$trim$split2[1];
   if (command === "반응") {
-    if (type === undefined || isNaN(Number(type)) || type < 0 || type > 6) {
+    if (type === undefined || Number.isNaN(Number(type)) || type < 0 || type > 6) {
       channel.send("반응 [타입]\nCANCEL: 0\nHEART: 1\nLIKE: 2\nCHECK: 3\nLAUGH: 4\nSURPRISE: 5\nSAD: 6");
       return;
     }
