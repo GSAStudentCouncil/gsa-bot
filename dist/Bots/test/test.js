@@ -1,14 +1,10 @@
 "use strict";
 
-var BotManager = require('bot-manager').get(BotManager);
-var bot = BotManager.getCurrentBot();
-var _require = require('bot-manager/Event'),
-  Event = _require.Event;
-var _require2 = require('bot-manager/Command'),
-  StructuredCommand = _require2.StructuredCommand,
-  NaturalCommand = _require2.NaturalCommand;
-bot.addCommand(new NaturalCommand.Builder().setName('test').setDescription('test command').setQuery({}).setUseDateParse(true, false, true).setExecute(function (self, chat, channel, _ref) {
-  var datetime = _ref.datetime;
-  channel.send("filteredText=".concat(chat.filteredText, "\ndatetime=").concat(datetime.humanize()));
-}).build());
-bot.start();
+var G = require('test-manager').get(BotManager).getCurrentBot();
+G.add('a');
+G.add('b');
+G.add('c');
+G.on('message', function (chat, channel) {
+  if (chat.text === '밥') channel.send('대충 밥이 어쩌고 저쩌고');
+});
+G.start();

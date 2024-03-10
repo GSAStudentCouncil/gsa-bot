@@ -1,0 +1,66 @@
+{
+	"locale": "en-US",
+	"isTurnReversed": true,
+
+	"t": ["AM", "PM"],
+	"W": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+	"WW": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+	"MMM": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	"MMMM": [
+		"January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	],
+	
+	"formats": {
+		"shortDate": "M/D/YYYY",
+		"longDate": "MMMM DD, YYYY",
+		"shortTime": "h:mm t",
+		"longTime": "h:mm:ss t",
+		"full": "MMMM DD, YYYY h:mm:ss t"
+	},
+	
+	"translate": {
+		"about": "about",
+		"every": "every",
+		"bi": "bi",
+		"ly": "ly",
+		
+		"second": "second",
+		"minute": "minute",
+		"hour": "hour",
+		"day": "day",
+		"weekday": "weekday",
+		"week": "week",
+		"month": "month",
+		"year": "year",
+		
+		"yesterday": "yesterday",
+		"today": "today",
+		"tomorrow": "tomorrow",
+		
+		"ago": "ago",
+		"after": "after",
+		"from": "from",
+		"to": "to",
+		"begin": "begin",
+		"done": "done",
+		
+		"morning": "morning",
+		"noon": "noon",
+		"afternoon": "afternoon",
+		"evening": "evening",
+		"night": "night",
+		"midnight": "midnight",
+		
+		"quarter": "quarter",
+		"half": "half",
+		
+		"secondly": "secondly",
+		"minutely": "minutely",
+		"hourly": "hourly",
+		"daily": "daily",
+		"weekly": "weekly",
+		"monthly": "monthly",
+		"yearly": "yearly"
+	}
+}

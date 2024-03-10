@@ -92,7 +92,7 @@ var command = new StructuredCommand.Builder().setName('todo1', '📅').setDescri
 //     .setExamples('ujihweuhwef', 'iuhwefiuhwef', ['ㅑㅕㅗㅈㄷㄹ', 'ㅑㅕㅈㄷㄹ'])
 //     .setUseDateParse(true, true)
 //     .setExecute((self, chat, channel, { 학교행사, datetime: { from, to } }) => {
-//         const events = JSON.parse(fs.readFileSync('global_modules/bot-manager/Command/test/school_events.json', 'utf-8'));
+//         const events = JSON.parse(fs.readFileSync('global_modules/BotOperator/Command/test/school_events.json', 'utf-8'));
 //         const satisfied = [];
 
 //         for (let date in events) {

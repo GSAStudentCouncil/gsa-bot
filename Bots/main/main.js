@@ -3,22 +3,52 @@
  * 
  * @checklist
  * 1. 오픈 프로필이 적어도 1개 존재해야함
- * 2. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
- * 3. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (따로 미리 구해야함)
+ * 2. 봇이 실행되기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록해야함
+ * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
+ * 		- 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
+ * 4. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (따로 미리 구해야함)
  */
 
-const BotManager = require('../../global_modules/bot-manager').get(BotManager);
-const bot = BotManager.getCurrentBot();
+const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
+const bot = BotOperator.getCurrentBot();
 
 const Jsoup = org.jsoup.Jsoup;
-const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/bot-manager/Command');
-const { Event } = require('../../global_modules/bot-manager/Event');
-const { DateTime } = require("../../global_modules/bot-manager/DateTime");
+const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
+const { Event } = require('../../global_modules/BotOperator/Event');
+const { DateTime } = require("../../global_modules/BotOperator/DateTime");
 
-// 기본 유틸 함수들
-FileStream.writeObject = (path, data) => FileStream.write(path, JSON.stringify(data));
-FileStream.readObject = (path, defaultValue={}) => JSON.parse(FileStream.read(path) ?? JSON.stringify(defaultValue));
-const f = {
+// 파일 경로
+const paths = {
+	users: "/sdcard/msgbot/users.json",
+	channels: "/sdcard/msgbot/channels.json"
+};
+
+// 파일 입출력
+const FS = {
+	...FileStream,
+	writeObject: (path, data) => FileStream.write(path, JSON.stringify(data)),
+	readObject: (path, defaultValue={}) => JSON.parse(FileStream.read(path) ?? JSON.stringify(defaultValue))
+};
+
+// 유저, 채널 데이터베이스 관리
+const DB = {
+	users: FS.readObject(paths.users),
+	channels: FS.readObject(paths.channels, { i2c: {}, c2i: {} }),	// i2c: id to customName, c2i: customName to id
+	reloadUser: (user, channel) => {
+		// user.id, channel.id 도 string 타입
+		DB.users[user.id] = {
+			name: user.name,    // 카톡 이름
+			nth: Number(channel.customName)   // 기수
+		};
+	},
+	reloadChannel: channel => {
+		DB.channels.i2c[channel.id] = channel.customName;
+		DB.channels.c2i[channel.customName] = channel.id;
+	}
+};
+
+// 유틸리티 함수
+const _ = {
 	josa: (str, josa) => {
 		const hasJong = (str.charCodeAt(str.length - 1) - '가'.charCodeAt(0)) % 28 !== 0;
 
@@ -45,76 +75,58 @@ const f = {
 	warn: msg => `⚠ ${msg}`,
 	error: msg => `❌ ${msg}`,
 	success: msg => `✅ ${msg}`,
-	info: msg => `ℹ️ ${msg}`
-};
+	info: msg => `ℹ️ ${msg}`,
+	isNumber: name => /^\d+$/.test(name),
+	isNaN: n => Number.isNaN(n),
+	catch: (err, channel) => {
+		const error = `${_.error(err.name)}\n—————\n${err.message}\n${err.stack.trimEnd()}`;
 
-// 저장 경로
-const paths = {
-	users: "/sdcard/msgbot/users.json",
-	channels: "/sdcard/msgbot/channels.json"
-};
-
-// 유저, 채널 데이터베이스 관리 객체
-const DB = {
-	users: FileStream.readObject(paths.users),
-	channels: FileStream.readObject(paths.channels, { i2c: {}, c2i: {} }),
-	userReload: (user, channel) => {
-		// user.id, channel.id 도 string 타입
-		DB.users[user.id] = {
-			name: user.name,    // 카톡 이름
-			nth: Number(channel.customName)   // 기수
-		};
+		Log.e(error);
+		if (channel != null && typeof channel.send === 'function')
+			channel.send(error);
 	},
-	channelReload: channel => {
-		DB.channels.i2c[channel.id] = channel.customName;
-		DB.channels.c2i[channel.customName] = channel.id;
-	}
+	compress: '\u200b'.repeat(500)
+};
+
+// 채널 객체에 메시지 전송을 위한 유틸리티 함수
+/**
+ * @param {Channel} channel 
+ * @param {Command} command
+ */
+const $ = (channel) => {
+	const send = (...msg) => {
+		const content = msg.join(' ');
+
+		if (channel != null && typeof channel.send === 'function') {
+			channel.send(content).catch(e => {
+				_.catch(e, debugRoom);
+				if (debugRoom != null && typeof debugRoom.send === 'function')
+					debugRoom.send('보내려던 내용' + _.compress + '\n\n' + content);
+			});
+		}
+	};
+	const warn = msg => send(_.warn(msg));
+	const error = msg => send(_.error(msg));
+	const success = msg => send(_.success(msg));
+	const info = msg => send(_.info(msg));
+
+	return { send, warn, error, success, info };
 };
 
 // db.channels: object[string, string] -> rooms: object[string, Channel] 변환
-const staffRoom = {}; //BotManager.getChannelById('c1'); FIXME:
-const debugRoom = {}; //BotManager.getChannelById('c2'); FIXME:
+const staffRoom = null; //BotManager.getChannelById('c1'); FIXME:
+const debugRoom = null; //BotManager.getChannelById('c2'); FIXME:
 
 const studentRooms = {};   // 기수방만 분리
 const rooms = {};
-const isNumber = name => /^\d+$/.test(name);
-
 for (let [ name, id ] of Object.entries(DB.channels.c2i)) {
-	if (isNumber(name))
-		studentRooms[name] = BotManager.getChannelById(id);
+	if (_.isNumber(name))
+		studentRooms[name] = BotOperator.getChannelById(id);
 
-	rooms[name] = BotManager.getChannelById(id);
+	rooms[name] = BotOperator.getChannelById(id);
 }
 
 try {
-// 봇 가동 시작
-bot.start();
-
-// db 갱신
-bot.on(Event.MESSAGE, (chat, channel) => {
-	if (!isNumber(channel.customName))
-		return;
-
-	// 기수 톡방 및 톡방 내 학생들 추가
-	if (!(channel.id in DB.channels.i2c)) {
-		DB.channelReload(channel);
-		FileStream.writeObject(paths.channels, DB.channels);
-		
-		channel.members.forEach(user => DB.userReload(user, channel));
-		FileStream.writeObject(paths.users, DB.users);
-		
-		studentRooms[channel.customName] = channel;
-		rooms[channel.customName] = channel;
-	}
-	
-	// 이름 변경 적용
-	if (chat.user.id in DB.users && (DB.users[chat.user.id].name !== chat.user.name || DB.users[chat.user.id].nth !== Number(channel.customName))) {
-		DB.users[chat.user.id].name = chat.user.name;
-		DB.users[chat.user.id].nth = Number(channel.customName);
-		FileStream.writeObject(paths.users, DB.users);
-	}
-});
-
 // 급식 명령어
 
 /**
@@ -173,32 +185,33 @@ bot.addCommand(new NaturalCommand.Builder()
 		// 명령어 오호출 방지를 위해 날짜를 파싱하지 않은 경우에는 급식 토큰이 있는 경우에만 반응 (공백 미포함 3글자 여유로 줌)
 		if (chat.filteredText.replace(/\s+/g, '').length > 3)
 			return;
-		else if (Number.isNaN(datetime)) {
-			if (급식 === '조식' || 급식 === '아침')
-				datetime = DateTime.parse('아침');
-			else if (급식 === '중식' || 급식 === '점심')
-				datetime = DateTime.parse('점심');
-			else if (급식 === '석식' || 급식 === '저녁')
-				datetime = DateTime.parse('저녁');
-			else
-				datetime = DateTime.now();
-		}
+		
+		if (_.isNaN(datetime))
+			datetime = DateTime.now();
+
+		if (급식 === '조식' || 급식 === '아침')
+			datetime = datetime.parse('아침');
+		else if (급식 === '중식' || 급식 === '점심')
+			datetime = datetime.parse('점심');
+		else if (급식 === '석식' || 급식 === '저녁')
+			datetime = datetime.parse('저녁');
+
 		// TODO: manual에 date parse 유무 넣기
 
 		let meals = getMeals(datetime);
 
 		if (datetime.eq({ hour: 0, minute: 0 }))
-			channel.send(`${self.icon} ${datetime.humanize(true)} 급식\n—————\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`);
+			$(channel).send(`${self.icon} ${datetime.humanize(true)} 급식\n—————\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`);
 		else if (datetime.isWeekend() ? datetime.lt({ hour: 8, minute: 50 }) : datetime.lt({ hour: 8, minute: 10 }))
-			channel.send(`${self.icon} ${datetime.humanize(true)} 조식\n—————\n${meals[0]}`);
+			$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n—————\n${meals[0]}`);
 		else if (datetime.lt({ hour: 13, minute: 10 }))
-			channel.send(`${self.icon} ${datetime.humanize(true)} 중식\n—————\n${meals[1]}`);
+			$(channel).send(`${self.icon} ${datetime.humanize(true)} 중식\n—————\n${meals[1]}`);
 		else if (datetime.lt({ hour: 19, minute: 10}))
-			channel.send(`${self.icon} ${datetime.humanize(true)} 석식\n—————\n${meals[2]}`);
+			$(channel).send(`${self.icon} ${datetime.humanize(true)} 석식\n—————\n${meals[2]}`);
 		else {
 			datetime = datetime.add({ day: 1 });
 			meals = getMeals(datetime);
-			channel.send(`${self.icon} ${datetime.humanize(true)} 조식\n—————\n${meals[0]}`);
+			$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n—————\n${meals[0]}`);
 		}
 	})
 	.setCronJob([
@@ -217,7 +230,7 @@ bot.addCommand(new NaturalCommand.Builder()
 			msg = `${self.icon} ${dt.humanize(true)} 석식\n—————\n${meals[2]}`;
 		
 		for (let 기수 in studentRooms)
-			studentRooms[기수].send(msg);
+			$(studentRooms[기수]).send(msg);
 	})
 	.build()
 );
@@ -233,16 +246,16 @@ bot.addCommand(new StructuredCommand.Builder()
 	.setUsage(`<부서:str> 알림 <기수:int[]? min=${DateTime.now().year - 2000 + 15} max=${DateTime.now().year - 2000 + 17}>`)
 	.setChannels(staffRoom)
 	.setExamples(
-		['$user: 생체부 알림', '봇: ' + f.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'), '$user: 기숙사 3월 기상곡입니다 ...'],
-		['$user: 정책부 알림 39', '봇: ' + f.info('$user님, 39기에 정책부로서 공지할 내용을 작성해주세요.'), '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'],
-		['$user: 홍보부 알림 40 41', '봇: ' + f.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'), '$user: 취소', '봇: ' + f.success('취소되었습니다.')]
+		['$user: 생체부 알림', '봇: ' + _.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'), '$user: 기숙사 3월 기상곡입니다 ...'],
+		['$user: 정책부 알림 39', '봇: ' + _.info('$user님, 39기에 정책부로서 공지할 내용을 작성해주세요.'), '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'],
+		['$user: 홍보부 알림 40 41', '봇: ' + _.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'), '$user: 취소', '봇: ' + _.success('취소되었습니다.')]
 	)
 	.setExecute((self, chat, channel, args) => {
 		const 부서List = ["회장", "부회장", "학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"];
 
 		// 부서가 적절한지 확인
 		if (!부서List.includes(args.부서)) {
-			channel.send(f.warn(`${f.josa(args.부서, '는')} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서List.join(', ')}`));
+			$(channel).warn(`${_.josa(args.부서, '는')} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서List.join(', ')}`);
 			return;
 		}
 		
@@ -252,12 +265,12 @@ bot.addCommand(new StructuredCommand.Builder()
 			args.기수 = [thirdNth, thirdNth + 1, thirdNth + 2];
 		}
 		
-		channel.send(f.info(`${chat.user.name}님, ${f.josa(args.부서, '로')}서 ${args.기수.join(', ')}기에 공지할 내용을 작성해주세요.`));
+		$(channel).info(`${chat.user.name}님, ${_.josa(args.부서, '로')}서 ${args.기수.join(', ')}기에 공지할 내용을 작성해주세요.`);
 	},
 	(self, chat, prevChat, channel, prevChannel, { 부서, 기수 }) => {
 		// 취소 시 중단
 		if (chat.text === '취소') {
-			channel.send(f.success('취소되었습니다.'));
+			$(channel).success('취소되었습니다.');
 			return;
 		}
 
@@ -266,13 +279,13 @@ bot.addCommand(new StructuredCommand.Builder()
 		// 공지 전송
 		for (let n of 기수) {
 			if (!studentRooms[n]) {
-				channel.send(f.warn(`${n}기 톡방은 존재하지 않습니다.`));
+				$(channel).warn(`${n}기 톡방은 존재하지 않습니다.`);
 				continue;
 			}
 
 			studentRooms[n].send(`${self.icon} ${부서} 알림\n—————\n${chat.text}`)
-				.then(() => channel.send(f.success(`${n}기에 ${부서} 공지가 전송되었습니다.`)))
-				.catch(e => channel.send(f.warn(`${n}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`)));
+				.then(() => $(channel).success(`${n}기에 ${부서} 공지가 전송되었습니다.`))
+				.catch(e => $(channel).warn(`${n}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
 		}
 	})
 	.build()
@@ -291,11 +304,11 @@ bot.addCommand(new StructuredCommand.Builder()
 			
 			// 명령어가 존재하는 경우
 			if (found != null) {
-				channel.send(found.manual({ user: chat.user.name }));
+				$(channel).send(found.manual({ user: chat.user.name }));
 				return;
 			}
 			else
-				channel.send(f.warn(`명령어 이름이 '${명령어}'인 명령어는 존재하지 않습니다.`));
+				$(channel).warn(`명령어 이름이 '${명령어}'인 명령어는 존재하지 않습니다.`);
 		}
 		
 		let ret = [];
@@ -305,7 +318,7 @@ bot.addCommand(new StructuredCommand.Builder()
 		CommandRegistry.loop(cmd => ret.push(`· ${cmd.name} (${cmd.icon})`));
 		ret.push('\n"도움말 <명령어>"로\n세부 도움말을 확인하세요.');
 		
-		channel.send(ret.join('\n'));
+		$(channel).send(ret.join('\n'));
 	})
 	.build()
 );
@@ -339,15 +352,15 @@ bot.addCommand(new NaturalCommand.Builder()
 	.setUseDateParse(true, true)
 	.setQuery({ 학교행사: null })
 	.setExecute((self, chat, channel, { 학교행사, datetime: { from, to } }) => {
-		if (chat.filteredText.replace(/\s+/g, '').length > 3)
+		if (chat.filteredText.replace(/\s+/g, '').length > 3)	// TODO: 명령어 오호출 방지 setMargin() 구현
 			return;
 
 		const events = getEvents(from, to);
 		
 		if (events.length > 0)
-			channel.send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n—————\n${events.join('\n')}`);
+			$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n—————\n${events.join('\n')}`);
 		else
-			channel.send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n—————\n해당 기간에 학사일정이 없습니다.`);
+			$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n—————\n해당 기간에 학사일정이 없습니다.`);
 	})
 	.setCronJob([
 		{ cron: '0 0 * * 1', comment: '월요일 자정에는 그 주의 모든 일정을 전송' },
@@ -360,16 +373,43 @@ bot.addCommand(new NaturalCommand.Builder()
 		else if (index === 1)
 			events = getEvents(dt, dt);
 
-		if (events.length > 0)
-			channel.send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n—————\n${events.join('\n')}`);
-		else
-			channel.send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n—————\n해당 기간에 학사일정이 없습니다.`);
+		for (let 기수 in studentRooms) {
+			if (events.length > 0)
+				$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n—————\n${events.join('\n')}`);
+			else
+				$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n—————\n해당 기간에 학사일정이 없습니다.`);
+		}
 	})
 	.build()
 );
-} catch (err) {
-	const error = `${f.error(err.name)}\n—————\n${e.message}\n${e.stack.trimEnd()}`;
 
-	Log.e(error);
-	// debugRoom.send(error); FIXME:
+// 봇 가동 시작
+bot.start();
+
+// db 갱신
+bot.on(Event.MESSAGE, (chat, channel) => {
+	if (!_.isNumber(channel.customName))
+		return;
+
+	// 기수 톡방 및 톡방 내 학생들 추가
+	if (!(channel.id in DB.channels.i2c)) {
+		DB.reloadChannel(channel);
+		FS.writeObject(paths.channels, DB.channels);
+		
+		channel.members.forEach(user => DB.reloadUser(user, channel));
+		FS.writeObject(paths.users, DB.users);
+		
+		studentRooms[channel.customName] = channel;
+		rooms[channel.customName] = channel;
+	}
+	
+	// 이름 변경 적용
+	if (chat.user.id in DB.users && (DB.users[chat.user.id].name !== chat.user.name || DB.users[chat.user.id].nth !== Number(channel.customName))) {
+		DB.users[chat.user.id].name = chat.user.name;
+		DB.users[chat.user.id].nth = Number(channel.customName);
+		FS.writeObject(paths.users, DB.users);
+	}
+});
+} catch (err) {
+	_.catch(err, debugRoom);
 }

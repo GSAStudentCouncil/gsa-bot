@@ -23,10 +23,10 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 간단하게 위와 같은 방식으로 파일을 공유합니다. `dist` 폴더 내에 빌드된 소스 파일들을 `adb`를 사용해 메신저봇 내부 폴더로 전송해주세요.
 
 ### 사용한 모듈
-- [`bot-manager`](https://github.com/essentialib/bot-manager)
+- [`BotOperator`](https://github.com/essentialib/BotOperator)
   - `DBManager`
   - `CronJob`
   - [`DateTime`](https://github.com/essentialib/datetime)
   - `Command`
 
-모듈에 대해 더 자세한 것을 확인하려면 [basic.md](https://github.com/essentialib/bot-manager/blob/main/markdown/basic.md), [command.md](https://github.com/essentialib/bot-manager/blob/main/markdown/command.md)를 확인하세요.
+모듈에 대해 더 자세한 것을 확인하려면 [basic.md](https://github.com/essentialib/BotOperator/blob/main/markdown/basic.md), [command.md](https://github.com/essentialib/BotOperator/blob/main/markdown/command.md)를 확인하세요.

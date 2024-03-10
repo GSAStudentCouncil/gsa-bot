@@ -1,12 +1,6 @@
 "use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -26,34 +20,42 @@ var Bot = /*#__PURE__*/function () {
     var _this = this;
     _classCallCheck(this, Bot);
     this.bot = null;
-    this.dbManager = null;
+    this.dblistener = null;
     this.cronManager = CronJob;
     this.botManager = null;
     this.commandRegistry = CommandRegistry;
     this.commandRegistry.setCronManager(this.cronManager);
     this.commandEvent = function (chat, channel, command, args) {};
+
+    // FIXME:
     this._findCommand = function (chat, channel) {
-      for (var i = 0; i < _this._lazyArgsQueue.length; i++) {
-        var _this$_lazyArgsQueue$ = _slicedToArray(_this._lazyArgsQueue[i], 4),
-          prevChat = _this$_lazyArgsQueue$[0],
-          prevChannel = _this$_lazyArgsQueue$[1],
-          _cmd = _this$_lazyArgsQueue$[2],
-          _args = _this$_lazyArgsQueue$[3];
-        if (prevChat.user.id === chat.user.id && prevChannel.id === channel.id) {
-          _cmd.executeLazy(chat, prevChat, channel, prevChannel, _args);
-          _this._lazyArgsQueue.splice(i, 1);
-          return;
-        }
-      }
-      var _this$commandRegistry = _this.commandRegistry.get(chat, channel),
-        cmd = _this$commandRegistry.cmd,
-        args = _this$commandRegistry.args;
-      if (cmd != null) {
-        _this.commandEvent(chat, channel, cmd, args);
-        cmd.execute(chat, channel, args);
-        if (cmd.lazy) {
-          _this._lazyArgsQueue.push([chat, channel, cmd, args]);
-        }
+      // for (let i = 0; i < this._lazyArgsQueue.length; i++) {
+      //     const [prevChat, prevChannel, cmd, args] = this._lazyArgsQueue[i];
+
+      //     if (prevChat.user.id === chat.user.id && prevChannel.id === channel.id) {
+      //         cmd.executeLazy(chat, prevChat, channel, prevChannel, args);
+      //         this._lazyArgsQueue.splice(i, 1);
+
+      //         return;
+      //     }
+      // }
+
+      // const { cmd, args } = this.commandRegistry.get(chat, channel);
+
+      // if (cmd != null) {
+      //     this.commandEvent(chat, channel, cmd, args);
+      //     cmd.execute(chat, channel, args);
+
+      //     if (cmd.lazy) {
+      //         this._lazyArgsQueue.push([chat, channel, cmd, args]);
+      //     }
+      // }
+
+      if (chat.text.startsWith('찾기 ')) {
+        var result = _this.commandRegistry.data.find(function (v) {
+          return v.name === chat.text.substring(3);
+        });
+        if (result === undefined) channel.send('없음');else channel.send(result.name);
       }
     };
     this._lazyArgsQueue = [];
@@ -72,10 +74,10 @@ var Bot = /*#__PURE__*/function () {
           break;
         case Event.MESSAGE:
           // 이벤트 리스너는 여러 개가 등록 가능하므로, 컴파일하면 명령어 찾아내는 리스너 하나는 자동 등록되고, 나머지 커스텀 리스너는 이렇게 따로 추가되는거로.
-          this.dbManager.on(event, listener);
+          this.dblistener.on(event, listener);
           break;
         default:
-          this.dbManager.on(event, listener);
+          this.dblistener.on(event, listener);
       }
       return this;
     }
@@ -100,7 +102,7 @@ var Bot = /*#__PURE__*/function () {
           this.commandEvent = function (chat, channel, command, args) {};
           break;
         default:
-          this.dbManager.off(event, listener);
+          this.dblistener.off(event, listener);
       }
       return this;
     }
@@ -142,53 +144,62 @@ var Bot = /*#__PURE__*/function () {
   }, {
     key: "start",
     value: function start() {
-      this.dbManager.start();
+      this.dblistener.start();
       this.cronManager.setWakeLock(true);
     }
   }, {
     key: "stop",
     value: function stop() {
-      this.dbManager.stop();
+      this.dblistener.stop();
+      this.cronManager.off();
+      this.cronManager.setWakeLock(false);
     }
   }, {
     key: "close",
     value: function close() {
-      this.dbManager.close();
+      this.dblistener.close();
     }
   }, {
     key: "addChannel",
     value: function addChannel(sbn) {
-      this.dbManager.addChannel(sbn);
+      this.dblistener.addChannel(sbn);
     }
   }, {
     key: "addCommand",
     value: function addCommand(cmd) {
       this.commandRegistry.register(cmd);
     }
+
+    // FIXME:
+  }, {
+    key: "add",
+    value: function add(value) {
+      this.commandRegistry.data.push(value);
+    }
   }, {
     key: "setWakeLock",
     value: function setWakeLock(_setWakeLock) {
-      this.dbManager.setWakeLock(_setWakeLock);
+      this.cronManager.setWakeLock(_setWakeLock);
     }
   }], [{
     key: "getCurrentBot",
     value: function getCurrentBot(botManager, dbManager, init) {
       var ret = new Bot();
-      ret.dbManager = dbManager.getInstance(init);
+      ret.dblistener = dbManager.getInstance(init);
       ret.botManager = botManager;
       ret.bot = ret.botManager.getCurrentBot();
+      ret.dblistener.on(Event.MESSAGE, ret._findCommand);
       ret.bot.addListener('notificationPosted', function (sbn, rm) {
-        ret.dbManager.addChannel(sbn);
+        ret.dblistener.addChannel(sbn);
       });
 
       // NOTE: 이렇게 하면 봇 소스가 여러 개일 때, 컴파일 때마다 초기화되어서
       //  한 쪽 봇 코드의 말만 듣는 현상이 생김. 그렇다고 off를 뺄 수는 없어 그냥 둠.
       ret.bot.addListener('startCompile', function () {
-        ret.dbManager.stop();
+        ret.dblistener.stop();
         ret.cronManager.off();
         ret.cronManager.setWakeLock(false);
       });
-      ret.dbManager.on(Event.MESSAGE, ret._findCommand);
       return ret;
     }
   }]);
