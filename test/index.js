@@ -102,4 +102,4 @@ function onMessage(chat, channel) {
     if (cmd)
         cmd.execute(chat, channel, args);
 }
-onMessage({ text: '내일 밥' }, { name: 'test room', id: 982981398, send: (...msg) => console.log(...msg) });
+onMessage({ text: '3월 13일 오전 7시 3분 급식' }, { name: 'test room', id: 982981398, send: (...msg) => console.log(...msg) });

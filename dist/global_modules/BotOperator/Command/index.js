@@ -801,6 +801,10 @@ var Registry = /*#__PURE__*/function () {
               var foundTokens = {}; // 이미 찾은 토큰들 { token: word }
 
               while (filteredText.length > startIdx) {
+                if (/\s|\d|[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(filteredText[startIdx])) {
+                  startIdx++;
+                  continue;
+                }
                 var _iterator6 = _createForOfIteratorHelper(cmd.map),
                   _step6;
                 try {

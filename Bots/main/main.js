@@ -10,7 +10,7 @@
  */
 
 const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
-const bot = BotOperator.getCurrentBot();
+const bot = BotOperator.getCurrentBot();	
 
 const Jsoup = org.jsoup.Jsoup;
 const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
@@ -114,8 +114,8 @@ const $ = (channel) => {
 };
 
 // db.channels: object[string, string] -> rooms: object[string, Channel] 변환
-const staffRoom = BotManager.getChannelById('381748032476273');
-const debugRoom = BotManager.getChannelById('382089527597301');
+const staffRoom = BotOperator.getChannelById('381748032476273');
+const debugRoom = BotOperator.getChannelById('382089527597301');
 
 const studentRooms = {};   // 기수방만 분리
 const rooms = {};
@@ -273,8 +273,6 @@ bot.addCommand(new StructuredCommand.Builder()
 			$(channel).success('취소되었습니다.');
 			return;
 		}
-
-		// TODO: 디버그 방에 모든 에러 로그를 다 전송하게 설정
 		
 		// 공지 전송
 		for (let n of 기수) {

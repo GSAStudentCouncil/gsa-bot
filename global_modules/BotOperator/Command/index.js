@@ -793,6 +793,11 @@ class Registry {
 				const foundTokens = {};	// 이미 찾은 토큰들 { token: word }
 				
 				while (filteredText.length > startIdx) {
+					if (/\s|\d|[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(filteredText[startIdx])) {
+						startIdx++;
+						continue;
+					}
+
 					for (let [word, token] of cmd.map) {
 						if (token in args && !(token in foundTokens) && filteredText.startsWith(word, startIdx)) {
 							args[token] = word;
@@ -826,7 +831,7 @@ class Registry {
 							filteredText = string;
 						}
 					}
-				}	
+				}
 				
 				chat.filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
 				

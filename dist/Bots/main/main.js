@@ -23,11 +23,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * 광주과학고등학교 카카오톡 봇 ver. 2024
  * 
  * @checklist
- * 1. 오픈 프로필이 적어도 1개 존재해야함
- * 2. 봇이 실행되기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록해야함
+ * 1. 오픈 프로필이 적어도 1개 존재해야함 ✅
+ * 2. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (따로 미리 구해야함) ✅
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
  * 		- 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
- * 4. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (따로 미리 구해야함)
+ * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
  */
 
 var BotOperator = require('BotOperator').from(BotManager);
@@ -172,9 +172,8 @@ var $ = function $(channel) {
 };
 
 // db.channels: object[string, string] -> rooms: object[string, Channel] 변환
-var staffRoom = null; //BotManager.getChannelById('c1'); FIXME:
-var debugRoom = null; //BotManager.getChannelById('c2'); FIXME:
-
+var staffRoom = BotOperator.getChannelById('381748032476273');
+var debugRoom = BotOperator.getChannelById('382089527597301');
 var studentRooms = {}; // 기수방만 분리
 var rooms = {};
 for (var _i = 0, _Object$entries = _objectEntries(DB.channels.c2i); _i < _Object$entries.length; _i++) {
@@ -283,8 +282,6 @@ try {
       $(channel).success('취소되었습니다.');
       return;
     }
-
-    // TODO: 디버그 방에 모든 에러 로그를 다 전송하게 설정
 
     // 공지 전송
     var _iterator = _createForOfIteratorHelper(기수),

@@ -162,9 +162,9 @@ export declare class DateTime {
 	
 	static fromTimestamp(timestamp: number): DateTime;
 	
-	static fromString(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, locale?: string = 'ko-KR'): DateTime;
+	static fromString(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime;
 	
-	static dehumanize(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, locale?: string = 'ko-KR'): DateTime;
+	static dehumanize(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime;
 	
 	static fromNumber(timestamp: number): DateTime;
 	
@@ -198,20 +198,20 @@ export declare class DateTime {
 	
 	static set(datetimeObject: SetDateTimeTemplate): DateTime;
 	
-	static parseDuration(dateString: string, getString: true, filterIncludeEnding?: boolean = true, locale?: string): {
+	static parseDuration(dateString: string, getString: true, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): {
 		parse: {
 			from: DateTime | undefined,
 			to: DateTime | undefined
 		}, string: string
 	};
 
-	static parseDuration(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, locale?: string): { from: DateTime | undefined, to: DateTime | undefined };
+	static parseDuration(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): { from: DateTime | undefined, to: DateTime | undefined };
 	
-	static parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true, locale?: string): {
+	static parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): {
 		parse: DateTime | undefined, string: string
 	};
 
-	static parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true, locale?: string): DateTime | undefined;
+	static parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): DateTime | undefined;
 	
 	parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true): {
 		parse: DateTime | undefined, string: string

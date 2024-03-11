@@ -40,8 +40,8 @@ parseDuration = string => {
 // parse`다음 해` // ✅
 // parse`1년 후` // ✅
 // parse`다음 주 일요일` // ✅, 주일을 일월화수목금토 가 아니라 월화수목금토일 로 해서 '다음 주 일요일'을 보다 평상시 표현으로 사용할 수 있게 함.
-// parse`저번 주 일요일`  // ✅
-// parse`다음 주 월요일`
+// parse`저번 주 일요일`;  // ✅
+// parse`다음 주 월요일`;
 // parse`다다음 주`    // ✅
 // parse`다다음 주 일요일`    // ✅
 // parse`일요일`  // ✅
@@ -86,10 +86,14 @@ parseDuration = string => {
 // parseDuration`오늘 3시부터 내일`    // ✅
 
 // parse`3/4`;	// ✅
+// parse`3-4`;	// ✅
 // parse`2024/3/21`;	// ✅
+// parse`2024.3.21`;	// ✅
+// parse`2024-3-21`;	// ✅
 
 // parseDuration`다음 주부터 다음 달까지`;	// ✅
 // parseDuration`다음 주부터 2달 후 까지`;	// ✅
+// parseDuration`금요일부터 다음 주 일요일까지`;	// ✅
 
 // parseDuration`내일부터 어제까지`	// ✅
 // parseDuration`3월 3일부터 다음 주 까지`	// ✅
