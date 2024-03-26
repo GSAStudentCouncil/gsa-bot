@@ -172,11 +172,13 @@ var $ = function $(channel) {
 };
 
 // db.channels: object[string, string] -> rooms: object[string, Channel] 변환
-var staffRoom = BotOperator.getChannelById('381748032476273');
-var debugRoom = BotOperator.getChannelById('382089527597301');
+var staffRoom = BotOperator.getChannelById('381748032476273'); // 학생회방
+var debugRoom = BotOperator.getChannelById('382089527597301'); // 디버그방
 
-/** @type { { [key: string]: Channel } } */
-var studentRooms = {}; // 기수방만 분리
+/** 기수 톡방 @type { { [key: string]: Channel } } */
+var studentRooms = {};
+
+/** 모든 방 @type { { [key: string]: Channel } } */
 var rooms = {};
 for (var _i = 0, _Object$entries = _objectEntries(DB.channels.c2i); _i < _Object$entries.length; _i++) {
   var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),

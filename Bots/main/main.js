@@ -114,12 +114,15 @@ const $ = (channel) => {
 };
 
 // db.channels: object[string, string] -> rooms: object[string, Channel] 변환
-const staffRoom = BotOperator.getChannelById('381748032476273');
-const debugRoom = BotOperator.getChannelById('382089527597301');
+const staffRoom = BotOperator.getChannelById('381748032476273');	// 학생회방
+const debugRoom = BotOperator.getChannelById('382089527597301');	// 디버그방
 
-/** @type { { [key: string]: Channel } } */
-const studentRooms = {};	// 기수방만 분리
+/** 기수 톡방 @type { { [key: string]: Channel } } */
+const studentRooms = {};
+
+/** 모든 방 @type { { [key: string]: Channel } } */
 const rooms = {};
+
 for (let [name, id] of Object.entries(DB.channels.c2i)) {
 	if (_.isNumber(name))
 		studentRooms[name] = BotOperator.getChannelById(id);
@@ -314,7 +317,10 @@ try {
 
 			ret.push('📦 명령어 목록');
 			ret.push('——————');
-			CommandRegistry.loop(cmd => ret.push(`· ${cmd.name} (${cmd.icon})`));
+			CommandRegistry.loop(cmd => {
+				if (cmd.channels.map(c => c.id).includes(channel.id))
+					ret.push(`· ${cmd.name} (${cmd.icon})`)
+			});
 			ret.push('\n"도움말 <명령어>"로\n세부 도움말을 확인하세요.');
 
 			$(channel).send(ret.join('\n'));

@@ -8,7 +8,7 @@
     "build": "node build.js \\\".ts,.js\\\"",
     "build-js": "node build.js \\\".js\\\"",
     "ready": "npm run build-js Bots dist/Bots && npm run build-js global_modules dist/global_modules && npm run set-dist-true",
-    "test-local": "npm run ready && adb connect 127.0.0.1:62001 && adb push dist/Bots /sdcard/msgbot && adb push dist/global_modules /sdcard/msgbot"
+    "test-local": "npm run ready && adb connect 127.0.0.1:62001 && adb push dist/Bots /sdcard/msgbot && adb push dist/global_modules /sdcard/msgbot && adb shell am broadcast -a com.xfl.msgbot.broadcast.compile -p com.xfl.msgbot --es name main"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
