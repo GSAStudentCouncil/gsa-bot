@@ -17,7 +17,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * 광주과학고등학교 카카오톡 봇 ver. 2024
@@ -125,7 +125,7 @@ var _ = {
     return Number.isNaN(n);
   },
   "catch": function _catch(err, channel) {
-    var error = "".concat(_.error(err.name), "\n\u2014\u2014\u2014\u2014\u2014\n").concat(err.message, "\n").concat(err.stack.trimEnd());
+    var error = "".concat(_.error(err.name), "\n\u2014\u2014\n").concat(err.message, "\n").concat(err.stack.trimEnd());
     Log.e(error);
     if (channel != null && typeof channel.send === 'function') channel.send(error);
   },
@@ -200,7 +200,7 @@ try {
     }).join('&'))).get().text());
 
     // 순서대로 아침, 점심, 저녁
-    var ret = Array(3).fill('급식 정보가 없습니다.');
+    var ret = Array(3).fill(null);
     if ('RESULT' in data && data.RESULT.CODE !== "INFO-000") return ret;else if (data.mealServiceDietInfo[0].head[1].RESULT.CODE !== "INFO-000") return ret;
     for (var i = 0; i < data.mealServiceDietInfo[1].row.length; i++) {
       var ddish = data.mealServiceDietInfo[1].row[i].DDISH_NM.replace(/\s*\(\d+(?:.\d+)*\)\s+/g, '\n').replace(/\(\d+\.?(?:.\d+)*\)/g, '').replace(/([가-힣ㄱ-ㅎㅏ-ㅣ)]) /g, '$1\n').split('\n').slice(0, -1);
@@ -223,28 +223,30 @@ try {
 
     // TODO: manual에 date parse 유무 넣기
 
-    var meals = getMeals(datetime);
+    var meals = getMeals(datetime).map(function (e) {
+      return e ? e : '급식 정보가 없습니다.';
+    });
     if (datetime.eq({
       hour: 0,
       minute: 0
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n[\uC870\uC2DD]\n").concat(meals[0], "\n\n[\uC911\uC2DD]\n").concat(meals[1], "\n\n[\uC11D\uC2DD]\n").concat(meals[2]));else if (datetime.isWeekend() ? datetime.lt({
+    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n[\uC870\uC2DD]\n").concat(meals[0], "\n\n[\uC911\uC2DD]\n").concat(meals[1], "\n\n[\uC11D\uC2DD]\n").concat(meals[2]));else if (datetime.isWeekend() ? datetime.lt({
       hour: 8,
       minute: 50
     }) : datetime.lt({
       hour: 8,
       minute: 10
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n").concat(meals[0]));else if (datetime.lt({
+    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));else if (datetime.lt({
       hour: 13,
       minute: 10
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC911\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n").concat(meals[1]));else if (datetime.lt({
+    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]));else if (datetime.lt({
       hour: 19,
       minute: 10
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n").concat(meals[2]));else {
+    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]));else {
       datetime = datetime.add({
         day: 1
       });
       meals = getMeals(datetime);
-      $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n").concat(meals[0]));
+      $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));
     }
   }).setCronJob([{
     cron: '0 0 * * *',
@@ -258,12 +260,12 @@ try {
   }], function (self, index, dt) {
     var meals = getMeals(dt);
     var msg;
-    if (index === 0) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n[\uC870\uC2DD]\n").concat(meals[0], "\n\n[\uC911\uC2DD]\n").concat(meals[1], "\n\n[\uC11D\uC2DD]\n").concat(meals[2]);else if (index === 1) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n").concat(meals[1]);else if (index === 2) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\u2014\u2014\u2014\n").concat(meals[2]);
-    for (var 기수 in studentRooms) $(studentRooms[기수]).send(msg);
+    if (index === 0 && meals.filter(Boolean).length > 0) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n[\uC870\uC2DD]\n").concat(meals[0], "\n\n[\uC911\uC2DD]\n").concat(meals[1], "\n\n[\uC11D\uC2DD]\n").concat(meals[2]);else if (index === 1 && meals[1] != null) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]);else if (index === 2 && meals[2] != null) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]);
+    for (var 기수 in studentRooms) if (msg != null) $(studentRooms[기수]).send(msg);
   }).build());
 
   // 공지 명령어
-  bot.addCommand(new StructuredCommand.Builder().setName('공지', '🔔').setDescription("학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n" + "먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n" + "공지사항 내용 대신 메시지로 '취소'라고 보낼 경우 공지 명령어가 중단됩니다.").setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: ' + _.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'), '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: ' + _.info('$user님, 39기에 정책부로서 공지할 내용을 작성해주세요.'), '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: ' + _.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'), '$user: 취소', '봇: ' + _.success('취소되었습니다.')]).setExecute(function (self, chat, channel, args) {
+  bot.addCommand(new StructuredCommand.Builder().setName('공지', '📢').setDescription("학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n" + "먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n" + "공지사항 내용 대신 메시지로 '취소'라고 보낼 경우 공지 명령어가 중단됩니다.").setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: ' + _.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'), '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: ' + _.info('$user님, 39기에 정책부로서 공지할 내용을 작성해주세요.'), '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: ' + _.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'), '$user: 취소', '봇: ' + _.success('취소되었습니다.')]).setExecute(function (self, chat, channel, args) {
     var 부서List = ["회장", "부회장", "학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"];
 
     // 부서가 적절한지 확인
@@ -297,7 +299,7 @@ try {
           $(channel).warn("".concat(n, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
           return 1; // continue
         }
-        studentRooms[n].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\u2014\u2014\u2014\n").concat(chat.text)).then(function () {
+        studentRooms[n].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(chat.text)).then(function () {
           return $(channel).success("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
         })["catch"](function (e) {
           return $(channel).warn("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
@@ -332,9 +334,11 @@ try {
     }
     var ret = [];
     ret.push('📦 명령어 목록');
-    ret.push('——————');
+    ret.push('———');
     CommandRegistry.loop(function (cmd) {
-      return ret.push("\xB7 ".concat(cmd.name, " (").concat(cmd.icon, ")"));
+      if (cmd.channels.map(function (c) {
+        return c.id;
+      }).includes(channel.id)) ret.push("\xB7 ".concat(cmd.name, " (").concat(cmd.icon, ")"));
     });
     ret.push('\n"도움말 <명령어>"로\n세부 도움말을 확인하세요.');
     $(channel).send(ret.join('\n'));
@@ -370,7 +374,7 @@ try {
       // TODO: 명령어 오호출 방지 setMargin() 구현
       return;
     var events = getEvents(from, to);
-    if (events.length > 0) $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\u2014\u2014\u2014\n").concat(events.join('\n')));else $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\u2014\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
+    if (events.length > 0) $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n").concat(events.join('\n')));else $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
   }).setCronJob([{
     cron: '0 0 * * 1',
     comment: '월요일 자정에는 그 주의 모든 일정을 전송'
@@ -381,7 +385,7 @@ try {
     var events;
     if (index === 0) events = getEvents(dt, DateTime.sunday());else if (index === 1) events = getEvents(dt, dt);
     for (var 기수 in studentRooms) {
-      if (events.length > 0) $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\u2014\u2014\u2014\n").concat(events.join('\n')));else $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\u2014\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
+      if (events.length > 0) $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(events.join('\n')));
     }
   }).build());
 

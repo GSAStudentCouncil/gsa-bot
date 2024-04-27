@@ -16,7 +16,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // importClass(java.io.File);
 
@@ -32,7 +32,7 @@ var Duration = /*#__PURE__*/function () {
     _classCallCheck(this, Duration);
     this._amount = millisecond;
   }
-  _createClass(Duration, [{
+  return _createClass(Duration, [{
     key: "amount",
     get: function get() {
       return this._amount;
@@ -61,14 +61,13 @@ var Duration = /*#__PURE__*/function () {
       return "Duration(day=".concat(this.day, ", second=").concat(this.second, ", millisecond=").concat(this.millisecond, ")");
     }
   }]);
-  return Duration;
 }();
 var Date = /*#__PURE__*/function () {
   function Date(year, month, day) {
     _classCallCheck(this, Date);
     this._source = new $D(year, month - 1, day);
   }
-  _createClass(Date, [{
+  return _createClass(Date, [{
     key: "year",
     get: function get() {
       return this._source.getFullYear();
@@ -122,7 +121,6 @@ var Date = /*#__PURE__*/function () {
       };
     }
   }]);
-  return Date;
 }();
 var Time = /*#__PURE__*/function () {
   function Time(hour, minute, second, millisecond) {
@@ -133,7 +131,7 @@ var Time = /*#__PURE__*/function () {
     this._source.setSeconds(second);
     this._source.setMilliseconds(millisecond);
   }
-  _createClass(Time, [{
+  return _createClass(Time, [{
     key: "hour",
     get: function get() {
       return this._source.getHours();
@@ -195,7 +193,6 @@ var Time = /*#__PURE__*/function () {
       };
     }
   }]);
-  return Time;
 }();
 var DateTime = /*#__PURE__*/function () {
   function DateTime(datetimeObject, locale) {
@@ -211,7 +208,7 @@ var DateTime = /*#__PURE__*/function () {
       this._locale = dt._locale;
     }
   }
-  _createClass(DateTime, [{
+  return _createClass(DateTime, [{
     key: "date",
     get: function get() {
       return new Date(this._source.getFullYear(), this._source.getMonth() + 1, this._source.getDate());
@@ -1911,7 +1908,6 @@ var DateTime = /*#__PURE__*/function () {
       return ret;
     }
   }]);
-  return DateTime;
 }();
 exports.DateTime = DateTime;
 exports.Date = Date;

@@ -33,7 +33,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var _require = require('../DateTime'),
   DateTime = _require.DateTime;
@@ -82,7 +82,7 @@ var Command = /*#__PURE__*/function () {
     this._executeCron = _executeCron !== null && _executeCron !== void 0 ? _executeCron : function (self, index, datetime) {};
     this.lazy = _executeLazy != null;
   }
-  _createClass(Command, [{
+  return _createClass(Command, [{
     key: "execute",
     value: function execute(chat, channel, args) {
       return this._execute(this, chat, channel, args);
@@ -138,7 +138,6 @@ var Command = /*#__PURE__*/function () {
       throw new Error("Not implemented");
     }
   }]);
-  return Command;
 }();
 var Arg = /*#__PURE__*/function () {
   function Arg(name) {
@@ -148,7 +147,7 @@ var Arg = /*#__PURE__*/function () {
     this.many = false;
     this.includeEmpty = false;
   }
-  _createClass(Arg, [{
+  return _createClass(Arg, [{
     key: "toRegExp",
     value: function toRegExp() {
       throw new Error("Not implemented");
@@ -159,10 +158,8 @@ var Arg = /*#__PURE__*/function () {
       throw new Error("Not implemented");
     }
   }]);
-  return Arg;
 }();
 var IntArg = /*#__PURE__*/function (_Arg) {
-  _inherits(IntArg, _Arg);
   function IntArg(name, min, max) {
     var _this;
     _classCallCheck(this, IntArg);
@@ -173,7 +170,8 @@ var IntArg = /*#__PURE__*/function (_Arg) {
     _this._max_str = '이하';
     return _this;
   }
-  _createClass(IntArg, [{
+  _inherits(IntArg, _Arg);
+  return _createClass(IntArg, [{
     key: "toRegExp",
     value: function toRegExp() {
       if (this.min && this.max && this.min > this.max) throw new RangeError("min must be less than or equal to max");
@@ -200,10 +198,8 @@ var IntArg = /*#__PURE__*/function (_Arg) {
       }
     }
   }]);
-  return IntArg;
 }(Arg);
 var StrArg = /*#__PURE__*/function (_Arg2) {
-  _inherits(StrArg, _Arg2);
   function StrArg(name, length, minLength, maxLength) {
     var _this3;
     _classCallCheck(this, StrArg);
@@ -216,7 +212,8 @@ var StrArg = /*#__PURE__*/function (_Arg2) {
     _this3._maxlength_str = '글자 이하';
     return _this3;
   }
-  _createClass(StrArg, [{
+  _inherits(StrArg, _Arg2);
+  return _createClass(StrArg, [{
     key: "toRegExp",
     value: function toRegExp() {
       if (this.length && (this.minLength || this.maxLength)) throw new Error("length cannot be used with minLength or maxLength");
@@ -241,10 +238,8 @@ var StrArg = /*#__PURE__*/function (_Arg2) {
       }
     }
   }]);
-  return StrArg;
 }(Arg);
 var DateArg = /*#__PURE__*/function (_Arg3) {
-  _inherits(DateArg, _Arg3);
   function DateArg(name, duration) {
     var _this4;
     _classCallCheck(this, DateArg);
@@ -252,7 +247,8 @@ var DateArg = /*#__PURE__*/function (_Arg3) {
     _this4.duration = duration;
     return _this4;
   }
-  _createClass(DateArg, [{
+  _inherits(DateArg, _Arg3);
+  return _createClass(DateArg, [{
     key: "toRegExp",
     value: function toRegExp() {
       return /[0-9+\-ㄱ-ㅎㅏ-ㅣ가-힣:./ ]+/;
@@ -272,7 +268,6 @@ var DateArg = /*#__PURE__*/function (_Arg3) {
       return parsed;
     }
   }]);
-  return DateArg;
 }(Arg);
 var mapType = {
   'int': IntArg,
@@ -285,7 +280,6 @@ var mapStr = {
   'date': ['날짜', '기간']
 };
 var StructuredCommand = /*#__PURE__*/function (_Command) {
-  _inherits(StructuredCommand, _Command);
   function StructuredCommand(options) {
     var _this5;
     _classCallCheck(this, StructuredCommand);
@@ -361,7 +355,8 @@ var StructuredCommand = /*#__PURE__*/function (_Command) {
     _this5.regex = new RegExp("^".concat(regexApplied, "$"));
     return _this5;
   }
-  _createClass(StructuredCommand, [{
+  _inherits(StructuredCommand, _Command);
+  return _createClass(StructuredCommand, [{
     key: "manual",
     value: function manual(formats) {
       var _this6 = this;
@@ -402,7 +397,6 @@ var StructuredCommand = /*#__PURE__*/function (_Command) {
       new StructuredCommand(options).register();
     }
   }]);
-  return StructuredCommand;
 }(Command);
 _StructuredCommand = StructuredCommand;
 _defineProperty(StructuredCommand, "Builder", /*#__PURE__*/function () {
@@ -419,7 +413,7 @@ _defineProperty(StructuredCommand, "Builder", /*#__PURE__*/function () {
     this.channels = [];
     this.examples = [];
   }
-  _createClass(_class, [{
+  return _createClass(_class, [{
     key: "setName",
     value: function setName(name, icon) {
       this.name = name;
@@ -496,10 +490,8 @@ _defineProperty(StructuredCommand, "Builder", /*#__PURE__*/function () {
       });
     }
   }]);
-  return _class;
 }());
 var NaturalCommand = /*#__PURE__*/function (_Command2) {
-  _inherits(NaturalCommand, _Command2);
   function NaturalCommand(options) {
     var _this7;
     _classCallCheck(this, NaturalCommand);
@@ -531,7 +523,8 @@ var NaturalCommand = /*#__PURE__*/function (_Command2) {
     });
     return _this7;
   }
-  _createClass(NaturalCommand, [{
+  _inherits(NaturalCommand, _Command2);
+  return _createClass(NaturalCommand, [{
     key: "manual",
     value: function manual(formats) {
       var _this8 = this;
@@ -573,7 +566,6 @@ var NaturalCommand = /*#__PURE__*/function (_Command2) {
       new NaturalCommand(options).register();
     }
   }]);
-  return NaturalCommand;
 }(Command);
 _NaturalCommand = NaturalCommand;
 _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
@@ -594,7 +586,7 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
     this.channels = [];
     this.examples = [];
   }
-  _createClass(_class2, [{
+  return _createClass(_class2, [{
     key: "setName",
     value: function setName(name, icon) {
       this.name = name;
@@ -691,7 +683,6 @@ _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
       });
     }
   }]);
-  return _class2;
 }());
 var Registry = /*#__PURE__*/function () {
   function Registry() {
@@ -701,7 +692,7 @@ var Registry = /*#__PURE__*/function () {
     this.data = [];
     Registry.CommandRegistry = this;
   }
-  _createClass(Registry, [{
+  return _createClass(Registry, [{
     key: "setCronManager",
     value: function setCronManager(cronManager) {
       this.cronManager = cronManager;
@@ -892,7 +883,6 @@ var Registry = /*#__PURE__*/function () {
       };
     }
   }]);
-  return Registry;
 }();
 _Registry = Registry;
 _defineProperty(Registry, "CommandRegistry", new _Registry());

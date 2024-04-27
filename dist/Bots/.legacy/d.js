@@ -14,7 +14,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * 모든 정보는 여기서 참고했습니다.
@@ -27,7 +27,7 @@ var Image = /*#__PURE__*/function () {
     this.base64 = base64;
     this.bitmap = bitmap;
   }
-  _createClass(Image, [{
+  return _createClass(Image, [{
     key: "getBase64",
     value: function getBase64() {
       return this.base64;
@@ -38,7 +38,6 @@ var Image = /*#__PURE__*/function () {
       return this.bitmap;
     }
   }]);
-  return Image;
 }();
 var Room = /*#__PURE__*/_createClass(
 /**
@@ -101,7 +100,7 @@ var Message = exports.Message = /*#__PURE__*/function () {
    * @param {string} text
    * @return {void}
    */
-  _createClass(Message, [{
+  return _createClass(Message, [{
     key: "reply",
     value: function reply(text) {
       console.log(text.toString());
@@ -115,7 +114,6 @@ var Message = exports.Message = /*#__PURE__*/function () {
     key: "markAsRead",
     value: function markAsRead() {}
   }]);
-  return Message;
 }();
 var App = exports.App = /*#__PURE__*/function () {
   function App() {
@@ -126,7 +124,7 @@ var App = exports.App = /*#__PURE__*/function () {
    * 앱의 Context(컨텍스트)를 반환합니다.
    * @return {android.content.Context}
    */
-  _createClass(App, null, [{
+  return _createClass(App, null, [{
     key: "getContext",
     value: function getContext() {}
 
@@ -140,7 +138,6 @@ var App = exports.App = /*#__PURE__*/function () {
     key: "runOnUiThread",
     value: function runOnUiThread(task, onComplete) {}
   }]);
-  return App;
 }();
 var AppData = exports.AppData = /*#__PURE__*/function () {
   function AppData() {
@@ -155,7 +152,7 @@ var AppData = exports.AppData = /*#__PURE__*/function () {
    * @param {boolean} defaultValue
    * @return {boolean}
    */
-  _createClass(AppData, null, [{
+  return _createClass(AppData, null, [{
     key: "getBoolean",
     value: function getBoolean(key, defaultValue) {}
 
@@ -230,7 +227,6 @@ var AppData = exports.AppData = /*#__PURE__*/function () {
     key: "clear",
     value: function clear() {}
   }]);
-  return AppData;
 }();
 var Bot = exports.Bot = /*#__PURE__*/function () {
   function Bot() {
@@ -256,7 +252,7 @@ var Bot = exports.Bot = /*#__PURE__*/function () {
    * @param {string} prefix
    * @return {void}
    */
-  _createClass(Bot, [{
+  return _createClass(Bot, [{
     key: "setCommandPrefix",
     value: function setCommandPrefix(prefix) {}
 
@@ -407,7 +403,6 @@ var Bot = exports.Bot = /*#__PURE__*/function () {
       var packageName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'last_name';
     }
   }]);
-  return Bot;
 }();
 var BotManager = exports.BotManager = /*#__PURE__*/function () {
   function BotManager() {
@@ -418,7 +413,7 @@ var BotManager = exports.BotManager = /*#__PURE__*/function () {
    * 스크립트에 할당된 Bot 객체를 반환합니다.
    * @return {Bot}
    */
-  _createClass(BotManager, null, [{
+  return _createClass(BotManager, null, [{
     key: "getCurrentBot",
     value: function getCurrentBot() {
       return new Bot();
@@ -525,7 +520,6 @@ var BotManager = exports.BotManager = /*#__PURE__*/function () {
     key: "unload",
     value: function unload() {}
   }]);
-  return BotManager;
 }();
 var Broadcast = exports.Broadcast = /*#__PURE__*/function () {
   function Broadcast() {
@@ -538,7 +532,7 @@ var Broadcast = exports.Broadcast = /*#__PURE__*/function () {
    * @param {function(value)} task
    * @return {void}
    */
-  _createClass(Broadcast, null, [{
+  return _createClass(Broadcast, null, [{
     key: "send",
     value: function send(broadcastName, task) {}
 
@@ -570,7 +564,6 @@ var Broadcast = exports.Broadcast = /*#__PURE__*/function () {
     key: "unregisterAll",
     value: function unregisterAll() {}
   }]);
-  return Broadcast;
 }();
 var Database = exports.Database = /*#__PURE__*/function () {
   function Database() {
@@ -582,7 +575,7 @@ var Database = exports.Database = /*#__PURE__*/function () {
    * @param {string} fileName
    * @return {boolean}
    */
-  _createClass(Database, null, [{
+  return _createClass(Database, null, [{
     key: "exists",
     value: function exists(fileName) {}
 
@@ -627,7 +620,6 @@ var Database = exports.Database = /*#__PURE__*/function () {
     key: "writeString",
     value: function writeString(fileName, str) {}
   }]);
-  return Database;
 }();
 var Device = exports.Device = /*#__PURE__*/function () {
   function Device() {
@@ -638,7 +630,7 @@ var Device = exports.Device = /*#__PURE__*/function () {
    * android.os.Build()값을 반환합니다.
    * @return {android.os.Build}
    */
-  _createClass(Device, null, [{
+  return _createClass(Device, null, [{
     key: "getBuild",
     value: function getBuild() {}
 
@@ -752,7 +744,6 @@ var Device = exports.Device = /*#__PURE__*/function () {
     key: "getBatteryIntent",
     value: function getBatteryIntent() {}
   }]);
-  return Device;
 }();
 var Event = exports.Event = {
   /**
@@ -871,7 +862,7 @@ var FileStream = exports.FileStream = /*#__PURE__*/function () {
   function FileStream() {
     _classCallCheck(this, FileStream);
   }
-  _createClass(FileStream, null, [{
+  return _createClass(FileStream, null, [{
     key: "append",
     value:
     /**
@@ -991,13 +982,12 @@ var FileStream = exports.FileStream = /*#__PURE__*/function () {
     key: "saveJson",
     value: function saveJson(path, json) {}
   }]);
-  return FileStream;
 }();
 var GlobalLog = exports.GlobalLog = /*#__PURE__*/function () {
   function GlobalLog() {
     _classCallCheck(this, GlobalLog);
   }
-  _createClass(GlobalLog, null, [{
+  return _createClass(GlobalLog, null, [{
     key: "info",
     value:
     /**
@@ -1069,7 +1059,6 @@ var GlobalLog = exports.GlobalLog = /*#__PURE__*/function () {
      */
     function clear() {}
   }]);
-  return GlobalLog;
 }();
 _GlobalLog = GlobalLog;
 _defineProperty(GlobalLog, "i", _GlobalLog.info);
@@ -1079,7 +1068,7 @@ var Http = exports.Http = /*#__PURE__*/function () {
   function Http() {
     _classCallCheck(this, Http);
   }
-  _createClass(Http, null, [{
+  return _createClass(Http, null, [{
     key: "request",
     value:
     /**
@@ -1109,13 +1098,12 @@ var Http = exports.Http = /*#__PURE__*/function () {
      */
     function request(key, callBack) {}
   }]);
-  return Http;
 }();
 var Log = exports.Log = /*#__PURE__*/function () {
   function Log() {
     _classCallCheck(this, Log);
   }
-  _createClass(Log, null, [{
+  return _createClass(Log, null, [{
     key: "info",
     value:
     /**
@@ -1187,7 +1175,6 @@ var Log = exports.Log = /*#__PURE__*/function () {
      */
     function clear() {}
   }]);
-  return Log;
 }();
 _Log = Log;
 _defineProperty(Log, "i", _Log.info);
@@ -1197,7 +1184,7 @@ var Security = exports.Security = /*#__PURE__*/function () {
   function Security() {
     _classCallCheck(this, Security);
   }
-  _createClass(Security, null, [{
+  return _createClass(Security, null, [{
     key: "hashCode",
     value:
     /**
@@ -1324,7 +1311,6 @@ var Security = exports.Security = /*#__PURE__*/function () {
     key: "sha512",
     value: function sha512(value) {}
   }]);
-  return Security;
 }();
 var org = exports.org = {
   jsoup: {
@@ -1337,7 +1323,7 @@ var org = exports.org = {
       /**
        * @param {string} url
        */
-      _createClass(Jsoup, [{
+      return _createClass(Jsoup, [{
         key: "get",
         value: function get() {
           return this;
@@ -1368,7 +1354,6 @@ var org = exports.org = {
           return new org.jsoup.Jsoup(url);
         }
       }]);
-      return Jsoup;
     }()
   }
 };

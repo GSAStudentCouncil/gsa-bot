@@ -38,4 +38,5 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 ### [v1.1](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.1)
   - 버그 수정
   - `main.js` 코드 개선
-  - 급식이 없으면 cronjob 무시. 매일 학사 일정 알림 기능에서도 내용 없으면 무시. TODO:
+  - 학사 일정이 없으면 학사 일정 cronjob 무시.
+  - 급식이 없으면 급식 cronjob 무시.

@@ -79,7 +79,7 @@ const _ = {
 	isNumber: name => /^\d+$/.test(name),
 	isNaN: n => Number.isNaN(n),
 	catch: (err, channel) => {
-		const error = `${_.error(err.name)}\n—————\n${err.message}\n${err.stack.trimEnd()}`;
+		const error = `${_.error(err.name)}\n——\n${err.message}\n${err.stack.trimEnd()}`;
 
 		Log.e(error);
 		if (channel != null && typeof channel.send === 'function')
@@ -149,7 +149,7 @@ try {
 		).get().text());
 
 		// 순서대로 아침, 점심, 저녁
-		let ret = Array(3).fill('급식 정보가 없습니다.');
+		let ret = Array(3).fill(null);
 
 		if ('RESULT' in data && data.RESULT.CODE !== "INFO-000")
 			return ret;
@@ -202,20 +202,20 @@ try {
 
 			// TODO: manual에 date parse 유무 넣기
 
-			let meals = getMeals(datetime);
+			let meals = getMeals(datetime).map(e => e ? e : '급식 정보가 없습니다.');
 
 			if (datetime.eq({ hour: 0, minute: 0 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 급식\n—————\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`);
+				$(channel).send(`${self.icon} ${datetime.humanize(true)} 급식\n——\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`);
 			else if (datetime.isWeekend() ? datetime.lt({ hour: 8, minute: 50 }) : datetime.lt({ hour: 8, minute: 10 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n—————\n${meals[0]}`);
+				$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n——\n${meals[0]}`);
 			else if (datetime.lt({ hour: 13, minute: 10 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 중식\n—————\n${meals[1]}`);
+				$(channel).send(`${self.icon} ${datetime.humanize(true)} 중식\n——\n${meals[1]}`);
 			else if (datetime.lt({ hour: 19, minute: 10 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 석식\n—————\n${meals[2]}`);
+				$(channel).send(`${self.icon} ${datetime.humanize(true)} 석식\n——\n${meals[2]}`);
 			else {
 				datetime = datetime.add({ day: 1 });
 				meals = getMeals(datetime);
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n—————\n${meals[0]}`);
+				$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n——\n${meals[0]}`);
 			}
 		})
 		.setCronJob([
@@ -226,22 +226,23 @@ try {
 			const meals = getMeals(dt);
 
 			let msg;
-			if (index === 0)
-				msg = `${self.icon} ${dt.humanize(true)} 급식\n—————\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`;
-			else if (index === 1)
-				msg = `${self.icon} ${dt.humanize(true)} 중식\n—————\n${meals[1]}`;
-			else if (index === 2)
-				msg = `${self.icon} ${dt.humanize(true)} 석식\n—————\n${meals[2]}`;
+			if (index === 0 && meals.filter(Boolean).length > 0)
+				msg = `${self.icon} ${dt.humanize(true)} 급식\n——\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`;
+			else if (index === 1 && meals[1] != null)
+				msg = `${self.icon} ${dt.humanize(true)} 중식\n——\n${meals[1]}`;
+			else if (index === 2 && meals[2] != null)
+				msg = `${self.icon} ${dt.humanize(true)} 석식\n——\n${meals[2]}`;
 
 			for (let 기수 in studentRooms)
-				$(studentRooms[기수]).send(msg);
+				if (msg != null)
+					$(studentRooms[기수]).send(msg);
 		})
 		.build()
 	);
 
 	// 공지 명령어
 	bot.addCommand(new StructuredCommand.Builder()
-		.setName('공지', '🔔')
+		.setName('공지', '📢')
 		.setDescription(
 			"학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n" +
 			"먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n" +
@@ -285,7 +286,7 @@ try {
 						continue;
 					}
 
-					studentRooms[n].send(`${self.icon} ${부서} 알림\n—————\n${chat.text}`)
+					studentRooms[n].send(`${self.icon} ${부서} 알림\n——\n${chat.text}`)
 						.then(() => $(channel).success(`${n}기에 ${부서} 공지가 전송되었습니다.`))
 						.catch(e => $(channel).warn(`${n}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
 				}
@@ -316,7 +317,7 @@ try {
 			let ret = [];
 
 			ret.push('📦 명령어 목록');
-			ret.push('——————');
+			ret.push('———');
 			CommandRegistry.loop(cmd => {
 				if (cmd.channels.map(c => c.id).includes(channel.id))
 					ret.push(`· ${cmd.name} (${cmd.icon})`)
@@ -357,15 +358,15 @@ try {
 		.setUseDateParse(true, true)
 		.setQuery({ 학교행사: null })
 		.setExecute((self, chat, channel, { 학교행사, datetime: { from, to } }) => {
-			if (chat.filteredText.replace(/\s+/g, '').length > 3)	// TODO: 명령어 오호출 방지 setMargin() 구현
-				return;
+			if (chat.filteredText.replace(/\s+/g, '').length > 3)	// TODO: 명령어 오호출 방지 setMargin(3) 구현
+				return;	
 
 			const events = getEvents(from, to);
 
 			if (events.length > 0)
-				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n—————\n${events.join('\n')}`);
+				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n${events.join('\n')}`);
 			else
-				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n—————\n해당 기간에 학사일정이 없습니다.`);
+				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n해당 기간에 학사일정이 없습니다.`);
 		})
 		.setCronJob([
 			{ cron: '0 0 * * 1', comment: '월요일 자정에는 그 주의 모든 일정을 전송' },
@@ -380,9 +381,7 @@ try {
 
 			for (let 기수 in studentRooms) {
 				if (events.length > 0)
-					$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n—————\n${events.join('\n')}`);
-				else
-					$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n—————\n해당 기간에 학사일정이 없습니다.`);
+					$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${events.join('\n')}`);
 			}
 		})
 		.build()
