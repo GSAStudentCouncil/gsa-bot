@@ -227,7 +227,7 @@ try {
 
 			let msg;
 			if (index === 0 && meals.filter(Boolean).length > 0)
-				msg = `${self.icon} ${dt.humanize(true)} 급식\n——\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`;
+				msg = `${self.icon} ${dt.humanize(true)} 급식\n——\n[조식]\n${meals[0] || '급식 정보가 없습니다.'}\n\n[중식]\n${meals[1] || '급식 정보가 없습니다.'}\n\n[석식]\n${meals[2] || '급식 정보가 없습니다.'}`;
 			else if (index === 1 && meals[1] != null)
 				msg = `${self.icon} ${dt.humanize(true)} 중식\n——\n${meals[1]}`;
 			else if (index === 2 && meals[2] != null)
