@@ -36,7 +36,7 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
   - 모듈 `DateTime`, `Command`, `BotOperator` 구현
 
 ### [v1.1](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.1)
-  - 버그 수정
+  - 메시지 디자인 개선
   - `main.js` 코드 개선
   - 학사 일정이 없으면 학사 일정 cronjob 무시.
   - 급식이 없으면 급식 cronjob 무시.

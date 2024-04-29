@@ -193,7 +193,7 @@ try {
   /**
    * @param {DateTime} dt
    */
-  var getMeals = function getMeals(dt) {
+  var getMeals = function getMeals(dt, bullet) {
     var options = [["ATPT_OFCDC_SC_CODE", "F10"], ["SD_SCHUL_CODE", 7380031], ["MLSV_YMD", dt.toString('YYMMDD')], ["Type", "json"]];
     var data = JSON.parse(org.jsoup.Jsoup.connect("https://open.neis.go.kr/hub/mealServiceDietInfo?".concat(options.map(function (opt) {
       return opt.join('=');
@@ -205,12 +205,12 @@ try {
     for (var i = 0; i < data.mealServiceDietInfo[1].row.length; i++) {
       var ddish = data.mealServiceDietInfo[1].row[i].DDISH_NM.replace(/\s*\(\d+(?:.\d+)*\)\s+/g, '\n').replace(/\(\d+\.?(?:.\d+)*\)/g, '').replace(/([가-힣ㄱ-ㅎㅏ-ㅣ)]) /g, '$1\n').split('\n').slice(0, -1);
       ret[Number(data.mealServiceDietInfo[1].row[i].MMEAL_SC_CODE) - 1] = ddish.map(function (e) {
-        return '· ' + e;
+        return bullet + e;
       }).join('\n');
     }
     return ret;
   };
-  bot.addCommand(new NaturalCommand.Builder().setName('급식', '🍚').setDescription('입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' + '예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' + '또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.').setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일').setQuery({
+  bot.addCommand(new NaturalCommand.Builder().setName('급식', '(밥)').setDescription('입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' + '예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' + '또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.').setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일').setQuery({
     급식: null,
     datetime: NaN
   }).setUseDateParse(true, false, false).setExecute(function (self, chat, channel, _ref) {
@@ -220,33 +220,40 @@ try {
     if (chat.filteredText.replace(/\s+/g, '').length > 3) return;
     if (_.isNaN(datetime)) datetime = DateTime.now();
     if (급식 === '조식' || 급식 === '아침') datetime = datetime.parse('아침');else if (급식 === '중식' || 급식 === '점심') datetime = datetime.parse('점심');else if (급식 === '석식' || 급식 === '저녁') datetime = datetime.parse('저녁');
-
-    // TODO: manual에 date parse 유무 넣기
-
-    var meals = getMeals(datetime).map(function (e) {
-      return e ? e : '급식 정보가 없습니다.';
-    });
+    var meals;
     if (datetime.eq({
       hour: 0,
       minute: 0
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n[\uC870\uC2DD]\n").concat(meals[0], "\n\n[\uC911\uC2DD]\n").concat(meals[1], "\n\n[\uC11D\uC2DD]\n").concat(meals[2]));else if (datetime.isWeekend() ? datetime.lt({
+    })) {
+      meals = getMeals(datetime, ' · ').map(function (e) {
+        return e ? e : '급식 정보가 없습니다.';
+      });
+      $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(meals[0], "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(meals[1], "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(meals[2]));
+      return;
+    }
+    meals = getMeals(datetime, '· ').map(function (e) {
+      return e ? e : '급식 정보가 없습니다.';
+    });
+    if (datetime.isWeekend() ? datetime.lt({
       hour: 8,
       minute: 50
     }) : datetime.lt({
       hour: 8,
       minute: 10
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));else if (datetime.lt({
+    })) $(channel).send("\uD83C\uDF73 ".concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));else if (datetime.lt({
       hour: 13,
       minute: 10
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]));else if (datetime.lt({
+    })) $(channel).send("\uD83C\uDF54 ".concat(datetime.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]));else if (datetime.lt({
       hour: 19,
       minute: 10
-    })) $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]));else {
+    })) $(channel).send("\uD83C\uDF71 ".concat(datetime.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]));else {
       datetime = datetime.add({
         day: 1
       });
-      meals = getMeals(datetime);
-      $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));
+      meals = getMeals(datetime, '· ').map(function (e) {
+        return e ? e : '급식 정보가 없습니다.';
+      });
+      $(channel).send("\uD83C\uDF73 ".concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));
     }
   }).setCronJob([{
     cron: '0 0 * * *',
@@ -258,9 +265,12 @@ try {
     cron: '20 16 * * *',
     comment: '7교시 이후 청소 시간 (16:20)에 저녁 메뉴 전송'
   }], function (self, index, dt) {
-    var meals = getMeals(dt);
+    var meals = getMeals(dt, ' · ');
     var msg;
-    if (index === 0 && meals.filter(Boolean).length > 0) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n[\uC870\uC2DD]\n").concat(meals[0], "\n\n[\uC911\uC2DD]\n").concat(meals[1], "\n\n[\uC11D\uC2DD]\n").concat(meals[2]);else if (index === 1 && meals[1] != null) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]);else if (index === 2 && meals[2] != null) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]);
+    if (index === 0 && meals.filter(Boolean).length > 0) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(meals[0] || '급식 정보가 없습니다.', "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(meals[1] || '급식 정보가 없습니다.', "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(meals[2] || '급식 정보가 없습니다.');else {
+      meals = getMeals(dt, '· ');
+      if (index === 1 && meals[1] != null) msg = "\uD83C\uDF54 ".concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]);else if (index === 2 && meals[2] != null) msg = "\uD83C\uDF71 ".concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]);
+    }
     for (var 기수 in studentRooms) if (msg != null) $(studentRooms[기수]).send(msg);
   }).build());
 
@@ -352,14 +362,29 @@ try {
    */
   var getEvents = function getEvents(from, to) {
     var events = Database.readObject('school_events.json');
-    var satisfied = [];
+    var satisfied = {};
     for (var date in events) {
       var dt = DateTime.parse(date);
+      var dtString = dt.toString('M월 D일:');
       if (from.le(dt) && dt.le(to)) {
-        satisfied.push("\xB7 ".concat(dt.toString('M월 D일'), ": ").concat(events[date]));
+        if (!(dtString in satisfied)) satisfied[dtString] = [];
+        var _iterator2 = _createForOfIteratorHelper(events[date].split(/,\s*/)),
+          _step2;
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var event = _step2.value;
+            satisfied[dtString].push("    \xB7 ".concat(event));
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
       }
     }
-    return satisfied;
+    var msg = '';
+    for (var _dtString in satisfied) msg += "".concat(_dtString, "\n").concat(satisfied[_dtString].join('\n'), "\n");
+    return msg.slice(0, -1);
   };
 
   // TODO: 학교 학사일정 수정 기능(관리자방만 허용) 추가하기 - subcommand 개념 도입 필요
@@ -371,10 +396,10 @@ try {
       from = _ref4$datetime.from,
       to = _ref4$datetime.to;
     if (chat.filteredText.replace(/\s+/g, '').length > 3)
-      // TODO: 명령어 오호출 방지 setMargin() 구현
+      // TODO: 명령어 오호출 방지 setMargin(3) 구현
       return;
     var events = getEvents(from, to);
-    if (events.length > 0) $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n").concat(events.join('\n')));else $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
+    if (events.length > 0) $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n").concat(events));else $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
   }).setCronJob([{
     cron: '0 0 * * 1',
     comment: '월요일 자정에는 그 주의 모든 일정을 전송'
@@ -385,7 +410,7 @@ try {
     var events;
     if (index === 0) events = getEvents(dt, DateTime.sunday());else if (index === 1) events = getEvents(dt, dt);
     for (var 기수 in studentRooms) {
-      if (events.length > 0) $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(events.join('\n')));
+      if (events.length > 0) $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(events));
     }
   }).build());
 

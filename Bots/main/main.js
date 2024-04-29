@@ -136,7 +136,7 @@ try {
 	/**
 	 * @param {DateTime} dt
 	 */
-	const getMeals = dt => {
+	const getMeals = (dt, bullet) => {
 		const options = [
 			["ATPT_OFCDC_SC_CODE", "F10"],
 			["SD_SCHUL_CODE", 7380031],
@@ -160,14 +160,14 @@ try {
 			let ddish = data.mealServiceDietInfo[1].row[i].DDISH_NM
 				.replace(/\s*\(\d+(?:.\d+)*\)\s+/g, '\n').replace(/\(\d+\.?(?:.\d+)*\)/g, '').replace(/([가-힣ㄱ-ㅎㅏ-ㅣ)]) /g, '$1\n').split('\n').slice(0, -1);
 
-			ret[Number(data.mealServiceDietInfo[1].row[i].MMEAL_SC_CODE) - 1] = ddish.map(e => '· ' + e).join('\n');
+			ret[Number(data.mealServiceDietInfo[1].row[i].MMEAL_SC_CODE) - 1] = ddish.map(e => bullet + e).join('\n');
 		}
 
 		return ret;
 	}
 
 	bot.addCommand(new NaturalCommand.Builder()
-		.setName('급식', '🍚')
+		.setName('급식', '(밥)')
 		.setDescription(
 			'입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' +
 			'예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' +
@@ -200,22 +200,25 @@ try {
 			else if (급식 === '석식' || 급식 === '저녁')
 				datetime = datetime.parse('저녁');
 
-			// TODO: manual에 date parse 유무 넣기
+			let meals;
 
-			let meals = getMeals(datetime).map(e => e ? e : '급식 정보가 없습니다.');
+			if (datetime.eq({ hour: 0, minute: 0 })) {
+				meals = getMeals(datetime, ' · ').map(e => e ? e : '급식 정보가 없습니다.');
+				$(channel).send(`${self.icon} ${datetime.humanize(true)} 급식\n——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`);
+				return;
+			}
 
-			if (datetime.eq({ hour: 0, minute: 0 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 급식\n——\n[조식]\n${meals[0]}\n\n[중식]\n${meals[1]}\n\n[석식]\n${meals[2]}`);
-			else if (datetime.isWeekend() ? datetime.lt({ hour: 8, minute: 50 }) : datetime.lt({ hour: 8, minute: 10 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n——\n${meals[0]}`);
+			meals = getMeals(datetime, '· ').map(e => e ? e : '급식 정보가 없습니다.');
+			if (datetime.isWeekend() ? datetime.lt({ hour: 8, minute: 50 }) : datetime.lt({ hour: 8, minute: 10 }))
+				$(channel).send(`🍳 ${datetime.humanize(true)} 조식\n——\n${meals[0]}`);
 			else if (datetime.lt({ hour: 13, minute: 10 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 중식\n——\n${meals[1]}`);
+				$(channel).send(`🍔 ${datetime.humanize(true)} 중식\n——\n${meals[1]}`);
 			else if (datetime.lt({ hour: 19, minute: 10 }))
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 석식\n——\n${meals[2]}`);
+				$(channel).send(`🍱 ${datetime.humanize(true)} 석식\n——\n${meals[2]}`);
 			else {
 				datetime = datetime.add({ day: 1 });
-				meals = getMeals(datetime);
-				$(channel).send(`${self.icon} ${datetime.humanize(true)} 조식\n——\n${meals[0]}`);
+				meals = getMeals(datetime, '· ').map(e => e ? e : '급식 정보가 없습니다.');
+				$(channel).send(`🍳 ${datetime.humanize(true)} 조식\n——\n${meals[0]}`);
 			}
 		})
 		.setCronJob([
@@ -223,15 +226,18 @@ try {
 			{ cron: '40 11 * * *', comment: '3교시 쉬는 시간 (11:40)에 점심 메뉴 전송' },
 			{ cron: '20 16 * * *', comment: '7교시 이후 청소 시간 (16:20)에 저녁 메뉴 전송' }
 		], (self, index, dt) => {
-			const meals = getMeals(dt);
-
+			let meals = getMeals(dt, ' · ');
 			let msg;
+
 			if (index === 0 && meals.filter(Boolean).length > 0)
-				msg = `${self.icon} ${dt.humanize(true)} 급식\n——\n[조식]\n${meals[0] || '급식 정보가 없습니다.'}\n\n[중식]\n${meals[1] || '급식 정보가 없습니다.'}\n\n[석식]\n${meals[2] || '급식 정보가 없습니다.'}`;
-			else if (index === 1 && meals[1] != null)
-				msg = `${self.icon} ${dt.humanize(true)} 중식\n——\n${meals[1]}`;
-			else if (index === 2 && meals[2] != null)
-				msg = `${self.icon} ${dt.humanize(true)} 석식\n——\n${meals[2]}`;
+				msg = `${self.icon} ${dt.humanize(true)} 급식\n——\n🍳 조식\n${meals[0] || '급식 정보가 없습니다.'}\n\n🍔 중식\n${meals[1] || '급식 정보가 없습니다.'}\n\n🍱 석식\n${meals[2] || '급식 정보가 없습니다.'}`;
+			else {
+				meals = getMeals(dt, '· ');
+				if (index === 1 && meals[1] != null)
+					msg = `🍔 ${dt.humanize(true)} 중식\n——\n${meals[1]}`;
+				else if (index === 2 && meals[2] != null)
+					msg = `🍱 ${dt.humanize(true)} 석식\n——\n${meals[2]}`;
+			}
 
 			for (let 기수 in studentRooms)
 				if (msg != null)
@@ -337,17 +343,26 @@ try {
 	 */
 	const getEvents = (from, to) => {
 		const events = Database.readObject('school_events.json');
-		const satisfied = [];
+		const satisfied = {};
 
 		for (let date in events) {
 			let dt = DateTime.parse(date);
+			let dtString = dt.toString('M월 D일:');
 
 			if (from.le(dt) && dt.le(to)) {
-				satisfied.push(`· ${dt.toString('M월 D일')}: ${events[date]}`);
+				if (!(dtString in satisfied))
+					satisfied[dtString] = [];
+
+				for (let event of events[date].split(/,\s*/))
+					satisfied[dtString].push(`    · ${event}`);
 			}
 		}
 
-		return satisfied;
+		let msg = '';
+		for (let dtString in satisfied)
+			msg += `${dtString}\n${satisfied[dtString].join('\n')}\n`;
+
+		return msg.slice(0, -1);
 	};
 
 	// TODO: 학교 학사일정 수정 기능(관리자방만 허용) 추가하기 - subcommand 개념 도입 필요
@@ -364,7 +379,7 @@ try {
 			const events = getEvents(from, to);
 
 			if (events.length > 0)
-				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n${events.join('\n')}`);
+				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n${events}`);
 			else
 				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n해당 기간에 학사일정이 없습니다.`);
 		})
@@ -378,10 +393,10 @@ try {
 				events = getEvents(dt, DateTime.sunday());
 			else if (index === 1)
 				events = getEvents(dt, dt);
-
+	
 			for (let 기수 in studentRooms) {
 				if (events.length > 0)
-					$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${events.join('\n')}`);
+					$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${events}`);
 			}
 		})
 		.build()
