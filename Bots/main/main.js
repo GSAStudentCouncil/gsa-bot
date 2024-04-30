@@ -325,7 +325,7 @@ try {
 			ret.push('📦 명령어 목록');
 			ret.push('———');
 			CommandRegistry.loop(cmd => {
-				if (cmd.channels.map(c => c.id).includes(channel.id))
+				if (cmd.channels.length === 0 || cmd.channels.map(c => c.id).includes(channel.id))
 					ret.push(`· ${cmd.name} (${cmd.icon})`)
 			});
 			ret.push('\n"도움말 <명령어>"로\n세부 도움말을 확인하세요.');
