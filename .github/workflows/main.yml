@@ -27,6 +27,6 @@ jobs:
         git config --global user.email 'github-actions@github.com'
         git add .
         git commit -m 'Run npm ready and update dist folder'
-        git push
+        git push https://${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/GSAStudentCouncil/gsa-bot.git HEAD:main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
