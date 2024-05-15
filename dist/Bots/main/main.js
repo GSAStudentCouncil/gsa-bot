@@ -210,7 +210,7 @@ try {
     }
     return ret;
   };
-  bot.addCommand(new NaturalCommand.Builder().setName('급식', '(밥)').setDescription('입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' + '예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' + '또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.').setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일').setQuery({
+  bot.addCommand(new NaturalCommand.Builder().setName('급식', '🍚').setDescription('입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' + '예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' + '또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.').setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일').setQuery({
     급식: null,
     datetime: NaN
   }).setUseDateParse(true, false, false).setExecute(function (self, chat, channel, _ref) {
@@ -326,12 +326,12 @@ try {
   }).build());
 
   // 도움말 명령어
-  bot.addCommand(new StructuredCommand.Builder().setName('도움말', '❓').setDescription("명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.").setUsage('도움말 <명령어:str?>').setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사').setExecute(function (self, chat, channel, _ref3) {
+  bot.addCommand(new StructuredCommand.Builder().setName('도움말', '❓').setDescription("명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.").setUsage('도움말 <명령어:str?>').setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚').setExecute(function (self, chat, channel, _ref3) {
     var 명령어 = _ref3.명령어;
     // 명령어 이름이 주어진 경우
     if (명령어 != null) {
       var found = CommandRegistry.data.find(function (cmd) {
-        return cmd.name === 명령어;
+        return cmd.name === 명령어 || cmd.icon === 명령어;
       });
 
       // 명령어가 존재하는 경우
