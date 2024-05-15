@@ -167,7 +167,7 @@ try {
 	}
 
 	bot.addCommand(new NaturalCommand.Builder()
-		.setName('급식', '(밥)')
+		.setName('급식', '🍚')
 		.setDescription(
 			'입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' +
 			'예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' +
@@ -303,19 +303,19 @@ try {
 	// 도움말 명령어
 	bot.addCommand(new StructuredCommand.Builder()
 		.setName('도움말', '❓')
-		.setDescription("명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.")
+		.setDescription("명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.")
 		.setUsage('도움말 <명령어:str?>')
-		.setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사')
+		.setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚')
 		.setExecute((self, chat, channel, { 명령어 }) => {
 			// 명령어 이름이 주어진 경우
 			if (명령어 != null) {
-				const found = CommandRegistry.data.find(cmd => cmd.name === 명령어);
+				const found = CommandRegistry.data.find(cmd => cmd.name === 명령어 || cmd.icon === 명령어);
 
 				// 명령어가 존재하는 경우
 				if (found != null) {
 					$(channel).send(found.manual({ user: chat.user.name }));
 					return;
-				}
+				}	
 				else
 					$(channel).warn(`명령어 이름이 '${명령어}'인 명령어는 존재하지 않습니다.`);
 			}

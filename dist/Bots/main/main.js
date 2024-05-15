@@ -346,7 +346,7 @@ try {
     ret.push('📦 명령어 목록');
     ret.push('———');
     CommandRegistry.loop(function (cmd) {
-      if (cmd.channels.map(function (c) {
+      if (cmd.channels.length === 0 || cmd.channels.map(function (c) {
         return c.id;
       }).includes(channel.id)) ret.push("\xB7 ".concat(cmd.name, " (").concat(cmd.icon, ")"));
     });
