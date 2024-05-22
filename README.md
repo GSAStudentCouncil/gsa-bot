@@ -4,7 +4,7 @@
 이 프로젝트는 `d.ts` 파일이 구현되어 있어, 타입 힌트를 제공합니다. 따라서, IDE(ex. PyCharm, WebStorm)를 사용하여 개발하는 것을 권장합니다.
 
 > [!NOTE]
-> 봇 앱은 ES5 문법까지만 지원하므로 `src` 폴더 내에서 코딩을 한 후, [`package.json`](package.json)에 정의된 `npm run build-js` 등의 커맨드로 `src` 폴더 내의 소스 파일들을 쉽게 트랜스파일한 파일을 사용하면 됩니다.
+> 봇 앱은 ES5 문법까지만 지원하므로 `src` 폴더 내에서 코딩을 한 후, [`package.json`](package.json)에 정의된 `npm run build-js` 등의 커맨드로 `src` 폴더 내의 소스 파일들을 babel로 트랜스파일한 파일을 사용하면 됩니다.
 
 ## 구동 환경
 
