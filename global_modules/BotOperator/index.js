@@ -15,7 +15,8 @@ class Bot {
         this.commandRegistry = CommandRegistry;
         this.commandRegistry.setCronManager(this.cronManager);
 
-        this.commandEvent = (chat, channel, command, args) => {};
+        this.commandEvent = (chat, channel, command, args) => {
+        };
 
         this._findCommand = (chat, channel) => {
             for (let i = 0; i < this._lazyArgsQueue.length; i++) {

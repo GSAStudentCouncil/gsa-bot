@@ -812,18 +812,21 @@ class Registry {
 				}
 				
 				if (cmd.useDateParse) {
-					if (!('datetime' in args))
-						args.datetime = null;
-
 					if (cmd.useDuration) {
+						if (!('duration' in args))
+							args.duration = null;
+						
 						let { parse: { from, to }, string } = DateTime.parseDuration(filteredText, true, cmd.filterIncludeEnding);
 						
 						if (from != null && to != null) {
-							args.datetime = { from, to };
+							args.duration = { from, to };
 							filteredText = string;
 						}
 					}
 					else {
+						if (!('datetime' in args))
+							args.datetime = null;
+						
 						let { parse, string } = DateTime.parse(filteredText, true, cmd.filterIncludeEnding);
 						
 						if (parse != null) {

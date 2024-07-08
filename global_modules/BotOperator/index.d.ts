@@ -45,7 +45,7 @@ export declare class BotOperator {
     public botManager: any;
     public dbManager: DBManager;
 
-    getCurrentBot: (init?: InstanceType = {}) => Bot;
+    getCurrentBot: (init?: InstanceType) => Bot;
     getChannelById: typeof Channel.get;
 }
 

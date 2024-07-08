@@ -12,6 +12,8 @@ parseDuration = string => {
 	console.log(`${parsed.from} ~ ${parsed.to}`);
 }
 
+// console.log(DateTime.now().gt({ year: 2024, month: 7, day: 7 }));
+
 // parse`새벽 3시`    // ✅
 // parse`오전 4시`    // ✅
 // parse`오후 7:15`  // ✅

@@ -4,23 +4,25 @@ import { DateTime } from "../DateTime";
 
 type ChatWithFiltered = { [K in keyof Chat]: Chat[K] } & { filteredText: string };
 
-type ArgType = [string, number, DateTime];
+type ArgType = [string, number, DateTime, Duration];
 type ArgTypeUnion = ArgType[number];
+type Duration = { from: DateTime, to: DateTime };
 
-type Query = { [token: string]: null | string | (() => ArgTypeUnion) };
-type Args = { [key: string]: NaN | ArgTypeUnion | ArgTypeUnion[] };
-type ArgsWithDateTime<T> = {
+type Query = { [token: string]: null | (typeof NaN) | string | (() => ArgTypeUnion) };
+type Args = { [key: string]: (typeof NaN) | ArgTypeUnion | ArgTypeUnion[] };
+type ArgsWithDateTime = {
 	[key: string]: ArgTypeUnion | ArgTypeUnion[],
-	datetime?: T extends true ? DateTime : { from: DateTime, to: DateTime }
+	datetime?: DateTime,
+	duration?: Duration
 };
 type CronJob = { cron: string, comment: string };
 
-type Execute<C, A> = (self: Command, chat: C, channel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime<A> : never)) => void;
-type ExecuteLazy<C, A> = (self: Command, chat: C, prevChat: C, channel: Channel, prevChannel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime<A> : never)) => void;
+type Execute<C> = (self: Command, chat: C, channel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime : never)) => void;
+type ExecuteLazy<C> = (self: Command, chat: C, prevChat: C, channel: Channel, prevChannel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime : never)) => void;
 type ExecuteCron = (self: Command, index: number, datetime: DateTime) => void;
 
-type ExecuteWithoutSelf<C, A> = (chat: C, channel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime<A> : never)) => void;
-type ExecuteLazyWithoutSelf<C, A> = (chat: C, prevChat: C, channel: Channel, prevChannel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime<A> : never)) => void;
+type ExecuteWithoutSelf<C> = (chat: C, channel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime : never)) => void;
+type ExecuteLazyWithoutSelf<C> = (chat: C, prevChat: C, channel: Channel, prevChannel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime : never)) => void;
 type ExecuteCronWithoutSelf = (index: number, datetime: DateTime) => void;
 
 declare interface CommandOptions {
@@ -28,12 +30,12 @@ declare interface CommandOptions {
 	icon: string;
 	description: string;
 	channels?: Channel[];
-	cronJobs?: CronJobs;
+	cronJobs?: CronJob[];
 	examples?: string[];
-	execute?: Execute<Chat, boolean>;
-	executeLazy?: ExecuteLazy<Chat, boolean>;
+	execute?: Execute<Chat>;
+	executeLazy?: ExecuteLazy<Chat>;
 	executeCron?: ExecuteCron;
-};
+}
 
 declare abstract class Command {
 	protected constructor(
@@ -48,8 +50,8 @@ declare abstract class Command {
 	public readonly channels: Channel[];
 	public readonly cronJobs: CronJob[];
 	public readonly examples: string[];
-	private abstract readonly _execute: Execute<any>;
-	private abstract readonly _executeLazy: ExecuteLazy<any>;
+	private readonly _execute: Execute<any>;
+	private readonly _executeLazy: ExecuteLazy<any>;
 	private readonly _executeCron: ExecuteCron;
 	public readonly lazy: boolean;
 
@@ -108,10 +110,11 @@ declare class DateArg extends Arg {
 	parse(value: string): ArgType[2] | false;
 }
 
-declare interface StructuredCommandOptions implements CommandOptions {
+declare interface StructuredCommandOptions extends CommandOptions {
 	usage: string;
 }
 
+// @ts-ignore
 export declare class StructuredCommand extends Command {
 	constructor(options: StructuredCommandOptions);
 
@@ -119,11 +122,11 @@ export declare class StructuredCommand extends Command {
 	public readonly args: Arg[];
 	public readonly regex: RegExp;
 
-	private readonly _execute: Execute<Chat, false>;
-	private readonly _executeLazy: ExecuteLazy<Chat, false>;
+	private readonly _execute: Execute<Chat>;
+	private readonly _executeLazy: ExecuteLazy<Chat>;
 
-	public readonly execute: ExecuteWithoutSelf<Chat, false>;
-	public readonly executeLazy: ExecuteLazyWithoutSelf<Chat, false>;
+	public readonly execute: ExecuteWithoutSelf<Chat>;
+	public readonly executeLazy: ExecuteLazyWithoutSelf<Chat>;
 
 	static add(options: StructuredCommandOptions): void;
 
@@ -141,8 +144,8 @@ export declare namespace StructuredCommand {
 		public channels: Channel[];
 		public cronJobs: CronJob[];
 		public examples: string[];
-		public execute: Execute<Chat, false> | null;
-		public executeLazy: ExecuteLazy<Chat, false> | null;
+		public execute: Execute<Chat> | null;
+		public executeLazy: ExecuteLazy<Chat> | null;
 		public executeCron: ExecuteCron | null;
 
 		setName(name: string, icon: string): this;
@@ -157,13 +160,13 @@ export declare namespace StructuredCommand {
 
 		setCronJob(cronJobs: CronJob[], execute: ExecuteCron): this;
 
-		setExecute(execute: Execute<Chat, false>, executeLazy?: ExecuteLazy<Chat, false>): this;
+		setExecute(execute: Execute<Chat>, executeLazy?: ExecuteLazy<Chat>): this;
 
 		build(): StructuredCommand;
 	}
 }
 
-declare interface NaturalCommandOptions implements CommandOptions {
+declare interface NaturalCommandOptions extends CommandOptions {
 	query: Query;
 	useDateParse: boolean;
 	useDuration?: boolean;
@@ -171,6 +174,7 @@ declare interface NaturalCommandOptions implements CommandOptions {
 	dictionaryPath?: string;
 }
 
+// @ts-ignore
 export declare class NaturalCommand extends Command {
 	constructor(options: NaturalCommandOptions);
 
@@ -182,11 +186,11 @@ export declare class NaturalCommand extends Command {
 
 	private readonly map: [string, string][];	// [word, token]
 
-	private readonly _execute: Execute<ChatWithFiltered, this['useDuration']>;
-	private readonly _executeLazy: ExecuteLazy<ChatWithFiltered, this['useDuration']>;
+	private readonly _execute: Execute<ChatWithFiltered>;
+	private readonly _executeLazy: ExecuteLazy<ChatWithFiltered>;
 
-	public readonly execute: ExecuteWithoutSelf<ChatWithFiltered, this['useDuration']>;
-	public readonly executeLazy: ExecuteLazyWithoutSelf<ChatWithFiltered, this['useDuration']>;
+	public readonly execute: ExecuteWithoutSelf<ChatWithFiltered>;
+	public readonly executeLazy: ExecuteLazyWithoutSelf<ChatWithFiltered>;
 
 	static add(options: NaturalCommandOptions): void;
 
@@ -205,8 +209,8 @@ export declare namespace NaturalCommand {
 		public cronJobs: CronJob[];
 		public dictionaryPath: string;
 		public examples: string[];
-		public execute: Execute<ChatWithFiltered, this['useDuration']> | null;
-		public executeLazy: ExecuteLazy<ChatWithFiltered, this['useDuration']> | null;
+		public execute: Execute<ChatWithFiltered> | null;
+		public executeLazy: ExecuteLazy<ChatWithFiltered> | null;
 		public executeCron: ExecuteCron | null;
 		public useDateParse: boolean;
 		public useDuration: boolean;
@@ -226,9 +230,9 @@ export declare namespace NaturalCommand {
 
 		setCronJob(cronJobs: CronJob[], execute: ExecuteCron): this;
 
-		setExecute(execute: Execute<ChatWithFiltered, this['useDuration']>, executeLazy?: ExecuteLazy<ChatWithFiltered, this['useDuration']>): this;
+		setExecute(execute: Execute<ChatWithFiltered>, executeLazy?: ExecuteLazy<ChatWithFiltered>): this;
 
-		setUseDateParse(useDateParse: boolean, useDuration?: boolean = false, filterIncludeEnding?: boolean = true): this;
+		setUseDateParse(useDateParse: boolean, useDuration?: boolean, filterIncludeEnding?: boolean): this;
 
 		build(): NaturalCommand;
 	}

@@ -21,12 +21,12 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * 광주과학고등학교 카카오톡 봇 ver. 2024
- * 
+ *
  * @checklist
  * 1. 오픈 프로필이 적어도 1개 존재해야함 ✅
  * 2. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (따로 미리 구해야함) ✅
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
- * 		- 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
+ *    - 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
  * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
  */
 
@@ -39,13 +39,14 @@ var _require = require('BotOperator/Command'),
   CommandRegistry = _require.CommandRegistry;
 var _require2 = require('BotOperator/Event'),
   Event = _require2.Event;
-var _require3 = require("BotOperator/DateTime"),
+var _require3 = require('BotOperator/DateTime'),
   DateTime = _require3.DateTime;
 
 // 파일 경로
 var paths = {
-  users: "/sdcard/msgbot/users.json",
-  channels: "/sdcard/msgbot/channels.json"
+  users: '/sdcard/msgbot/users.json',
+  channels: '/sdcard/msgbot/channels.json',
+  dmChannels: '/sdcard/msgbot/dmChannels.json'
 };
 
 // 파일 입출력
@@ -68,6 +69,7 @@ var DB = {
     c2i: {}
   }),
   // i2c: id to customName, c2i: customName to id
+  dmChannels: FS.readObject(paths.dmChannels),
   reloadUser: function reloadUser(user, channel) {
     // user.id, channel.id 도 string 타입
     DB.users[user.id] = {
@@ -125,18 +127,17 @@ var _ = {
     return Number.isNaN(n);
   },
   "catch": function _catch(err, channel) {
-    var error = "".concat(_.error(err.name), "\n\u2014\u2014\n").concat(err.message, "\n").concat(err.stack.trimEnd());
+    var error = "".concat(err.name, "\n\u2014\u2014\n").concat(err.message, "\n").concat(err.stack.trimEnd());
     Log.e(error);
-    if (channel != null && typeof channel.send === 'function') channel.send(error);
+    if (channel != null && typeof channel.send === 'function') {
+      channel.send(error);
+    }
   },
   compress: "\u200B".repeat(500)
 };
 
 // 채널 객체에 메시지 전송을 위한 유틸리티 함수
-/**
- * @param {Channel} channel 
- * @param {Command} command
- */
+/** @param {Channel} channel */
 var $ = function $(channel) {
   var send = function send() {
     for (var _len = arguments.length, msg = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -146,7 +147,9 @@ var $ = function $(channel) {
     if (channel != null && typeof channel.send === 'function') {
       channel.send(content)["catch"](function (e) {
         _["catch"](e, debugRoom);
-        if (debugRoom != null && typeof debugRoom.send === 'function') debugRoom.send('보내려던 내용' + _.compress + '\n\n' + content);
+        if (debugRoom != null && typeof debugRoom.send === 'function') {
+          debugRoom.send('보내려던 내용' + _.compress + '\n\n' + content);
+        }
       });
     }
   };
@@ -184,31 +187,64 @@ for (var _i = 0, _Object$entries = _objectEntries(DB.channels.c2i); _i < _Object
   var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
     name = _Object$entries$_i[0],
     id = _Object$entries$_i[1];
-  if (_.isNumber(name)) studentRooms[name] = BotOperator.getChannelById(id);
-  rooms[name] = BotOperator.getChannelById(id);
+  var ch = BotOperator.getChannelById(id);
+  if (ch == null) continue;
+  if (_.isNumber(name)) {
+    if (ch.isGroupChannel() && ch.members.length > 80)
+      // 기수 톡방이 맞는지 검사
+      studentRooms[name] = ch;
+  }
+  rooms[name] = ch;
 }
 try {
   // 급식 명령어
 
   /**
    * @param {DateTime} dt
+   * @param {String} bullet
+   * @return {String[]}
    */
   var getMeals = function getMeals(dt, bullet) {
-    var options = [["ATPT_OFCDC_SC_CODE", "F10"], ["SD_SCHUL_CODE", 7380031], ["MLSV_YMD", dt.toString('YYMMDD')], ["Type", "json"]];
-    var data = JSON.parse(org.jsoup.Jsoup.connect("https://open.neis.go.kr/hub/mealServiceDietInfo?".concat(options.map(function (opt) {
-      return opt.join('=');
-    }).join('&'))).get().text());
+    var options = [['ATPT_OFCDC_SC_CODE', 'F10'], ['SD_SCHUL_CODE', 7380031], ['MLSV_YMD', dt.toString('YYMMDD')], ['Type', 'xml']];
+    try {
+      var doc = Jsoup.connect("https://open.neis.go.kr/hub/mealServiceDietInfo?".concat(options.map(function (opt) {
+        return opt.join('=');
+      }).join('&'))).get();
 
-    // 순서대로 아침, 점심, 저녁
-    var ret = Array(3).fill(null);
-    if ('RESULT' in data && data.RESULT.CODE !== "INFO-000") return ret;else if (data.mealServiceDietInfo[0].head[1].RESULT.CODE !== "INFO-000") return ret;
-    for (var i = 0; i < data.mealServiceDietInfo[1].row.length; i++) {
-      var ddish = data.mealServiceDietInfo[1].row[i].DDISH_NM.replace(/\s*\(\d+(?:.\d+)*\)\s+/g, '\n').replace(/\(\d+\.?(?:.\d+)*\)/g, '').replace(/([가-힣ㄱ-ㅎㅏ-ㅣ)]) /g, '$1\n').split('\n').slice(0, -1);
-      ret[Number(data.mealServiceDietInfo[1].row[i].MMEAL_SC_CODE) - 1] = ddish.map(function (e) {
-        return bullet + e;
-      }).join('\n');
+      // 에러 코드 처리
+      var resultElements = doc.select('RESULT > CODE');
+      if (!resultElements.isEmpty() && !resultElements.text().equals('INFO-000')) {
+        return [null, null, null];
+      }
+
+      // 에러 코드 처리 2
+      var headElements = doc.select('head > RESULT > CODE');
+      if (!headElements.isEmpty() && !headElements.text().equals('INFO-000')) {
+        return [null, null, null];
+      }
+      var elements = doc.select('row');
+      var breakfast = null;
+      var lunch = null;
+      var dinner = null;
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements.get(i);
+        var mealType = element.select('MMEAL_SC_CODE').text();
+        var dishName = element.select('DDISH_NM').text().split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g).filter(Boolean).map(function (e) {
+          return bullet + e;
+        }).join('\n');
+        if (mealType === '1') {
+          breakfast = dishName;
+        } else if (mealType === '2') {
+          lunch = dishName;
+        } else if (mealType === '3') {
+          dinner = dishName;
+        }
+      }
+      return [breakfast, lunch, dinner];
+    } catch (e) {
+      _.error(e);
+      return [null, null, null];
     }
-    return ret;
   };
   bot.addCommand(new NaturalCommand.Builder().setName('급식', '🍚').setDescription('입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' + '예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' + '또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.').setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일').setQuery({
     급식: null,
@@ -217,10 +253,24 @@ try {
     var 급식 = _ref.급식,
       datetime = _ref.datetime;
     // 명령어 오호출 방지를 위해 날짜를 파싱하지 않은 경우에는 급식 토큰이 있는 경우에만 반응 (공백 미포함 3글자 여유로 줌)
-    if (chat.filteredText.replace(/\s+/g, '').length > 3) return;
-    if (_.isNaN(datetime)) datetime = DateTime.now();
-    if (급식 === '조식' || 급식 === '아침') datetime = datetime.parse('아침');else if (급식 === '중식' || 급식 === '점심') datetime = datetime.parse('점심');else if (급식 === '석식' || 급식 === '저녁') datetime = datetime.parse('저녁');
+    if (chat.filteredText.replace(/\s+/g, '').length > 0) {
+      return;
+    }
+    if (_.isNaN(datetime)) {
+      datetime = DateTime.now();
+    }
+
+    // 급식의 의미를 담은 토큰이 시간의 의미도 동시에 갖는 경우 처리
+    if (급식 === '조식' || 급식 === '아침') {
+      datetime = datetime.parse('아침');
+    } else if (급식 === '중식' || 급식 === '점심') {
+      datetime = datetime.parse('점심');
+    } else if (급식 === '석식' || 급식 === '저녁') {
+      datetime = datetime.parse('저녁');
+    }
     var meals;
+
+    // "오늘 밥" 같은 명령어는 급식 전체 출력
     if (datetime.eq({
       hour: 0,
       minute: 0
@@ -228,33 +278,73 @@ try {
       meals = getMeals(datetime, ' · ').map(function (e) {
         return e ? e : '급식 정보가 없습니다.';
       });
-      $(channel).send("".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(meals[0], "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(meals[1], "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(meals[2]));
+      var _msg = "".concat(self.icon, " ").concat(datetime.humanize(true), " \uAE09\uC2DD\n").concat(_.compress, "\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(meals[0], "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(meals[1], "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(meals[2]);
+      if (channel.id === studentRooms[39].id && datetime.gt({
+        year: 2024,
+        month: 7,
+        day: 7
+      }) && datetime.lt({
+        year: 2024,
+        month: 7,
+        day: 27
+      })) {
+        _msg += "\n\n[GIST \uD559\uC0DD\uC2DD\uB2F9]\n\uC81C1\uD559\uC0DD\uC2DD\uB2F9: https://www.gist.ac.kr/kr/html/sub05/050601.html\n\uC81C2\uD559\uC0DD\uC2DD\uB2F9: https://www.gist.ac.kr/kr/html/sub05/050602.html";
+      }
+      $(channel).send(_msg);
       return;
     }
     meals = getMeals(datetime, '· ').map(function (e) {
       return e ? e : '급식 정보가 없습니다.';
     });
+    var msg;
+    var type;
+
+    // 급식 시간에 따라 메시지 전송
     if (datetime.isWeekend() ? datetime.lt({
       hour: 8,
       minute: 50
     }) : datetime.lt({
       hour: 8,
       minute: 10
-    })) $(channel).send("\uD83C\uDF73 ".concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));else if (datetime.lt({
+    })) {
+      type = 1;
+      msg = "\uD83C\uDF73 ".concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]);
+    } else if (datetime.lt({
       hour: 13,
       minute: 10
-    })) $(channel).send("\uD83C\uDF54 ".concat(datetime.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]));else if (datetime.lt({
+    })) {
+      type = 2;
+      msg = "\uD83C\uDF54 ".concat(datetime.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]);
+    } else if (datetime.lt({
       hour: 19,
       minute: 10
-    })) $(channel).send("\uD83C\uDF71 ".concat(datetime.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]));else {
+    })) {
+      type = 3;
+      msg = "\uD83C\uDF71 ".concat(datetime.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]);
+    } else {
+      type = 4;
       datetime = datetime.add({
         day: 1
       });
       meals = getMeals(datetime, '· ').map(function (e) {
         return e ? e : '급식 정보가 없습니다.';
       });
-      $(channel).send("\uD83C\uDF73 ".concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]));
+      msg = "\uD83C\uDF73 ".concat(datetime.humanize(true), " \uC870\uC2DD\n\u2014\u2014\n").concat(meals[0]);
     }
+
+    // 3학년 여름 방학 급식실 대신 지스트 학생 식당 사용 이슈
+    if (type === 3 && channel.id === studentRooms[39].id && datetime.gt({
+      year: 2024,
+      month: 7,
+      day: 7
+    }) && datetime.lt({
+      year: 2024,
+      month: 7,
+      day: 27
+    })) {
+      msg += "\n\n[GIST \uD559\uC0DD\uC2DD\uB2F9]\n\uC81C1\uD559\uC0DD\uC2DD\uB2F9: https://www.gist.ac.kr/kr/html/sub05/050601.html\n\uC81C2\uD559\uC0DD\uC2DD\uB2F9: https://www.gist.ac.kr/kr/html/sub05/050602.html";
+    }
+    $(channel).send(msg);
   }).setCronJob([{
     cron: '0 0 * * *',
     comment: '매일 자정에 그 날의 모든 메뉴 전송'
@@ -267,16 +357,40 @@ try {
   }], function (self, index, dt) {
     var meals = getMeals(dt, ' · ');
     var msg;
-    if (index === 0 && meals.filter(Boolean).length > 0) msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(meals[0] || '급식 정보가 없습니다.', "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(meals[1] || '급식 정보가 없습니다.', "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(meals[2] || '급식 정보가 없습니다.');else {
+    if (index === 0 && meals.filter(Boolean).length > 0) {
+      msg = "".concat(self.icon, " ").concat(dt.humanize(true), " \uAE09\uC2DD\n\u2014\u2014\n\uD83C\uDF73 \uC870\uC2DD\n").concat(meals[0] || '급식 정보가 없습니다.', "\n\n\uD83C\uDF54 \uC911\uC2DD\n").concat(meals[1] || '급식 정보가 없습니다.', "\n\n\uD83C\uDF71 \uC11D\uC2DD\n").concat(meals[2] || '급식 정보가 없습니다.');
+    } else {
       meals = getMeals(dt, '· ');
-      if (index === 1 && meals[1] != null) msg = "\uD83C\uDF54 ".concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]);else if (index === 2 && meals[2] != null) msg = "\uD83C\uDF71 ".concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]);
+      if (index === 1 && meals[1] != null) {
+        msg = "\uD83C\uDF54 ".concat(dt.humanize(true), " \uC911\uC2DD\n\u2014\u2014\n").concat(meals[1]);
+      } else if (index === 2 && meals[2] != null) {
+        msg = "\uD83C\uDF71 ".concat(dt.humanize(true), " \uC11D\uC2DD\n\u2014\u2014\n").concat(meals[2]);
+      }
     }
-    for (var 기수 in studentRooms) if (msg != null) $(studentRooms[기수]).send(msg);
+    for (var 기수 in studentRooms) {
+      if (msg == null) {
+        continue;
+      }
+
+      // 3학년 여름 방학 급식실 대신 지스트 학생 식당 사용 이슈
+      if (기수 === 39 && dt.gt({
+        year: 2024,
+        month: 7,
+        day: 7
+      }) && dt.lt({
+        year: 2024,
+        month: 7,
+        day: 27
+      })) {
+        msg += "\n\n[GIST \uD559\uC0DD\uC2DD\uB2F9]\n\uC81C1\uD559\uC0DD\uC2DD\uB2F9: https://www.gist.ac.kr/kr/html/sub05/050601.html\n\uC81C2\uD559\uC0DD\uC2DD\uB2F9: https://www.gist.ac.kr/kr/html/sub05/050602.html";
+      }
+      $(studentRooms[기수]).send(msg);
+    }
   }).build());
 
   // 공지 명령어
-  bot.addCommand(new StructuredCommand.Builder().setName('공지', '📢').setDescription("학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n" + "먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n" + "공지사항 내용 대신 메시지로 '취소'라고 보낼 경우 공지 명령어가 중단됩니다.").setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: ' + _.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'), '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: ' + _.info('$user님, 39기에 정책부로서 공지할 내용을 작성해주세요.'), '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: ' + _.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'), '$user: 취소', '봇: ' + _.success('취소되었습니다.')]).setExecute(function (self, chat, channel, args) {
-    var 부서List = ["회장", "부회장", "학생회", "생체부", "환경부", "통계부", "문예부", "체육부", "홍보부", "정책부", "정보부", "총무부"];
+  bot.addCommand(new StructuredCommand.Builder().setName('공지', '📢').setDescription('학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n' + '먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n' + '공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.').setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: ' + _.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'), '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: ' + _.info('$user님, 39기에 정책부로서 공지할 내용을 작성해주세요.'), '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: ' + _.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'), '$user: 취소', '봇: ' + _.success('취소되었습니다.')]).setExecute(function (self, chat, channel, args) {
+    var 부서List = ['회장', '부회장', '학생회', '생체부', '환경부', '통계부', '문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'];
 
     // 부서가 적절한지 확인
     if (!부서List.includes(args.부서)) {
@@ -309,7 +423,7 @@ try {
           $(channel).warn("".concat(n, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
           return 1; // continue
         }
-        studentRooms[n].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(chat.text)).then(function () {
+        $(studentRooms[n]).send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(chat.text)).then(function () {
           return $(channel).success("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
         })["catch"](function (e) {
           return $(channel).warn("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
@@ -326,7 +440,7 @@ try {
   }).build());
 
   // 도움말 명령어
-  bot.addCommand(new StructuredCommand.Builder().setName('도움말', '❓').setDescription("명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.").setUsage('도움말 <명령어:str?>').setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚').setExecute(function (self, chat, channel, _ref3) {
+  bot.addCommand(new StructuredCommand.Builder().setName('도움말', '❓').setDescription('명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.').setUsage('도움말 <명령어:str?>').setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚').setExecute(function (self, chat, channel, _ref3) {
     var 명령어 = _ref3.명령어;
     // 명령어 이름이 주어진 경우
     if (명령어 != null) {
@@ -340,7 +454,9 @@ try {
           user: chat.user.name
         }));
         return;
-      } else $(channel).warn("\uBA85\uB839\uC5B4 \uC774\uB984\uC774 '".concat(명령어, "'\uC778 \uBA85\uB839\uC5B4\uB294 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
+      } else {
+        $(channel).warn("\uBA85\uB839\uC5B4 \uC774\uB984\uC774 '".concat(명령어, "'\uC778 \uBA85\uB839\uC5B4\uB294 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
+      }
     }
     var ret = [];
     ret.push('📦 명령어 목록');
@@ -348,7 +464,9 @@ try {
     CommandRegistry.loop(function (cmd) {
       if (cmd.channels.length === 0 || cmd.channels.map(function (c) {
         return c.id;
-      }).includes(channel.id)) ret.push("\xB7 ".concat(cmd.name, " (").concat(cmd.icon, ")"));
+      }).includes(channel.id)) {
+        ret.push("\xB7 ".concat(cmd.name, " (").concat(cmd.icon, ")"));
+      }
     });
     ret.push('\n"도움말 <명령어>"로\n세부 도움말을 확인하세요.');
     $(channel).send(ret.join('\n'));
@@ -367,7 +485,9 @@ try {
       var dt = DateTime.parse(date);
       var dtString = dt.toString('M월 D일:');
       if (from.le(dt) && dt.le(to)) {
-        if (!(dtString in satisfied)) satisfied[dtString] = [];
+        if (!(dtString in satisfied)) {
+          satisfied[dtString] = [];
+        }
         var _iterator2 = _createForOfIteratorHelper(events[date].split(/,\s*/)),
           _step2;
         try {
@@ -392,14 +512,20 @@ try {
     학교행사: null
   }).setExecute(function (self, chat, channel, _ref4) {
     var 학교행사 = _ref4.학교행사,
-      _ref4$datetime = _ref4.datetime,
-      from = _ref4$datetime.from,
-      to = _ref4$datetime.to;
-    if (chat.filteredText.replace(/\s+/g, '').length > 3)
-      // TODO: 명령어 오호출 방지 setMargin(3) 구현
-      return;
+      _ref4$duration = _ref4.duration,
+      from = _ref4$duration.from,
+      to = _ref4$duration.to;
+    if (chat.filteredText.replace(/\s+/g, '').length > 0)
+      // TODO: 명령어 오호출 방지 setMargin(0) 구현
+      {
+        return;
+      }
     var events = getEvents(from, to);
-    if (events.length > 0) $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n").concat(events));else $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
+    if (events.length > 0) {
+      $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n").concat(events));
+    } else {
+      $(channel).send("".concat(self.icon, " \uD559\uC0AC\uC77C\uC815 (").concat(from.humanize(true), " ~ ").concat(to.humanize(true), ")\n\u2014\u2014\n\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uD559\uC0AC\uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."));
+    }
   }).setCronJob([{
     cron: '0 0 * * 1',
     comment: '월요일 자정에는 그 주의 모든 일정을 전송'
@@ -408,9 +534,15 @@ try {
     comment: '월요일을 제외한 모든 요일의 자정에는 그 날의 일정을 전송'
   }], function (self, index, dt) {
     var events;
-    if (index === 0) events = getEvents(dt, DateTime.sunday());else if (index === 1) events = getEvents(dt, dt);
+    if (index === 0) {
+      events = getEvents(dt, DateTime.sunday());
+    } else if (index === 1) {
+      events = getEvents(dt, dt);
+    }
     for (var 기수 in studentRooms) {
-      if (events.length > 0) $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(events));
+      if (events.length > 0) {
+        $(studentRooms[기수]).send("".concat(self.icon, " ").concat(['이번 주', '오늘'][index], " \uD559\uC0AC\uC77C\uC815\n\u2014\u2014\n").concat(events));
+      }
     }
   }).build());
 
@@ -419,7 +551,15 @@ try {
 
   // db 갱신
   bot.on(Event.MESSAGE, function (chat, channel) {
-    if (!_.isNumber(channel.customName)) return;
+    if (!_.isNumber(channel.customName)) {
+      return;
+    }
+
+    // 개인 톡방 추가
+    if (channel.isDirectChannel() && !(chat.user.id in DB.dmChannels)) {
+      DB.dmChannels[chat.user.id] = channel.id;
+      FS.writeObject(paths.dmChannels, DB.dmChannels);
+    }
 
     // 기수 톡방 및 톡방 내 학생들 추가
     if (!(channel.id in DB.channels.i2c)) {
@@ -434,7 +574,7 @@ try {
     }
 
     // 이름 변경 적용
-    if (chat.user.id in DB.users && (DB.users[chat.user.id].name !== chat.user.name || DB.users[chat.user.id].nth !== Number(channel.customName))) {
+    if (chat.user.id in DB.users && (DB.users[chat.user.id].name !== chat.user.name || DB.users[chat.user.id].nth !== parseInt(channel.customName))) {
       DB.users[chat.user.id].name = chat.user.name;
       DB.users[chat.user.id].nth = Number(channel.customName);
       FS.writeObject(paths.users, DB.users);

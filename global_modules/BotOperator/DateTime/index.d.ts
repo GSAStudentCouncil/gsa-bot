@@ -162,8 +162,10 @@ export declare class DateTime {
 	
 	static fromTimestamp(timestamp: number): DateTime;
 	
+	// @ts-ignore
 	static fromString(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime;
 	
+	// @ts-ignore
 	static dehumanize(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime;
 	
 	static fromNumber(timestamp: number): DateTime;
@@ -198,27 +200,32 @@ export declare class DateTime {
 	
 	static set(datetimeObject: SetDateTimeTemplate): DateTime;
 	
+	// @ts-ignore
 	static parseDuration(dateString: string, getString: true, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): {
 		parse: {
 			from: DateTime | undefined,
 			to: DateTime | undefined
 		}, string: string
 	};
-
+	
+	// @ts-ignore
 	static parseDuration(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): { from: DateTime | undefined, to: DateTime | undefined };
 	
+	// @ts-ignore
 	static parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): {
 		parse: DateTime | undefined, string: string
 	};
-
+	
+	// @ts-ignore
 	static parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): DateTime | undefined;
 	
+	// @ts-ignore
 	parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true): {
 		parse: DateTime | undefined, string: string
 	};
-
-	parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true): DateTime | undefined;
 	
+	// @ts-ignore
+	parse(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, trim?: boolean = true): DateTime | undefined;
 
 	// private static _parse(dateString: string, locale?: string): [ SetDateTimeTemplate, string? ];
 	

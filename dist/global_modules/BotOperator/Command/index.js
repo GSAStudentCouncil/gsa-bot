@@ -818,21 +818,22 @@ var Registry = /*#__PURE__*/function () {
                 startIdx++;
               }
               if (cmd.useDateParse) {
-                if (!('datetime' in args)) args.datetime = null;
                 if (cmd.useDuration) {
+                  if (!('duration' in args)) args.duration = null;
                   var _DateTime$parseDurati = DateTime.parseDuration(filteredText, true, cmd.filterIncludeEnding),
                     _DateTime$parseDurati2 = _DateTime$parseDurati.parse,
                     from = _DateTime$parseDurati2.from,
                     to = _DateTime$parseDurati2.to,
                     string = _DateTime$parseDurati.string;
                   if (from != null && to != null) {
-                    args.datetime = {
+                    args.duration = {
                       from: from,
                       to: to
                     };
                     filteredText = string;
                   }
                 } else {
+                  if (!('datetime' in args)) args.datetime = null;
                   var _DateTime$parse = DateTime.parse(filteredText, true, cmd.filterIncludeEnding),
                     parse = _DateTime$parse.parse,
                     _string = _DateTime$parse.string;

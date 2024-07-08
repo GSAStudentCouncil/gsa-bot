@@ -1,4 +1,4 @@
-const Entity = {};
+const E = {};
 
 function Int(v) {
     this.special = v;
@@ -17,41 +17,53 @@ Int = Object.assign(Int, {
     }
 });
 
-class Str {}
-class Bool {}
-
-function Union(...args) {
-    return args;
+function Str(v) {
+    this.special = v;
+    return this;
 }
 
-function Optional(type, v) {
-    return type;
+function Bool(v) {
+    this.special = v;
+    return this;
 }
 
-function Literal(...v) {
-    return v;
-}
+let Greedy = {};
+Greedy[Int] = 3;
 
-function Annotated(type) {
-    return type;
-}
-
-function Greedy(type) {
-    return type;
-}
+// function Union(...args) {
+//     return args;
+// }
+// function Optional(type, v) {
+//     return type;
+// }
+// function Literal(...v) {
+//     return v;
+// }
+// function Annotated(type) {
+//     return type;
+// }
+// function Greedy(type) {
+//     return type;
+// }
 
 //////////////////////////
-급식 = chat`${Entity.date} 급식`
-    .execute((date) => `${date}일 급식입니다. ㅐㅕ조랴ㅗㅈㄷㄹ`)
-    .cron('0 0 12 * * *', () => [new Date().getDate()])
-    .cron('0 30 18 * * *', () => [new Date().getDate()]);
+// E.meal = new Entity(
+//     ['']
+// )
+//
+// 급식 = chat`${E.date} 급식`
+//     .execute(({ date }) => `${date}일 급식입니다. ㅐㅕ조랴ㅗㅈㄷㄹ`)
+//     .cron('0 0 12 * * *', () => [new Date().getDate()])
+//     .cron('0 30 18 * * *', () => [new Date().getDate()]);
+//
+// //////////////////////////
+// 공지 = chat`${Literal('회장', '부회장')} 알림 ${Int(Greedy).range(39, 41)}`
+//     .execute((role, grade) => `${role}님의 알림입니다. ${grade}학번`);
 
 //////////////////////////
-공지 = chat`${Literal('회장', '부회장')} 알림 ${Int(Greedy).range(39, 41)}`
-    .execute((role, grade) => `${role}님의 알림입니다. ${grade}학번`);
+function chat2(...args) {}
 
-//////////////////////////
-
+chat2`${Str} 알림 ${Greedy[Int]}`;
 
 chat2`공지 ${Str} ${Int} ${Bool}`;
 chat2`${Union(Str, Int, Bool)} ㅁㄴㅇㄹ ${Union(Int, Str)}`;
