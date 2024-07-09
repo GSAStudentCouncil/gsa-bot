@@ -21,30 +21,12 @@ jobs:
       - name: Run npm command
         run: npm run ready
 
-      - name: Get previous commit message
-        id: get_prev_commit
-        uses: actions/github-script@v6
-        with:
-          script: return github.context.payload.head_commit.message
-
       - name: Commit and push changes
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git add .
-          git commit -m "run npm ready on push: ${{ steps.get_prev_commit.outputs.result }}"
+          git commit -m 'Run npm ready and update dist folder'
           git push https://${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/GSAStudentCouncil/gsa-bot.git HEAD:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create a release if version is v1.x
-        if: startsWith(github.ref, 'refs/tags/v1.')
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          body: |
-            Changes committed:
-            ${{ steps.get_prev_commit.outputs.result }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
