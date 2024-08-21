@@ -1,6 +1,6 @@
 "use strict";
 
-var BotOperator = require('BotOperator').get(BotManager);
+var BotOperator = require('BotOperator').from(BotManager);
 var bot = BotOperator.getCurrentBot();
 var _require = require('BotOperator/Event'),
   Event = _require.Event;

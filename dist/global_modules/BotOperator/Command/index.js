@@ -14,6 +14,7 @@ function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" !=
 function _toArray(r) { return _arrayWithHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _superPropGet(t, e, r, o) { var p = _get(_getPrototypeOf(1 & o ? t.prototype : t), e, r); return 2 & o ? function (t) { return p.apply(r, t); } : p; }
 function _get() { return _get = "undefined" != typeof Reflect && Reflect.get ? Reflect.get.bind() : function (e, t, r) { var p = _superPropBase(e, t); if (p) { var n = Object.getOwnPropertyDescriptor(p, t); return n.get ? n.get.call(arguments.length < 3 ? e : r) : n.value; } }, _get.apply(null, arguments); }
 function _superPropBase(t, o) { for (; !{}.hasOwnProperty.call(t, o) && null !== (t = _getPrototypeOf(t));); return t; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -385,7 +386,7 @@ var StructuredCommand = /*#__PURE__*/function (_Command) {
         return "\xB7 ".concat(name, ": ").concat((properties.join(' ') + ' ' + typename).trim(), " ").concat(endProperties.length > 0 ? '(' + endProperties.join(', ') + ')' : '');
       });
       ret.push.apply(ret, _toConsumableArray(args));
-      var manual = _get(_getPrototypeOf(StructuredCommand.prototype), "createManual", this).call(this, ret);
+      var manual = _superPropGet(StructuredCommand, "createManual", this, 3)([ret]);
       for (var fmt in formats) {
         manual = manual.replaceAll("$".concat(fmt), formats[fmt]);
       }
@@ -554,7 +555,7 @@ var NaturalCommand = /*#__PURE__*/function (_Command2) {
         if (typeof this.query['datetime'] === 'function') tmp += "(\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(this.query['datetime']()), ")");else if (this.query['datetime'] != null && !Number.isNaN(this.query['datetime'])) tmp += "(\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(this.query['datetime']), ")");
         ret.push(tmp);
       }
-      var manual = _get(_getPrototypeOf(NaturalCommand.prototype), "createManual", this).call(this, ret);
+      var manual = _superPropGet(NaturalCommand, "createManual", this, 3)([ret]);
       for (var fmt in formats) {
         manual = manual.replaceAll("$".concat(fmt), formats[fmt]);
       }
