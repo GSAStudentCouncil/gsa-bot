@@ -369,7 +369,7 @@ try {
       var thirdNth = DateTime.now().year - 2000 + 15;
       기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
     }
-    $(channel).info("".concat(chat.user.name, "\uB2D8, ").concat(부서.으로, "\uC11C ").concat(기수List.join(', '), "\uAE30\uC5D0 \uACF5\uC9C0\uD560 \uB0B4\uC6A9\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694."));
+    $(channel).info("".concat(chat.user.name, "\uB2D8, ").concat(부서.으로, "\uC11C ").concat(기수List.join(', '), "\uAE30\uC5D0 \uACF5\uC9C0\uD560 \uB0B4\uC6A9\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694.\n'\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0B4\uBA74 \uC911\uB2E8\uB429\uB2C8\uB2E4."));
   }, function (self, chat, prevChat, channel, prevChannel, _ref3) {
     var 부서 = _ref3.부서,
       기수List = _ref3.기수;
