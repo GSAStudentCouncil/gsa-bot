@@ -378,7 +378,7 @@ try {
 				기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
 			}
 			
-			$(channel).info(`${chat.user.name}님, ${부서.으로}서 ${기수List.join(', ')}기에 공지할 내용을 작성해주세요.`);
+			$(channel).info(`${chat.user.name}님, ${부서.으로}서 ${기수List.join(', ')}기에 공지할 내용을 작성해주세요.\n'취소'라고 보내면 중단됩니다.`);
 		}, (self, chat, prevChat, channel, prevChannel, { 부서, 기수: 기수List }) => {
 			// 취소 시 중단
 			if (chat.text === '취소') {

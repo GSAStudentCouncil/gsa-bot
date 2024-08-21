@@ -46,7 +46,7 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 
 ### [v1.2](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.2)
 
-- 명령어 남용 문제로 명령어 민감도 낮춤, 긴 메시지는 compress 사용.
+- 명령어 남용 문제로 명령어 민감도 낮춤.
 - 개인 톡방 채널용 DB 생성
 - 방이름 보안 강화 (그룹챗, 인원수>80 조건 추가)
 - 급식 파싱 보수 및 보안 강화
