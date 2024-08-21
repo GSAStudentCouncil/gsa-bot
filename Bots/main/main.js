@@ -3,24 +3,19 @@
  *
  * @checklist
  * 1. 오픈 프로필이 적어도 1개 존재해야함 ✅
- * 2. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (따로 미리 구해야함) ✅
+ * 2. `debugRoom`, `staffRoom`의 id가 정확히 설정되어있어야함 (Bots/extract 사용해서 구할 수 있음) ✅
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
  *    - 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
  * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
  */
 
-const BotOperator = require('../../global_modules/BotOperator').
-	from(BotManager);
+const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
 const bot = BotOperator.getCurrentBot();
 
 const Jsoup = org.jsoup.Jsoup;
-const {
-	      StructuredCommand,
-	      NaturalCommand,
-	      CommandRegistry,
-      } = require('../../global_modules/BotOperator/Command');
-const {Event} = require('../../global_modules/BotOperator/Event');
-const {DateTime} = require('../../global_modules/BotOperator/DateTime');
+const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
+const { Event } = require('../../global_modules/BotOperator/Event');
+const { DateTime } = require('../../global_modules/BotOperator/DateTime');
 
 // 파일 경로
 const paths = {
@@ -29,7 +24,7 @@ const paths = {
 	dmChannels: '/sdcard/msgbot/dmChannels.json',
 };
 
-// 파일 입출력
+// 파일 스트림 관리
 const FS = {
 	...FileStream,
 	writeObject: (path, data) => FileStream.write(path, JSON.stringify(data)),
@@ -59,31 +54,29 @@ const DB = {
 };
 
 // 유틸리티 함수
+String.prototype.이가 = function () {
+	const hasJong = _.hasJong(this);
+	return this + (hasJong ? '이가' : '가');
+}
+String.prototype.을를 = function () {
+	const hasJong = _.hasJong(this);
+	return this + (hasJong ? '을' : '를');
+}
+String.prototype.은는 = function () {
+	const hasJong = _.hasJong(this);
+	return this + (hasJong ? '은' : '는');
+}
+String.prototype.으로 = function () {
+	const hasJong = _.hasJong(this);
+	return this + (hasJong ? '으로' : '로');
+}
+String.prototype.와과 = function () {
+	const hasJong = _.hasJong(this);
+	return this + (hasJong ? '과' : '와');
+}
+
 const _ = {
-	josa: (str, josa) => {
-		const hasJong = (str.charCodeAt(str.length - 1) - '가'.charCodeAt(0)) %
-		                28 !== 0;
-		
-		switch (josa) {
-			case '이가':
-			case '가':
-				return str + (hasJong ? '이가' : '가');
-			case '을':
-			case '를':
-				return str + (hasJong ? '을' : '를');
-			case '은':
-			case '는':
-				return str + (hasJong ? '은' : '는');
-			case '으로':
-			case '로':
-				return str + (hasJong ? '으로' : '로');
-			case '과':
-			case '와':
-				return str + (hasJong ? '과' : '와');
-			default:
-				return str + josa;
-		}
-	},
+	hasJong: str => (str.charCodeAt(str.length - 1) - '가'.charCodeAt(0)) % 28 !== 0,
 	warn: msg => `⚠ ${msg}`,
 	error: msg => `❌ ${msg}`,
 	success: msg => `✅ ${msg}`,
@@ -133,7 +126,7 @@ const $ = (channel) => {
 };
 
 // db.channels: object[string, string] -> rooms: object[string, Channel] 변환
-const staffRoom = BotOperator.getChannelById('381748032476273');	// 학생회방
+const staffRoom = BotOperator.getChannelById('412937930061983');	// 학생회 임원방
 const debugRoom = BotOperator.getChannelById('382089527597301');	// 디버그방
 
 /** 기수 톡방 @type { { [key: string]: Channel } } */
@@ -148,7 +141,7 @@ for (let [name, id] of Object.entries(DB.channels.c2i)) {
 		continue;
 	
 	if (_.isNumber(name)) {
-		if (ch.isGroupChannel() && ch.members.length > 80)  // 기수 톡방이 맞는지 검사
+		if (ch.isGroupChannel() && ch.members.length > 80)  // 기수 톡방이 맞는지 검사 (조건: 최소 80명 이상)
 			studentRooms[name] = ch;
 	}
 	
@@ -223,23 +216,22 @@ try {
 		}
 	};
 	
-	bot.addCommand(new NaturalCommand.Builder().
-		setName('급식', '🍚').
-		setDescription('입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n' +
-		               '예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n' +
-		               '또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.').
-		setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침',
-			'급식 3/29', '급식 다다음주 목요일').
-		setQuery({
+	bot.addCommand(new NaturalCommand.Builder()
+		.setName('급식', '🍚')
+		.setDescription(
+			`입력한 시간에 맞춰 급식을 전송합니다. 시간을 생략하면 메시지를 전송한 시각으로 설정됩니다.\n예를 들어, 아침과 점심 시간 사이에 명령어를 호출하면 점심 급식을 알려주고, 점심과 저녁 시간 사이에는 저녁 급식을 알려줍니다.\n또한, 매일 자정 그 날의 모든 급식을 알려주고, 3교시에서 4교시로 가는 쉬는 시간에는 점심, 7교시 이후 청소 시간에 저녁 급식을 정기적으로 전송합니다.`
+		)
+		.setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일')
+		.setQuery({
 			급식: null,
 			datetime: NaN,
-		}).
-		setUseDateParse(true, false, false).
+		})
+		.setUseDateParse(true, false, false).
 		setExecute((self, chat, channel, {
 			급식,
 			datetime,
 		}) => {
-			// 명령어 오호출 방지를 위해 날짜를 파싱하지 않은 경우에는 급식 토큰이 있는 경우에만 반응 (공백 미포함 3글자 여유로 줌)
+			// 명령어 오호출 방지를 위해 날짜를 파싱하지 않은 경우에는 급식 토큰이 있는 경우에만 반응 (공백 미포함 0글자 여유로 줌)
 			if (chat.filteredText.replace(/\s+/g, '').length > 0) {
 				return;
 			}
@@ -264,77 +256,33 @@ try {
 			// "오늘 밥" 같은 명령어는 급식 전체 출력
 			if (datetime.eq({ hour: 0, minute: 0 })) {
 				meals = getMeals(datetime, ' · ').map(e => e ? e : '급식 정보가 없습니다.');
-				let msg = `${self.icon} ${datetime.humanize(true)} 급식\n${_.compress}——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`;
-				if (channel.id === studentRooms[39].id && datetime.gt({
-					year: 2024,
-					month: 7,
-					day: 7,
-				}) && datetime.lt({
-					year: 2024,
-					month: 7,
-					day: 27,
-				})) {
-					msg +=
-						`\n\n[GIST 학생식당]\n제1학생식당: https://www.gist.ac.kr/kr/html/sub05/050601.html\n제2학생식당: https://www.gist.ac.kr/kr/html/sub05/050602.html`;
-				}
+				let msg = `${self.icon} ${datetime.humanize(true)} 급식\n——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`;
 				$(channel).send(msg);
 				return;
 			}
 			
 			meals = getMeals(datetime, '· ').map(e => e ? e : '급식 정보가 없습니다.');
 			let msg;
-			let type;
 			
 			// 급식 시간에 따라 메시지 전송
-			if (datetime.isWeekend() ? datetime.lt({
-				hour: 8,
-				minute: 50,
-			}) : datetime.lt({
-				hour: 8,
-				minute: 10,
-			})) {
-				type = 1;
+			if (datetime.isWeekend() ? datetime.lt({hour: 8, minute: 50}) : datetime.lt({hour: 8, minute: 10})) {
 				msg = `🍳 ${datetime.humanize(true)} 조식\n——\n${meals[0]}`;
 			}
-			else if (datetime.lt({
-				hour: 13,
-				minute: 10,
-			})) {
-				type = 2;
+			else if (datetime.lt({hour: 13, minute: 10})) {
 				msg = `🍔 ${datetime.humanize(true)} 중식\n——\n${meals[1]}`;
 			}
-			else if (datetime.lt({
-				hour: 19,
-				minute: 10,
-			})) {
-				type = 3;
+			else if (datetime.lt({hour: 19, minute: 10})) {
 				msg = `🍱 ${datetime.humanize(true)} 석식\n——\n${meals[2]}`;
 			}
-			else {
-				type = 4;
+			else {	// 저녁 시간이 끝난 후에 급식 명령어를 치는 건 내일 조식을 보겠다는 것으로 해석함
 				datetime = datetime.add({day: 1});
-				meals =
-					getMeals(datetime, '· ').map(e => e ? e : '급식 정보가 없습니다.');
+				meals = getMeals(datetime, '· ').map(e => e ? e : '급식 정보가 없습니다.');
 				msg = `🍳 ${datetime.humanize(true)} 조식\n——\n${meals[0]}`;
-			}
-			
-			// 3학년 여름 방학 급식실 대신 지스트 학생 식당 사용 이슈
-			if (type === 3 && channel.id === studentRooms[39].id && datetime.gt({
-				year: 2024,
-				month: 7,
-				day: 7,
-			}) && datetime.lt({
-				year: 2024,
-				month: 7,
-				day: 27,
-			})) {
-				msg +=
-					`\n\n[GIST 학생식당]\n제1학생식당: https://www.gist.ac.kr/kr/html/sub05/050601.html\n제2학생식당: https://www.gist.ac.kr/kr/html/sub05/050602.html`;
 			}
 			
 			$(channel).send(msg);
-		}).
-		setCronJob([
+		})
+		.setCronJob([
 			{
 				cron: '0 0 * * *',
 				comment: '매일 자정에 그 날의 모든 메뉴 전송',
@@ -344,18 +292,17 @@ try {
 			}, {
 				cron: '20 16 * * *',
 				comment: '7교시 이후 청소 시간 (16:20)에 저녁 메뉴 전송',
-			}], (self, index, dt) => {
+			}
+		], (self, index, dt) => {
 			let meals = getMeals(dt, ' · ');
 			let msg;
 			
+			// 첫 번째 크론(자정)이면서 급식 정보가 있는 경우 전체 급식 출력
 			if (index === 0 && meals.filter(Boolean).length > 0) {
-				msg = `${self.icon} ${dt.humanize(
-					true)} 급식\n——\n🍳 조식\n${meals[0] ||
-				                           '급식 정보가 없습니다.'}\n\n🍔 중식\n${meals[1] ||
-				                                                      '급식 정보가 없습니다.'}\n\n🍱 석식\n${meals[2] ||
-				                                                                                 '급식 정보가 없습니다.'}`;
+				meals = meals.map(e => e ? e : '급식 정보가 없습니다.');
+				msg = `${self.icon} ${dt.humanize(true)} 급식\n——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`;
 			}
-			else {
+			else {	// 첫 번째 크론이 아니면 해당 시간의 급식만 출력
 				meals = getMeals(dt, '· ');
 				if (index === 1 && meals[1] != null) {
 					msg = `🍔 ${dt.humanize(true)} 중식\n——\n${meals[1]}`;
@@ -366,40 +313,33 @@ try {
 			}
 			
 			for (let 기수 in studentRooms) {
-				if (msg == null) {
+				if (msg == null)
 					continue;
-				}
-				
-				// 3학년 여름 방학 급식실 대신 지스트 학생 식당 사용 이슈
-				if (기수 === 39 && dt.gt({
-					year: 2024,
-					month: 7,
-					day: 7,
-				}) && dt.lt({
-					year: 2024,
-					month: 7,
-					day: 27,
-				})) {
-					msg +=
-						`\n\n[GIST 학생식당]\n제1학생식당: https://www.gist.ac.kr/kr/html/sub05/050601.html\n제2학생식당: https://www.gist.ac.kr/kr/html/sub05/050602.html`;
-				}
 				
 				$(studentRooms[기수]).send(msg);
 			}
-		}).
-		build());
+		})
+		.build());
 	
 	// 공지 명령어
-	bot.addCommand(new StructuredCommand.Builder().
-		setName('공지', '📢').
-		setDescription('학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n' +
-		               '먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n' +
-		               '공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.').
-		setUsage(`<부서:str> 알림 <기수:int[]? min=${DateTime.now().year - 2000 +
-		                                       15} max=${DateTime.now().year -
-		                                                 2000 + 17}>`).
-		setChannels(staffRoom).
-		setExamples([
+	bot.addCommand(new StructuredCommand.Builder()
+		.setName('공지', '📢')
+		.setDescription(`학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.\n<부서>에는 다음과 같은 문자열이 들어갑니다. ${[
+			'회장',
+			'부회장',
+			'학생회',
+			'생체부',
+			'환경부',
+			'통계부',
+			'문예부',
+			'체육부',
+			'홍보부',
+			'정책부',
+			'정보부',
+			'총무부'].join(', ')}`)
+		.setUsage(`<부서:str> 알림 <기수:int[]? min=${DateTime.now().year - 2000 + 15} max=${DateTime.now().year - 2000 + 17}>`)
+		.setChannels(staffRoom)
+		.setExamples([
 			'$user: 생체부 알림',
 			'봇: ' + _.info('$user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.'),
 			'$user: 기숙사 3월 기상곡입니다 ...'], [
@@ -409,9 +349,10 @@ try {
 			'$user: 홍보부 알림 40 41',
 			'봇: ' + _.info('$user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.'),
 			'$user: 취소',
-			'봇: ' + _.success('취소되었습니다.')]).
-		setExecute((self, chat, channel, args) => {
-			const 부서List = [
+			'봇: ' + _.success('취소되었습니다.')
+		])
+		.setExecute((self, chat, channel, { 부서, 기수List }) => {
+			const 부서명List = [
 				'회장',
 				'부회장',
 				'학생회',
@@ -424,28 +365,21 @@ try {
 				'정책부',
 				'정보부',
 				'총무부'];
-			
+
 			// 부서가 적절한지 확인
-			if (!부서List.includes(args.부서)) {
-				$(channel).
-					warn(`${_.josa(args.부서,
-						'는')} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서List.join(', ')}`);
+			if (!부서명List.includes(부서)) {
+				$(channel).warn(`${부서.은는} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서명List.join(', ')}`);
 				return;
 			}
 			
 			// 기수가 없으면 재학 중인 기수로 설정
-			if (args.기수.length === 0) {
+			if (기수List.length === 0) {
 				const thirdNth = DateTime.now().year - 2000 + 15;
-				args.기수 = [thirdNth, thirdNth + 1, thirdNth + 2];
+				기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
 			}
 			
-			$(channel).
-				info(`${chat.user.name}님, ${_.josa(args.부서,
-					'로')}서 ${args.기수.join(', ')}기에 공지할 내용을 작성해주세요.`);
-		}, (self, chat, prevChat, channel, prevChannel, {
-			부서,
-			기수,
-		}) => {
+			$(channel).info(`${chat.user.name}님, ${부서.으로}서 ${기수List.join(', ')}기에 공지할 내용을 작성해주세요.`);
+		}, (self, chat, prevChat, channel, prevChannel, { 부서, 기수: 기수List }) => {
 			// 취소 시 중단
 			if (chat.text === '취소') {
 				$(channel).success('취소되었습니다.');
@@ -453,19 +387,18 @@ try {
 			}
 			
 			// 공지 전송
-			for (let n of 기수) {
-				if (!studentRooms[n]) {
-					$(channel).warn(`${n}기 톡방은 존재하지 않습니다.`);
+			for (let 기수 of 기수List) {
+				if (!studentRooms[기수]) {
+					$(channel).warn(`${기수}기 톡방은 존재하지 않습니다.`);
 					continue;
 				}
 				
-				$(studentRooms[n]).send(`${self.icon} ${부서} 알림\n——\n${chat.text}`).
-					then(() => $(channel).success(`${n}기에 ${부서} 공지가 전송되었습니다.`)).
-					catch(e => $(channel).
-						warn(`${n}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
+				$(studentRooms[기수]).send(`${self.icon} ${부서} 알림\n——\n${chat.text}`).
+					then(() => $(channel).success(`${기수}기에 ${부서} 공지가 전송되었습니다.`)).
+					catch(e => $(channel).warn(`${기수}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
 			}
-		}).
-		build());
+		})
+		.build());
 	
 	// 도움말 명령어
 	bot.addCommand(new StructuredCommand.Builder().
@@ -474,13 +407,13 @@ try {
 			'명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.').
 		setUsage('도움말 <명령어:str?>').
 		setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚').
-		setExecute((self, chat, channel, {명령어}) => {
+		setExecute((self, chat, channel, { 명령어 }) => {
 			// 명령어 이름이 주어진 경우
 			if (명령어 != null) {
 				const found = CommandRegistry.data.find(
 					cmd => cmd.name === 명령어 || cmd.icon === 명령어);
 				
-				// 명령어가 존재하는 경우
+				// 찾은 명령어가 존재하는 경우
 				if (found != null) {
 					$(channel).send(found.manual({user: chat.user.name}));
 					return;
@@ -511,6 +444,7 @@ try {
 	/**
 	 * @param {DateTime} from
 	 * @param {DateTime} to
+	 * @returns {string}
 	 */
 	const getEvents = (from, to) => {
 		const events = Database.readObject('school_events.json');
@@ -539,62 +473,54 @@ try {
 	};
 	
 	// TODO: 학교 학사일정 수정 기능(관리자방만 허용) 추가하기 - subcommand 개념 도입 필요
-	bot.addCommand(new NaturalCommand.Builder().
-		setName('행사', '📅').
-		setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').
-		setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').
-		setUseDateParse(true, true).
-		setQuery({학교행사: null}).
-		setExecute((self, chat, channel, {
+	bot.addCommand(new NaturalCommand.Builder()
+		.setName('행사', '📅')
+		.setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.')
+		.setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사')
+		.setUseDateParse(true, true)
+		.setQuery({학교행사: null})
+		.setExecute((self, chat, channel, {
 			학교행사,
-			duration: {
-				from,
-				to,
-			},
+			duration: { from, to },
 		}) => {
-			if (chat.filteredText.replace(/\s+/g, '').length > 0)	// TODO: 명령어 오호출 방지 setMargin(0) 구현
-			{
+			// TODO: 명령어 오호출 방지 setMargin(1) 구현
+			if (chat.filteredText.replace(/\s+/g, '').length > 0)
 				return;
-			}
 			
-			const events = getEvents(from, to);
+			const eventStr = getEvents(from, to);
 			
-			if (events.length > 0) {
-				$(channel).send(
-					`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(
-						true)})\n——\n${events}`);
+			if (eventStr.length > 0) {
+				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n${eventStr}`);
 			}
 			else {
-				$(channel).send(
-					`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(
-						true)})\n——\n해당 기간에 학사일정이 없습니다.`);
+				$(channel).send(`${self.icon} 학사일정 (${from.humanize(true)} ~ ${to.humanize(true)})\n——\n해당 기간에 학사일정이 없습니다.`);
 			}
-		}).
-		setCronJob([
+		})
+		.setCronJob([
 			{
 				cron: '0 0 * * 1',
 				comment: '월요일 자정에는 그 주의 모든 일정을 전송',
 			}, {
 				cron: '0 0 * * 0,2-6',
 				comment: '월요일을 제외한 모든 요일의 자정에는 그 날의 일정을 전송',
-			}], (self, index, dt) => {
-			let events;
+			}
+		], (self, index, dt) => {
+			let eventStr;
 			
 			if (index === 0) {
-				events = getEvents(dt, DateTime.sunday());
+				eventStr = getEvents(dt, DateTime.sunday());
 			}
 			else if (index === 1) {
-				events = getEvents(dt, dt);
+				eventStr = getEvents(dt, dt);
 			}
 			
 			for (let 기수 in studentRooms) {
-				if (events.length > 0) {
-					$(studentRooms[기수]).send(`${self.icon} ${[
-						'이번 주', '오늘'][index]} 학사일정\n——\n${events}`);
+				if (eventStr.length > 0) {
+					$(studentRooms[기수]).send(`${self.icon} ${['이번 주', '오늘'][index]} 학사일정\n——\n${eventStr}`);
 				}
 			}
-		}).
-		build());
+		})
+		.build());
 	
 	// 봇 가동 시작
 	bot.start();

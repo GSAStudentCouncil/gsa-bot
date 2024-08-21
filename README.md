@@ -21,6 +21,7 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 간단하게 위와 같은 방식으로 파일을 공유합니다. `dist` 폴더 내에 빌드된 소스 파일들을 `adb`를 사용해 메신저봇 내부 폴더로 전송해주세요.
 
 ## 사용한 모듈
+
 - [`BotOperator`](https://github.com/essentialib/BotOperator)
   - `DBManager`
   - `CronJob`
@@ -32,19 +33,21 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 ## 패치 노트
 
 ### [v1.0](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.0)
-  - `main.js` 구현
-  - 모듈 `DateTime`, `Command`, `BotOperator` 구현
+
+- `main.js` 구현
+- 모듈 `DateTime`, `Command`, `BotOperator` 구현
 
 ### [v1.1](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.1)
-  - 메시지 디자인 개선
-  - `main.js` 코드 개선
-  - 학사 일정이 없으면 학사 일정 cronjob 무시.
-  - 급식이 없으면 급식 cronjob 무시.
+
+- 메시지 디자인 개선
+- `main.js` 코드 개선
+- 학사 일정이 없으면 학사 일정 cronjob 무시.
+- 급식이 없으면 급식 cronjob 무시.
 
 ### [v1.2](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.2)
-  - 명령어 남용 문제로 명령어 민감도 낮춤, 긴 메시지는 compress 사용.
-  - 개인 톡방 채널용 DB 생성
-  - 방이름 보안 강화 (그룹챗, 인원수>80 조건 추가)
-  - 급식 파싱 보수 및 보안 강화
-  - 39기 여름방학 기간 동안 지스트 석식 추가
-  - Google Javascript Style 채택
+
+- 명령어 남용 문제로 명령어 민감도 낮춤, 긴 메시지는 compress 사용.
+- 개인 톡방 채널용 DB 생성
+- 방이름 보안 강화 (그룹챗, 인원수>80 조건 추가)
+- 급식 파싱 보수 및 보안 강화
+- Google Javascript Style 채택

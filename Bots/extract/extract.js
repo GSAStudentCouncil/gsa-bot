@@ -1,4 +1,4 @@
-const BotOperator = require('../../global_modules/BotOperator').get(BotManager);
+const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
 const bot = BotOperator.getCurrentBot();
 
 const { Event } = require('../../global_modules/BotOperator/Event');
