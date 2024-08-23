@@ -210,7 +210,7 @@ var 부서명List = ['회장', '부회장', '학생회', '생체부', '환경부
 ////////////////////// 명령어 선언
 try {
   ////////////////////// 디버그 명령어
-  bot.addCommand(new StructuredCommand.Builder().setName('디버그', '🔧').setDescription('디버그 모드를 실행하거나 종료합니다. 디버그 모드를 실행하면 모든 명령어의 사용이 제한됩니다.').setUsage('디버그 <스위치:str?>').setChannels(debugRoom1, debugRoom2).setExamples('디버그 시작', '디버그 종료').setExecute(function (self, chat, channel, _ref) {
+  bot.addCommand(new StructuredCommand.Builder().setName('디버그', '🔧').setDescription('디버그 모드를 실행하거나 종료합니다. 디버그 모드를 실행하면 테스트방을 제외한 모든 명령어의 사용이 제한됩니다.').setUsage('디버그 <스위치:str?>').setChannels(debugRoom1, debugRoom2).setExamples('디버그 시작', '디버그 종료', '디버그').setExecute(function (self, chat, channel, _ref) {
     var 스위치 = _ref.스위치;
     if (스위치 === '시작') {
       bot.setDebugMode(true);
@@ -365,19 +365,25 @@ try {
         _step2;
       try {
         var _loop = function _loop() {
-          var 기수 = _step2.value;
-          if (!studentRooms[기수]) {
-            channel.warn("".concat(기수, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
-            return 1; // continue
-          }
-          studentRooms[기수].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(chat.text)).then(function () {
-            return channel.success("".concat(기수, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
-          })["catch"](function (e) {
-            return channel.warn("".concat(기수, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
-          });
-        };
+            var 기수 = _step2.value;
+            if (!studentRooms[기수]) {
+              channel.warn("".concat(기수, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
+              return 0; // continue
+            }
+            if (!isValidChannel(studentRooms[기수])) {
+              channel.warn("".concat(기수, "\uAE30 \uD1A1\uBC29\uC774 \uB4F1\uB85D\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB354\uBBF8 \uBA54\uC2DC\uC9C0\uB97C \uBCF4\uB0B4\uC8FC\uC138\uC694."));
+              return 0; // continue
+            }
+            studentRooms[기수].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(chat.text)).then(function () {
+              return channel.success("".concat(기수, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
+            })["catch"](function (e) {
+              return channel.warn("".concat(기수, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
+            });
+          },
+          _ret;
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          if (_loop()) continue;
+          _ret = _loop();
+          if (_ret === 0) continue;
         }
       } catch (err) {
         _iterator2.e(err);
