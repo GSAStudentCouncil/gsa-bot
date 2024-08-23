@@ -1,184 +1,234 @@
 const { DBManager } = require('./DBManager');
 const { CronJob } = require('./CronJob');
 const { Event } = require('./Event');
-const { CommandRegistry } = require('./Command');
+const { CommandRegistry, StructuredCommand, NaturalCommand } = require('./Command');
+const { DateTime } = require('./DateTime');
+const { isValidChannel } = require('./util');
 
 const IS_DIST = false;
 
-class Bot {
-    constructor() {
-        this.bot = null;
+try {
+    class Bot {
+        constructor() {
+            this.bot = null;
 
-        this.dblistener = null;
-        this.cronManager = CronJob;
-        this.botManager = null;
-        this.commandRegistry = CommandRegistry;
-        this.commandRegistry.setCronManager(this.cronManager);
+            this.dblistener = null;
+            this.cronManager = CronJob;
+            this.botManager = null;
+            this.commandRegistry = CommandRegistry;
+            this.commandRegistry.setCronManager(this.cronManager);
 
-        this.commandEvent = (chat, channel, command, args) => {
-        };
+            this.isDebugMod = false;
+            this.logRoom = null;
+            this.debugRooms = [];
 
-        this._findCommand = (chat, channel) => {
-            for (let i = 0; i < this._lazyArgsQueue.length; i++) {
-                const [prevChat, prevChannel, cmd, args] = this._lazyArgsQueue[i];
-        
-                if (prevChat.user.id === chat.user.id && prevChannel.id === channel.id) {
-                    cmd.executeLazy(chat, prevChat, channel, prevChannel, args);
-                    this._lazyArgsQueue.splice(i, 1);
-        
-                    return;
+            this.commandEvent = (chat, channel, command, args) => {
+            };
+
+            this._findCommand = (chat, channel) => {
+                for (let i = 0; i < this._lazyArgsQueue.length; i++) {
+                    const [prevChat, prevChannel, cmd, args] = this._lazyArgsQueue[i];
+            
+                    if (prevChat.user.id === chat.user.id && prevChannel.id === channel.id) {
+                        cmd.executeLazy(chat, prevChat, channel, prevChannel, args);
+                        
+                        // 명령어 사용 로그 전송
+                        if (isValidChannel(this.logRoom)) {
+                            let msg = [
+                                `유저: ${chat.user.name}(${chat.user.id})`,
+                                `채널: ${channel.name}(${channel.id})`,
+                                `메시지: ${chat.text}`,
+                                `호출된 명령어: Lazy of ${cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand"}(${cmd.icon} ${cmd.name})`,
+                                `명령어 인자: ${JSON.stringify(args)}`,
+                                `시간: ${DateTime.now().toString()}`
+                            ].join('\n');
+                            
+                            this.logRoom.send(msg);
+                        }
+
+                        this._lazyArgsQueue.splice(i, 1);
+                        return;
+                    }
                 }
-            }
-        
-            const { cmd, args } = this.commandRegistry.get(chat, channel);
-        
-            if (cmd != null) {
+            
+                const { cmd, args } = this.commandRegistry.get(chat, channel, this.debugRooms, this.isDebugMod);
+                if (cmd == null)
+                    return;
+
                 this.commandEvent(chat, channel, cmd, args);
                 cmd.execute(chat, channel, args);
+
+                // 명령어 사용 로그 전송
+                if (isValidChannel(this.logRoom)) {
+                    let msg = [
+                        `유저: ${chat.user.name}(${chat.user.id})`,
+                        `채널: ${channel.name}(${channel.id})`,
+                        `메시지: ${chat.text}`,
+                        `호출된 명령어: ${cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand"}(${cmd.icon} ${cmd.name})`,
+                        `명령어 인자: ${JSON.stringify(args)}`,
+                        `시간: ${DateTime.now().toString()}`
+                    ].join('\n');
+
+                    this.logRoom.send(msg);
+                }
         
                 if (cmd.lazy) {
                     this._lazyArgsQueue.push([chat, channel, cmd, args]);
                 }
             }
+
+            this._lazyArgsQueue = [];
         }
 
-        this._lazyArgsQueue = [];
-    }
+        static getCurrentBot(botManager, dbManager, init) {
+            let ret = new Bot();
+            ret.dblistener = dbManager.getInstance(init);
+            ret.botManager = botManager;
+            ret.bot = ret.botManager.getCurrentBot();
 
-    static getCurrentBot(botManager, dbManager, init) {
-        let ret = new Bot();
-        ret.dblistener = dbManager.getInstance(init);
-        ret.botManager = botManager;
-        ret.bot = ret.botManager.getCurrentBot();
+            ret.dblistener.on(Event.MESSAGE, ret._findCommand);
 
-        ret.dblistener.on(Event.MESSAGE, ret._findCommand);
+            ret.bot.addListener('notificationPosted', (sbn, rm) => {
+                ret.dblistener.addChannel(sbn);
+            });
 
-        ret.bot.addListener('notificationPosted', (sbn, rm) => {
-            ret.dblistener.addChannel(sbn);
-        });
+            // NOTE: 이렇게 하면 봇 소스가 여러 개일 때, 컴파일 때마다 초기화되어서
+            //  한 쪽 봇 코드의 말만 듣는 현상이 생김. 그렇다고 off를 뺄 수는 없어 그냥 둠.
+            ret.bot.addListener('startCompile', () => {
+                ret.dblistener.stop();
+                ret.cronManager.setWakeLock(false);
+                ret.cronManager.off();
+            });
 
-        // NOTE: 이렇게 하면 봇 소스가 여러 개일 때, 컴파일 때마다 초기화되어서
-        //  한 쪽 봇 코드의 말만 듣는 현상이 생김. 그렇다고 off를 뺄 수는 없어 그냥 둠.
-        ret.bot.addListener('startCompile', () => {
-            ret.dblistener.stop();
-            ret.cronManager.off();
-            ret.cronManager.setWakeLock(false);
-        });
-
-        return ret;
-    }
-
-    on(event, listener) {
-        if (!Object.values(Event).includes(event)) {
-            throw new Error('Invalid event');
+            return ret;
         }
 
-        switch (event) {
-            case Event.COMMAND:
-                this.commandEvent = listener;
-                break;
-            case Event.MESSAGE:
-                // 이벤트 리스너는 여러 개가 등록 가능하므로, 컴파일하면 명령어 찾아내는 리스너 하나는 자동 등록되고, 나머지 커스텀 리스너는 이렇게 따로 추가되는거로.
-                this.dblistener.on(event, listener);
-                break;
-            default:
-                this.dblistener.on(event, listener);
+        on(event, listener) {
+            if (!Object.values(Event).includes(event)) {
+                throw new Error('Invalid event');
+            }
+
+            switch (event) {
+                case Event.COMMAND:
+                    this.commandEvent = listener;
+                    break;
+                case Event.MESSAGE:
+                    // 이벤트 리스너는 여러 개가 등록 가능하므로, 컴파일하면 명령어 찾아내는 리스너 하나는 자동 등록되고, 나머지 커스텀 리스너는 이렇게 따로 추가되는거로.
+                    this.dblistener.on(event, listener);
+                    break;
+                default:
+                    this.dblistener.on(event, listener);
+            }
+
+            return this;
         }
 
-        return this;
-    }
-
-    addListener(event, listener) {
-        return this.on(event, listener);
-    }
-
-    off(event, listener) {
-        if (!Object.values(Event).includes(event)) {
-            throw new Error('Invalid event');
+        addListener(event, listener) {
+            return this.on(event, listener);
         }
 
-        // TODO: Event.COMMAND는 여러 리스너 공통임. 따로 안 됨 매뉴얼에 적기
+        off(event, listener) {
+            if (!Object.values(Event).includes(event)) {
+                throw new Error('Invalid event');
+            }
 
-        switch (event) {
-            case Event.COMMAND:
-                this.commandEvent = (chat, channel, command, args) => {};
-                break;
-            default:
-                this.dblistener.off(event, listener);
+            // TODO: Event.COMMAND는 여러 리스너 공통임. 따로 안 됨 매뉴얼에 적기
+
+            switch (event) {
+                case Event.COMMAND:
+                    this.commandEvent = (chat, channel, command, args) => {};
+                    break;
+                default:
+                    this.dblistener.off(event, listener);
+            }
+
+            return this;
         }
 
-        return this;
+        removeListener(event, listener) {
+            return this.off(event, listener);
+        }
+
+        eventNames() {
+            return this.botManager.eventNames();
+        }
+
+        rawListeners(event) {
+            return this.botManager.rawListeners(event);
+        }
+
+        listeners(event) {
+            return this.botManager.listeners(event);
+        }
+
+        listenerCount(event) {
+            return this.botManager.listenerCount(event);
+        }
+
+        getMaxListeners() {
+            return this.botManager.getMaxListeners();
+        }
+
+        setMaxListeners(maxListeners) {
+            return this.botManager.setMaxListeners(maxListeners);
+        }
+
+        start() {
+            this.dblistener.start();
+            this.cronManager.setWakeLock(true);
+        }
+
+        stop() {
+            this.dblistener.stop();
+            this.cronManager.setWakeLock(false);
+            this.cronManager.off();
+        }
+
+        close() {
+            this.dblistener.close();
+        }
+
+        addChannel(sbn) {
+            this.dblistener.addChannel(sbn);
+        }
+
+        addCommand(cmd) {
+            this.commandRegistry.register(cmd, this.logRoom);
+        }
+
+        setWakeLock(setWakeLock) {
+            this.cronManager.setWakeLock(setWakeLock);
+        }
+
+        setDebugMode(isDebugMod) {
+            this.isDebugMod = isDebugMod;
+        }
+
+        setLogRoom(logRoom) {
+            this.logRoom = logRoom;
+        }
+
+        setDebugRooms(...debugRooms) {
+            this.debugRooms = debugRooms;
+        }
     }
 
-    removeListener(event, listener) {
-        return this.off(event, listener);
+    class BotOperator {
+        constructor(botManager) {
+            this.botManager = botManager;
+            this.dbManager = DBManager;
+        }
+
+        getCurrentBot(init) {
+            return Bot.getCurrentBot(this.botManager, this.dbManager, init);
+        }
+
+        getChannelById(i) {
+            return this.dbManager.getChannelById(i);
+        }
     }
 
-    eventNames() {
-        return this.botManager.eventNames();
-    }
-
-    rawListeners(event) {
-        return this.botManager.rawListeners(event);
-    }
-
-    listeners(event) {
-        return this.botManager.listeners(event);
-    }
-
-    listenerCount(event) {
-        return this.botManager.listenerCount(event);
-    }
-
-    getMaxListeners() {
-        return this.botManager.getMaxListeners();
-    }
-
-    setMaxListeners(maxListeners) {
-        return this.botManager.setMaxListeners(maxListeners);
-    }
-
-    start() {
-        this.dblistener.start();
-        this.cronManager.setWakeLock(true);
-    }
-
-    stop() {
-        this.dblistener.stop();
-        this.cronManager.off();
-        this.cronManager.setWakeLock(false);
-    }
-
-    close() {
-        this.dblistener.close();
-    }
-
-    addChannel(sbn) {
-        this.dblistener.addChannel(sbn);
-    }
-
-    addCommand(cmd) {
-        this.commandRegistry.register(cmd);
-    }
-
-    setWakeLock(setWakeLock) {
-        this.cronManager.setWakeLock(setWakeLock);
-    }
+    exports.from = botManager => new BotOperator(botManager);
+} catch (e) {
+    Log.e(e);
 }
-
-class BotOperator {
-    constructor(botManager) {
-        this.botManager = botManager;
-        this.dbManager = DBManager;
-    }
-
-    getCurrentBot(init) {
-        return Bot.getCurrentBot(this.botManager, this.dbManager, init);
-    }
-
-    getChannelById(i) {
-        return this.dbManager.getChannelById(i);
-    }
-}
-
-exports.from = botManager => new BotOperator(botManager);

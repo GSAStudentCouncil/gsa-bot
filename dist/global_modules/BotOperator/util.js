@@ -8,7 +8,7 @@ Array.prototype.flat || (Array.prototype.flat = function (t, r) {
 String.prototype.replaceAll || (String.prototype.replaceAll = function (t, r) {
   return this.split(t).join(r);
 });
-var _getJosa = function _getJosa(str, josaPair) {
+var getJosa = function getJosa(str, josaPair) {
   var lastChar = str.charCodeAt(str.length - 1);
   var hasFinalConsonant = (lastChar - 44032) % 28 !== 0;
   var isFinalRieul = (lastChar - 44032) % 28 === 8;
@@ -24,27 +24,38 @@ var _getJosa = function _getJosa(str, josaPair) {
 Object.defineProperties(String.prototype, {
   '이가': {
     get: function get() {
-      return _getJosa(this, '이가');
+      return getJosa(this, '이가');
     }
   },
   '은는': {
     get: function get() {
-      return _getJosa(this, '은는');
+      return getJosa(this, '은는');
     }
   },
   '을를': {
     get: function get() {
-      return _getJosa(this, '을를');
+      return getJosa(this, '을를');
     }
   },
   '으로': {
     get: function get() {
-      return _getJosa(this, '으로');
+      return getJosa(this, '으로');
     }
   },
   '와과': {
     get: function get() {
-      return _getJosa(this, '와과');
+      return getJosa(this, '와과');
     }
   }
 });
+exports.isNumber = function (name) {
+  return /^\d+$/.test(name);
+};
+exports.isNaN = function (n) {
+  return Number.isNaN(n);
+};
+exports.compress = "\u200B".repeat(500);
+exports.getJosa = getJosa;
+exports.isValidChannel = function (channel) {
+  return channel != null && channel.send != null;
+};

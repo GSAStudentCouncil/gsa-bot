@@ -635,6 +635,11 @@ var DateTime = /*#__PURE__*/function () {
     value: function lengthOfYear() {
       return this.isLeapYear() ? 366 : 365;
     }
+  }, {
+    key: "toJSON",
+    value: function toJSON() {
+      return this.toString();
+    }
   }], [{
     key: "fromTimestamp",
     value: function fromTimestamp(timestamp) {

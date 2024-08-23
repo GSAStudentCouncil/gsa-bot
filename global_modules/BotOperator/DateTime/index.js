@@ -1806,6 +1806,10 @@ class DateTime {
 	lengthOfYear() {
 		return this.isLeapYear() ? 366 : 365;
 	}
+
+	toJSON() {
+		return this.toString();
+	}
 }
 
 exports.DateTime = DateTime;

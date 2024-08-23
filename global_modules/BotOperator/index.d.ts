@@ -15,6 +15,9 @@ export declare class Bot {
     public commandEvent: Execute<any>;
     private _lazyArgsQueue: [Chat, Channel, Command, Args][];
 
+    public isDebugMod: boolean;
+    public logRoom: Channel | null;
+
     static getCurrentBot(botManager: any, dbManager: DBManager, init?: InstanceType): Bot;
     
     on<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;
@@ -37,6 +40,9 @@ export declare class Bot {
     addChannel(sdn: any): void;
     addCommand(command: Command): void;
     setWakeLock(setWakeLock: boolean): void;
+    setDebugMode(isDebugMod: boolean): void;
+    setLogRoom(logRoom: Channel): void;
+    setDebugRooms(...debugRooms: Channel[]): void;
 }
 
 export declare class BotOperator {

@@ -1,34 +1,12 @@
-const { DateTime } = require('../DateTime');
-require('../polyfill');
+let { DateTime } = require('../DateTime');
+let { isValidChannel } = require('../util');
+require('../util');
 
-const $ = `/sdcard/msgbot/global_modules/BotOperator/Command`;
-const IS_DIST = false;
-const COMPRESS = '\u200b'.repeat(500);
+let S = `/sdcard/msgbot/global_modules/BotOperator/Command`;
+let IS_DIST = false;
+let COMPRESS = '\u200b'.repeat(500);
 
-function josa(str, josa) {
-	const hasJong = (str.charCodeAt(str.length - 1) - '가'.charCodeAt(0)) % 28 !== 0;
-
-	switch (josa) {
-		case '이가':
-		case '가':
-			return str + (hasJong ? '이가' : '가');
-		case '을':
-		case '를':
-			return str + (hasJong ? '을' : '를');
-		case '은':
-		case '는':
-			return str + (hasJong ? '은' : '는');
-		case '으로':
-		case '로':
-			return str + (hasJong ? '으로' : '로');
-		case '과':
-		case '와':
-			return str + (hasJong ? '과' : '와');
-		default:
-			return str + josa;
-	}
-};
-
+try {
 class Command {
 	constructor(name, icon, description, _execute, _executeLazy, _executeCron, cronJobs, channels, examples) {
 		if (this.constructor === Command)
@@ -94,7 +72,7 @@ class Command {
 		if (this.channels.length > 0) {
 			ret.push('📌 활성화된 방');
 			ret.push('——');
-			ret.push(...this.channels.map(channel => `· ${channel.customName}`));
+			ret.push(...this.channels.map(channel => `· ${channel.name}`));
 			ret.push('');
 		}
 		
@@ -276,13 +254,13 @@ class DateArg extends Arg {
 	}
 }
 
-const mapType = {
+let mapType = {
 	'int': IntArg,
 	'str': StrArg,
 	'date': DateArg
 };
 
-const mapStr = {
+let mapStr = {
 	'int': '숫자',
 	'str': '문자열',
 	'date': ['날짜', '기간']
@@ -301,9 +279,9 @@ class StructuredCommand extends Command {
 		
 		let args = [];
 		let regexApplied = this.usage.replace(/\s*<.+?>/g, m => {
-			const pos = m.indexOf('<');
+			let pos = m.indexOf('<');
 			
-			const whitespaces = m.slice(0, pos);
+			let whitespaces = m.slice(0, pos);
 			let [ nameAndType, ...properties ] = m.slice(pos + 1, -1).split(/\s+/);
 			let [ name, type ] = nameAndType.split(":");
 			this._arguments.push([ name, type ]);
@@ -519,9 +497,10 @@ class NaturalCommand extends Command {
 		this.useDuration = options.useDuration;
 		this.filterIncludeEnding = options.filterIncludeEnding;
 		this.dictionaryPath = options.dictionaryPath || 'dict.json';
+		this.margin = options.margin;
 		
 		let dictionary = IS_DIST ?
-			JSON.parse(FileStream.read(`${$}/${this.dictionaryPath}`)) :
+			JSON.parse(FileStream.read(`${S}/${this.dictionaryPath}`)) :
 			require(`./${this.dictionaryPath}`);
 		
 		this.map = {};
@@ -544,6 +523,7 @@ class NaturalCommand extends Command {
 			this.execute = null;
 			this.executeLazy = null;
 			this.executeCron = null;
+			this.margin = 3;
 			this.useDateParse = false;
 			this.useDuration = false;
 			this.filterIncludeEnding = true;
@@ -578,7 +558,8 @@ class NaturalCommand extends Command {
 			return this;
 		}
 		
-		setUseDateParse(useDateParse, useDuration = false, filterIncludeEnding = true) {
+		setUseDateParse(margin, useDateParse, useDuration = false, filterIncludeEnding = true) {
+			this.margin = margin;
 			this.useDateParse = useDateParse;
 			this.useDuration = useDuration;
 			this.filterIncludeEnding = filterIncludeEnding;
@@ -631,6 +612,7 @@ class NaturalCommand extends Command {
 				execute: this.execute,
 				executeLazy: this.executeLazy,
 				executeCron: this.executeCron,
+				margin: this.margin,
 				cronJobs: this.cronJobs,
 				channels: this.channels,
 				examples: this.examples,
@@ -655,7 +637,7 @@ class NaturalCommand extends Command {
 			if (key === 'datetime')
 				continue;
 
-			let tmp = `· ${josa(key, '를')} 의미하는 용어 (ex. ${this.map.filter(e => e[1] === key).map(e => e[0]).slice(0, 4).join(', ')}, ...) `;
+			let tmp = `· ${key.을를} 의미하는 용어 (ex. ${this.map.filter(e => e[1] === key).map(e => e[0]).slice(0, 4).join(', ')}, ...) `;
 			let humanize = value => value instanceof DateTime ? value.humanize() : value;
 
 			if (typeof this.query[key] === 'function')
@@ -716,9 +698,14 @@ class Registry {
 		}
 	}
 	
-	register(command) {
+	/**
+	 * @param {Command} command 
+	 * @param {Channel} logRoom 
+	 * @returns 
+	 */
+	register(command, logRoom) {
 		if (!(command instanceof Command))	
-			throw new TypeError("command must be instance of Command");
+			throw new TypeError("command must be instance of Command. maybe you forgot to use 'build' method?");
 		
 		for (let cmd of this.data) {
 			if (cmd.name === command.name)
@@ -744,17 +731,34 @@ class Registry {
 			}
 		});
 		
-		if (this.cronManager != null) {
-			for (let i = 0; i < command.cronJobs.length; i++) {
-				let { cron } = command.cronJobs[i];
-				this.cronManager.add(cron, () => command.executeCron(i, DateTime.now()));
-			}
+		if (this.cronManager == null)
+			return;
+
+		for (let idx = 0; idx < command.cronJobs.length; idx++) {
+			let { cron } = command.cronJobs[idx];
+
+			this.cronManager.add(cron, () => {
+				let datetime = DateTime.now();
+				command.executeCron(idx, datetime);
+
+				if (isValidChannel(logRoom)) {
+					let msg = [
+						`호출된 명령어: Cronjob of ${command instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand"}(${command.icon} ${command.name})`,
+						`명령어 인자: ${JSON.stringify({idx, datetime})}`,
+						`시간: ${datetime.toString()}`
+					].join('\n');
+					
+					logRoom.send(msg);
+				}
+			});
 		}
 	}
 	
-	get(chat, channel) {
+	get(chat, channel, debugRooms, isDebugMod) {
 		for (let cmd of this.data) {
-			if (cmd.channels.length !== 0 && !cmd.channels.map(c => c.id).includes(channel.id))    // 방이 포함되어 있지 않을 경우
+			if (isDebugMod && !debugRooms.map(c => c.id).includes(channel.id))    // 디버그 모드일 경우
+				continue;
+			else if (cmd.channels.length !== 0 && ![...cmd.channels, ...debugRooms].map(c => c.id).includes(channel.id))    // 방이 포함되어 있지 않을 경우
 				continue;
 			
 			let ret = {};
@@ -790,7 +794,7 @@ class Registry {
 				// 기본값만 있던 cmd.query 에서 쿼리할 대상으로 보낸 토큰들에 대응되는 단어들을 매칭
 				// 매칭이 실패하면 기본값이 있는 경우 그대로 남고, 아니면 null로 남게 된다
 				let startIdx = 0;
-				const foundTokens = {};	// 이미 찾은 토큰들 { token: word }
+				let foundTokens = {};	// 이미 찾은 토큰들 { token: word }
 				
 				while (filteredText.length > startIdx) {
 					if (/\s|\d|[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(filteredText[startIdx])) {
@@ -842,6 +846,9 @@ class Registry {
 					chat.filteredText = chat.filteredText.replace(foundTokens[token], '');
 				}
 				
+				if (chat.filteredText.replace(/\s+/g, '').length > cmd.margin)
+					continue;
+				
 				let is_full = true;
 				
 				for (let key in args) {
@@ -869,3 +876,7 @@ class Registry {
 exports.StructuredCommand = StructuredCommand;
 exports.NaturalCommand = NaturalCommand;
 exports.CommandRegistry = Registry.CommandRegistry;
+
+} catch (e) {
+	Log.e(e);
+}

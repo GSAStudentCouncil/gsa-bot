@@ -183,6 +183,7 @@ export declare class NaturalCommand extends Command {
 	public readonly useDuration: boolean;
 	public readonly filterIncludeEnding: boolean;
 	public readonly dictionaryPath: string;
+	public readonly margin: number;
 
 	private readonly map: [string, string][];	// [word, token]
 
@@ -205,6 +206,7 @@ export declare namespace NaturalCommand {
 		public icon: string;
 		public description: string;
 		public query: Query;
+		public margin: number;
 		public channels: Channel[];
 		public cronJobs: CronJob[];
 		public dictionaryPath: string;
@@ -232,7 +234,7 @@ export declare namespace NaturalCommand {
 
 		setExecute(execute: Execute<ChatWithFiltered>, executeLazy?: ExecuteLazy<ChatWithFiltered>): this;
 
-		setUseDateParse(useDateParse: boolean, useDuration?: boolean, filterIncludeEnding?: boolean): this;
+		setUseDateParse(margin: number, useDateParse: boolean, useDuration?: boolean, filterIncludeEnding?: boolean): this;
 
 		build(): NaturalCommand;
 	}
@@ -248,9 +250,9 @@ declare class Registry {
 
 	loop(callback: (command: Command) => void): void;
 
-	register(command: Command): void;
+	register(command: Command, logRoom: Channel): void;
 
-	get(chat: Chat, channel: Channel): {
+	get(chat: Chat, channel: Channel, debugRooms: Channel[], isDebugMod: boolean): {
 		cmd: Command | null,
 		args: { [key: string]: ArgTypeUnion | ArgTypeUnion[] } | null
 	};
