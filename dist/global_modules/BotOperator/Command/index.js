@@ -758,11 +758,15 @@ try {
         try {
           var _loop3 = function _loop3() {
               var cmd = _step5.value;
-              if (isDebugMod && !debugRooms.map(function (c) {
+              if (isDebugMod && !debugRooms.filter(function (c) {
+                return c != null;
+              }).map(function (c) {
                 return c.id;
               }).includes(channel.id)) // 디버그 모드일 경우
                 return 0; // continue
-              else if (cmd.channels.length !== 0 && ![].concat(_toConsumableArray(cmd.channels), _toConsumableArray(debugRooms)).map(function (c) {
+              else if (cmd.channels.length !== 0 && ![].concat(_toConsumableArray(cmd.channels), _toConsumableArray(debugRooms)).filter(function (c) {
+                return c != null;
+              }).map(function (c) {
                 return c.id;
               }).includes(channel.id)) // 방이 포함되어 있지 않을 경우
                 return 0; // continue
