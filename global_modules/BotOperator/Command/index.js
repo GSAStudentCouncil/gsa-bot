@@ -756,9 +756,9 @@ class Registry {
 	
 	get(chat, channel, debugRooms, isDebugMod) {
 		for (let cmd of this.data) {
-			if (isDebugMod && !debugRooms.map(c => c.id).includes(channel.id))    // 디버그 모드일 경우
+			if (isDebugMod && !debugRooms.filter(c => c != null).map(c => c.id).includes(channel.id))    // 디버그 모드일 경우
 				continue;
-			else if (cmd.channels.length !== 0 && ![...cmd.channels, ...debugRooms].map(c => c.id).includes(channel.id))    // 방이 포함되어 있지 않을 경우
+			else if (cmd.channels.length !== 0 && !([...cmd.channels, ...debugRooms].filter(c => c != null).map(c => c.id).includes(channel.id)))    // 방이 포함되어 있지 않을 경우
 				continue;
 			
 			let ret = {};
