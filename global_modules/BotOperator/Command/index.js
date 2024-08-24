@@ -740,13 +740,13 @@ class Registry {
 			if (before != null && after != null)
 				throw new Error("before and after in cronJobs cannot be used together");
 
-			let cropOpt = {};
+			let cronOpt = {};
 			if (before != null)
-				cropOpt.before = before;
+				cronOpt.before = before;
 			else if (startDate != null)
-				cropOpt.startDate = startDate.toDate();
+				cronOpt.startDate = startDate.toDate();
 			else if (endDate != null)
-				cropOpt.endDate = endDate.toDate();
+				cronOpt.endDate = endDate.toDate();
 
 			this.cronManager.add(cron, () => {				
 				if (after != null)
