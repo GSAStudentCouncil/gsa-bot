@@ -733,8 +733,17 @@ try {
         });
         if (this.cronManager == null) return;
         var _loop2 = function _loop2(idx) {
-          var cron = command.cronJobs[idx].cron;
+          var _command$cronJobs$idx = command.cronJobs[idx],
+            cron = _command$cronJobs$idx.cron,
+            startDate = _command$cronJobs$idx.startDate,
+            endDate = _command$cronJobs$idx.endDate,
+            before = _command$cronJobs$idx.before,
+            after = _command$cronJobs$idx.after;
+          if (before != null && after != null) throw new Error("before and after in cronJobs cannot be used together");
+          var cropOpt = {};
+          if (before != null) cropOpt.before = before;else if (startDate != null) cropOpt.startDate = startDate.toDate();else if (endDate != null) cropOpt.endDate = endDate.toDate();
           _this9.cronManager.add(cron, function () {
+            if (after != null) setTimeout(function () {}, after);
             var datetime = DateTime.now();
             command.executeCron(idx, datetime);
             if (isValidChannel(logRoom)) {
@@ -744,7 +753,7 @@ try {
               })), "\uC2DC\uAC04: ".concat(datetime.toString())].join('\n');
               logRoom.send(msg);
             }
-          });
+          }, cronOpt);
         };
         for (var idx = 0; idx < command.cronJobs.length; idx++) {
           _loop2(idx);

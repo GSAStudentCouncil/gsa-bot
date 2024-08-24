@@ -735,9 +735,23 @@ class Registry {
 			return;
 
 		for (let idx = 0; idx < command.cronJobs.length; idx++) {
-			let { cron } = command.cronJobs[idx];
+			let { cron, startDate, endDate, before, after } = command.cronJobs[idx];
 
-			this.cronManager.add(cron, () => {
+			if (before != null && after != null)
+				throw new Error("before and after in cronJobs cannot be used together");
+
+			let cropOpt = {};
+			if (before != null)
+				cropOpt.before = before;
+			else if (startDate != null)
+				cropOpt.startDate = startDate.toDate();
+			else if (endDate != null)
+				cropOpt.endDate = endDate.toDate();
+
+			this.cronManager.add(cron, () => {				
+				if (after != null)
+					java.lang.Thread.sleep(after);
+
 				let datetime = DateTime.now();
 				command.executeCron(idx, datetime);
 
@@ -750,7 +764,7 @@ class Registry {
 					
 					logRoom.send(msg);
 				}
-			});
+			}, cronOpt);
 		}
 	}
 	

@@ -54,25 +54,36 @@ let getMeals = (dt, bullet) => {
 	}
 };
 
+// CronJob.add("* * * * *", () => {
+//     let dt = DateTime.now();
+//     Log.info("after: " + dt);
+// }, { before: -1*1000 });
+
 CronJob.add("* * * * *", () => {
+	java.lang.Thread.sleep(1*1000);
     let dt = DateTime.now();
-    Log.info("0: " + dt);
-});
-
-CronJob.add("*/2 * * * *", () => {
-    let dt = DateTime.now();
-    Log.info("1: " + dt);
-});
-
-CronJob.add("*/3 * * * *", () => {
-    let dt = DateTime.now();
-    Log.info("2: " + dt);
-});
+    Log.info("after: " + dt);
+},);
 
 CronJob.add("* * * * *", () => {
     let dt = DateTime.now();
-    Log.info("3: pong");
-});
+    Log.info("before: " + dt);
+}, { before: 1*1000 });
+
+// CronJob.add("*/2 * * * *", () => {
+//     let dt = DateTime.now();
+//     Log.info("1: " + dt);
+// });
+
+// CronJob.add("*/3 * * * *", () => {
+//     let dt = DateTime.now();
+//     Log.info("2: " + dt);
+// });
+
+// CronJob.add("* * * * *", () => {
+//     let dt = DateTime.now();
+    // Log.info("3: pong");
+// });
 
 bot.addListener(Event.START_COMPILE, () => {
     CronJob.setWakeLock(false);

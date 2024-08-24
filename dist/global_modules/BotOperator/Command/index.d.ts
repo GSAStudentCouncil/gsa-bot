@@ -15,7 +15,7 @@ type ArgsWithDateTime = {
 	datetime?: DateTime,
 	duration?: Duration
 };
-type CronJob = { cron: string, comment: string };
+type CronJob = { cron: string, comment: string, startDate?: DateTime, endDate?: DateTime, before?: number, after?: number };
 
 type Execute<C> = (self: Command, chat: C, channel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime : never)) => void;
 type ExecuteLazy<C> = (self: Command, chat: C, prevChat: C, channel: Channel, prevChannel: Channel, args: C extends Chat ? Args : (C extends ChatWithFiltered ? ArgsWithDateTime : never)) => void;

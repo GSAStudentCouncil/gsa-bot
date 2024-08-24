@@ -43,17 +43,22 @@ var getMeals = function getMeals(dt, bullet) {
     return [null, null, null];
   }
 };
+
+// CronJob.add("* * * * *", () => {
+//     let dt = DateTime.now();
+//     Log.info("after: " + dt);
+// }, { before: -1*1000 });
+
 CronJob.add("* * * * *", function () {
+  setTimeout(function () {}, 1 * 1000);
   var dt = DateTime.now();
-  Log.info("after: " + dt);
-}, {
-  before: -10 * 1000
+  Log.info("before: " + dt);
 });
 CronJob.add("* * * * *", function () {
   var dt = DateTime.now();
   Log.info("before: " + dt);
 }, {
-  before: 10 * 1000
+  before: 1 * 1000
 });
 
 // CronJob.add("*/2 * * * *", () => {

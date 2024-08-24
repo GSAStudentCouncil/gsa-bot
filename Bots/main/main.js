@@ -184,6 +184,8 @@ let 부서명List = [
 	'문예부', '체육부', '홍보부', '정책부', '정보부', '총무부'
 ];
 
+let delay = 10*1000;
+
 ////////////////////// 명령어 선언
 try {
 
@@ -284,12 +286,15 @@ bot.addCommand(new NaturalCommand.Builder()
 		{
 			cron: '0 0 * * *',
 			comment: '매일 자정에 그 날의 모든 메뉴 전송',
+			after: delay,
 		}, {
 			cron: '40 11 * * *',
 			comment: '3교시 쉬는 시간 (11:40)에 점심 메뉴 전송',
+			after: delay,
 		}, {
 			cron: '20 16 * * *',
 			comment: '7교시 이후 청소 시간 (16:20)에 저녁 메뉴 전송',
+			after: delay,
 		}
 	], (self, index, dt) => {
 		let msg;
@@ -460,9 +465,11 @@ bot.addCommand(new NaturalCommand.Builder()
 		{
 			cron: '0 0 * * 1',
 			comment: '월요일 자정에는 그 주의 모든 일정을 전송',
+			after: delay,
 		}, {
 			cron: '0 0 * * 0,2-6',
 			comment: '월요일을 제외한 모든 요일의 자정에는 그 날의 일정을 전송',
+			after: delay,
 		}
 	], (self, index, dt) => {
 		let eventStr;
