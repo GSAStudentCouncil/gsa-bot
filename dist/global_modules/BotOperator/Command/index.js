@@ -740,8 +740,8 @@ try {
             before = _command$cronJobs$idx.before,
             after = _command$cronJobs$idx.after;
           if (before != null && after != null) throw new Error("before and after in cronJobs cannot be used together");
-          var cropOpt = {};
-          if (before != null) cropOpt.before = before;else if (startDate != null) cropOpt.startDate = startDate.toDate();else if (endDate != null) cropOpt.endDate = endDate.toDate();
+          var cronOpt = {};
+          if (before != null) cronOpt.before = before;else if (startDate != null) cronOpt.startDate = startDate.toDate();else if (endDate != null) cronOpt.endDate = endDate.toDate();
           _this9.cronManager.add(cron, function () {
             if (after != null) java.lang.Thread.sleep(after);
             var datetime = DateTime.now();
