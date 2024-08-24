@@ -50,9 +50,9 @@ var getMeals = function getMeals(dt, bullet) {
 // }, { before: -1*1000 });
 
 CronJob.add("* * * * *", function () {
-  setTimeout(function () {}, 1 * 1000);
+  java.lang.Thread.sleep(1 * 1000);
   var dt = DateTime.now();
-  Log.info("before: " + dt);
+  Log.info("after: " + dt);
 });
 CronJob.add("* * * * *", function () {
   var dt = DateTime.now();

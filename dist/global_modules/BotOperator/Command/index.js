@@ -743,7 +743,7 @@ try {
           var cropOpt = {};
           if (before != null) cropOpt.before = before;else if (startDate != null) cropOpt.startDate = startDate.toDate();else if (endDate != null) cropOpt.endDate = endDate.toDate();
           _this9.cronManager.add(cron, function () {
-            if (after != null) setTimeout(function () {}, after);
+            if (after != null) java.lang.Thread.sleep(after);
             var datetime = DateTime.now();
             command.executeCron(idx, datetime);
             if (isValidChannel(logRoom)) {
