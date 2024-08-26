@@ -357,6 +357,11 @@ try {
   }, function (self, chat, prevChat, channel, prevChannel, _ref4) {
     var 부서 = _ref4.부서,
       기수List = _ref4.기수;
+    if (기수List.length === 0) {
+      var thirdNth = DateTime.now().year - 2000 + 15;
+      기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
+    }
+
     // 취소 시 중단
     if (chat.text === '취소') {
       channel.success('취소되었습니다.');
