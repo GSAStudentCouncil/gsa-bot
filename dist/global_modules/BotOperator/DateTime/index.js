@@ -27,12 +27,12 @@ var getCultureInfo = function getCultureInfo(locale) {
   if (ret == null) throw Error("Invalid Locale ".concat(locale, ". (").concat(android.os.Environment.getExternalStorageDirectory().getAbsolutePath(), "/msgbot/global_modules/BotOperator/DateTime/globalization/").concat(locale, ".json is not exist)"));
   return ret;
 };
-var Duration = /*#__PURE__*/function () {
-  function Duration(millisecond) {
-    _classCallCheck(this, Duration);
+var TimeDelta = /*#__PURE__*/function () {
+  function TimeDelta(millisecond) {
+    _classCallCheck(this, TimeDelta);
     this._amount = millisecond;
   }
-  return _createClass(Duration, [{
+  return _createClass(TimeDelta, [{
     key: "amount",
     get: function get() {
       return this._amount;
@@ -58,7 +58,7 @@ var Duration = /*#__PURE__*/function () {
   }, {
     key: "toString",
     value: function toString() {
-      return "Duration(day=".concat(this.day, ", second=").concat(this.second, ", millisecond=").concat(this.millisecond, ")");
+      return "TimeDelta(day=".concat(this.day, ", second=").concat(this.second, ", millisecond=").concat(this.millisecond, ")");
     }
   }]);
 }();
@@ -93,7 +93,7 @@ var Date = /*#__PURE__*/function () {
   }, {
     key: "subtract",
     value: function subtract(dateObject) {
-      if (dateObject instanceof Date) return new Duration(this._source.getTime() - dateObject._source.getTime());else if (dateObject instanceof Duration) {
+      if (dateObject instanceof Date) return new TimeDelta(this._source.getTime() - dateObject._source.getTime());else if (dateObject instanceof TimeDelta) {
         var dt = new $D(this._source);
         dt.setMilliseconds(dt.getMilliseconds() - dateObject.amount);
         return new Date(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
@@ -163,7 +163,7 @@ var Time = /*#__PURE__*/function () {
   }, {
     key: "subtract",
     value: function subtract(timeObject) {
-      if (timeObject instanceof Time) return new Duration(this._source.getTime() - timeObject._source.getTime());else if (timeObject instanceof Duration) {
+      if (timeObject instanceof Time) return new TimeDelta(this._source.getTime() - timeObject._source.getTime());else if (timeObject instanceof TimeDelta) {
         var dt = new $D(this._source);
         dt.setMilliseconds(dt.getMilliseconds() - timeObject.amount);
         return new Time(dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds());
@@ -473,7 +473,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "add",
     value: function add(datetimeObject) {
-      if (datetimeObject instanceof Duration) {
+      if (datetimeObject instanceof TimeDelta) {
         var dt = this.toDate();
         dt.setMilliseconds(dt.getMilliseconds() + datetimeObject.amount);
         return new DateTime(dt, this.locale);
@@ -494,7 +494,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "subtract",
     value: function subtract(datetimeObject) {
-      if (datetimeObject instanceof DateTime) return new Duration(this.timestamp() - datetimeObject.timestamp());else if (datetimeObject instanceof Duration) {
+      if (datetimeObject instanceof DateTime) return new TimeDelta(this.timestamp() - datetimeObject.timestamp());else if (datetimeObject instanceof TimeDelta) {
         var dt = this.toDate();
         dt.setMilliseconds(dt.getMilliseconds() - datetimeObject.amount);
         return new DateTime(dt, this.locale);

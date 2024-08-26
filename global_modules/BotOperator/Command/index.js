@@ -1,10 +1,10 @@
 let { DateTime } = require('../DateTime');
 let { isValidChannel } = require('../util');
+let { compress } = require('../util');
 require('../util');
 
 let S = `/sdcard/msgbot/global_modules/BotOperator/Command`;
 let IS_DIST = false;
-let COMPRESS = '\u200b'.repeat(500);
 
 try {
 class Command {
@@ -54,7 +54,7 @@ class Command {
 	
 	createManual(contents) {
 		let ret = [
-			`🧩 '${this.name}' 명령어 도움말${COMPRESS}`,
+			`🧩 '${this.name}' 명령어 도움말${compress}`,
 			'——————————',
 			this.description,
 			'',
@@ -401,7 +401,7 @@ class StructuredCommand extends Command {
 		}
 		
 		setExamples(...examples) {
-			this.examples = examples.map(e => Array.isArray(e) ? e.map((e2, i) => i == 0 ? e2 : '┗' + '━'.repeat(i - 1) + ' ' + e2).join('\n') + '\n' : e);
+			this.examples = examples.map(e => Array.isArray(e) ? e.map((e2, i) => i === 0 ? e2 : '╰' + '─'.repeat(i - 1) + ' ' + e2).join('\n') + '\n' : e);
 			return this;
 		}
 		
@@ -553,14 +553,9 @@ class NaturalCommand extends Command {
 			return this;
 		}
 		
-		setDictionaryPath(dictionaryPath) {
-			this.dictionaryPath = dictionaryPath;
-			return this;
-		}
-		
-		setUseDateParse(margin, useDateParse, useDuration = false, filterIncludeEnding = true) {
+		setUseDateParse(margin, useDuration = false, filterIncludeEnding = true) {
 			this.margin = margin;
-			this.useDateParse = useDateParse;
+			this.useDateParse = true;
 			this.useDuration = useDuration;
 			this.filterIncludeEnding = filterIncludeEnding;
 			return this;
@@ -587,7 +582,7 @@ class NaturalCommand extends Command {
 		}
 		
 		setExamples(...examples) {
-			this.examples = examples.map(e => Array.isArray(e) ? e.map((e2, i) => i == 0 ? e2 : '┗' + '━'.repeat(i - 1) + ' ' + e2).join('\n') + '\n' : e);
+			this.examples = examples.map(e => Array.isArray(e) ? e.map((e2, i) => i === 0 ? e2 : '╰' + '─'.repeat(i - 1) + ' ' + e2).join('\n') + '\n' : e);
 			return this;
 		}
 		
@@ -675,6 +670,21 @@ class NaturalCommand extends Command {
 	}
 }
 
+/**
+ * @param {Command} cmd
+ * @param {Number} idx
+ * @param {DateTime} datetime
+ */
+const CronLog = (cmd, idx, datetime) => {
+	return [
+		`호출된 명령어: Cronjob of ${cmd instanceof StructuredCommand ?
+			"StructuredCommand" :
+			"NaturalCommand"}(${cmd.icon} ${cmd.name})`,
+		`명령어 인자: ${JSON.stringify({idx, datetime})}`,
+		`시간: ${datetime.toString()}`
+	].join('\n');
+}
+
 class Registry {
 	static CommandRegistry = new Registry();
 	
@@ -706,7 +716,7 @@ class Registry {
 	register(command, logRoom) {
 		if (!(command instanceof Command))	
 			throw new TypeError("command must be instance of Command. maybe you forgot to use 'build' method?");
-		
+
 		for (let cmd of this.data) {
 			if (cmd.name === command.name)
 				throw new Error(`Command with name "${command.name}" already exists`);
@@ -754,28 +764,35 @@ class Registry {
 
 				let datetime = DateTime.now();
 				command.executeCron(idx, datetime);
-
-				if (isValidChannel(logRoom)) {
-					let msg = [
-						`호출된 명령어: Cronjob of ${command instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand"}(${command.icon} ${command.name})`,
-						`명령어 인자: ${JSON.stringify({idx, datetime})}`,
-						`시간: ${datetime.toString()}`
-					].join('\n');
-					
-					logRoom.send(msg);
-				}
+				
+				if (isValidChannel(logRoom))
+					logRoom.send(CronLog(command, idx, datetime)).then(() => {}, e => Log.e(e.stack));
 			}, cronOpt);
 		}
 	}
 	
+	/**
+	 * @param {Chat} chat 
+	 * @param {Channel} channel 
+	 * @param {Channel[]} debugRooms 
+	 * @param {Boolean} isDebugMod 
+	 */
 	get(chat, channel, debugRooms, isDebugMod) {
+		/** @param {Channel[]} channels */
+		let channelToIdArray = channels => channels.filter(c => c != null).map(c => c.id);
+
 		for (let cmd of this.data) {
-			if (isDebugMod && !debugRooms.filter(c => c != null).map(c => c.id).includes(channel.id))    // 디버그 모드일 경우
+			// 디버그 모드일 경우, 디버그 방에만 명령어를 실행할 수 있도록 함
+			if (isDebugMod && !channelToIdArray(debugRooms).includes(channel.id))
 				continue;
-			else if (cmd.channels.length !== 0 && !([...cmd.channels, ...debugRooms].filter(c => c != null).map(c => c.id).includes(channel.id)))    // 방이 포함되어 있지 않을 경우
+
+			// 디버그 모드가 아닐 때, 방이 포함되어 있지 않을 경우 실행하지 않음
+			else if (cmd.channels.length !== 0 && !channelToIdArray([...cmd.channels, ...debugRooms]).includes(channel.id))
 				continue;
 			
-			let ret = {};
+			/**
+			 * @type {Args}
+			 */
 			let args;
 			
 			if (cmd instanceof StructuredCommand) {
@@ -809,7 +826,7 @@ class Registry {
 				// 매칭이 실패하면 기본값이 있는 경우 그대로 남고, 아니면 null로 남게 된다
 				let startIdx = 0;
 				let foundTokens = {};	// 이미 찾은 토큰들 { token: word }
-				
+
 				while (filteredText.length > startIdx) {
 					if (/\s|\d|[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(filteredText[startIdx])) {
 						startIdx++;
@@ -854,7 +871,8 @@ class Registry {
 					}
 				}
 				
-				chat.filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+				// chat.filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+				chat.filteredText = filteredText;
 				
 				for (let token in foundTokens) {
 					chat.filteredText = chat.filteredText.replace(foundTokens[token], '');
@@ -870,6 +888,7 @@ class Registry {
 						is_full = false;
 						break;
 					}
+					
 					// 기본값이 함수인 경우, 특히 날짜 관련 함수일 경우 호출 시간이 중요하므로 이 때 호출.
 					else if (typeof args[key] === 'function') {
 						args[key] = args[key]();
@@ -892,5 +911,5 @@ exports.NaturalCommand = NaturalCommand;
 exports.CommandRegistry = Registry.CommandRegistry;
 
 } catch (e) {
-	Log.e(e);
+	Log.e(e.stack);
 }

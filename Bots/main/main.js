@@ -10,15 +10,15 @@
  */
 
 ////////////////////// 모듈 불러오기
-var { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
-var { Event } = require('../../global_modules/BotOperator/Event');
-var { DateTime } = require('../../global_modules/BotOperator/DateTime');
-var { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
-var { isNumber, isNaN, isValidChannel, compress } = require('../../global_modules/BotOperator/util');
+const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../global_modules/BotOperator/Command');
+const { Event } = require('../../global_modules/BotOperator/Event');
+const { DateTime } = require('../../global_modules/BotOperator/DateTime');
+const { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
+const { isNumber, isNaN, isValidChannel, compress } = require('../../global_modules/BotOperator/util');
 
 ////////////////////// 봇 객체 선언
-var BotOperator = require('../../global_modules/BotOperator').from(BotManager);
-var bot = BotOperator.getCurrentBot();
+const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
+const bot = BotOperator.getCurrentBot();
 
 ////////////////////// 파일 스트림 객체
 let paths = {
@@ -130,21 +130,20 @@ let getMeals = (dt, bullet) => {
 		for (let i = 0; i < elements.length; i++) {
 			let element = elements.get(i);
 			let mealType = String(element.select('MMEAL_SC_CODE').text());
-			let dishName = String(element.select('DDISH_NM').text())
+			
+			meals[mealType - 1] = String(element.select('DDISH_NM').text())
 				.split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g)
 				.filter(Boolean)
 				.map(e => bullet + e)
 				.join('\n');
-			
-			meals[mealType - 1] = dishName;
 		}
 		
 		return meals;
 	} catch (e) {
 		if (isValidChannel(logRoom))
-			logRoom.send(`Error: ${e}`);
+			logRoom.send(`Error:${e.stack}`);
 
-		Log.e(e);
+		Log.e(e.stack);
 		return [null, null, null];
 	}
 };
@@ -229,15 +228,15 @@ bot.addCommand(new NaturalCommand.Builder()
 	.setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일')
 	.setQuery({
 		급식: null,
-		datetime: NaN,
+		datetime: () => DateTime.now(),
 	})
-	.setUseDateParse(0, true, false, false)
-	.setExecute((self, chat, channel, { 급식, datetime}) => {
-		if (isNaN(datetime)) {
-			datetime = DateTime.now();
-		}
+	.setUseDateParse(0, false, false)
+	.setExecute((self, chat, channel, { 급식, datetime }) => {
+		// if (isNaN(datetime)) {
+		// 	datetime = DateTime.now();
+		// }
 		
-		// 급식의 의미를 담은 토큰이 시간의 의미도 동시에 갖는 경우 처리
+		// 급식의 토큰이 시간의 의미도 동시에 갖는 경우를 처리
 		if (급식 === '조식' || 급식 === '아침') {
 			datetime = datetime.parse('아침');
 		}
@@ -251,9 +250,7 @@ bot.addCommand(new NaturalCommand.Builder()
 		// "오늘 밥" 같은 명령어는 급식 전체 출력
 		if (datetime.eq({ hour: 0, minute: 0 })) {
 			let meals = getMeals(datetime, ' · ').map(e => e ? e : '급식 정보가 없습니다.');
-			channel.send(
-				`${self.icon} ${datetime.humanize(true)} 급식${compress}\n——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`
-			);
+			channel.send(`${self.icon} ${datetime.humanize(true)} 급식${compress}\n——\n🍳 조식\n${meals[0]}\n\n🍔 중식\n${meals[1]}\n\n🍱 석식\n${meals[2]}`);
 
 			return;
 		}
@@ -400,12 +397,12 @@ bot.addCommand(new StructuredCommand.Builder()
 );
 
 ////////////////////// 도움말 명령어
-bot.addCommand(new StructuredCommand.Builder().
-	setName('도움말', '❓').
-	setDescription('명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.').
-	setUsage('도움말 <명령어:str?>').
-	setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚').
-	setExecute((self, chat, channel, { 명령어 }) => {
+bot.addCommand(new StructuredCommand.Builder()
+	.setName('도움말', '❓')
+	.setDescription('명령어에 대한 상세한 도움말을 표시합니다. 명령어 이름(또는 아이콘)을 생략할 경우, 대신 등록되어 있는 명령어 목록을 전부 출력합니다.')
+	.setUsage('도움말 <명령어:str?>')
+	.setExamples('도움말', '도움말 공지', '도움말 급식', '도움말 행사', '도움말 📅', '도움말 🍚')
+	.setExecute((self, chat, channel, { 명령어 }) => {
 		// 명령어 이름이 주어진 경우
 		if (명령어 != null) {
 			let found = CommandRegistry.data.find(cmd => cmd.name === 명령어 || cmd.icon === 명령어);
@@ -442,9 +439,12 @@ bot.addCommand(new NaturalCommand.Builder()
 	.setName('행사', '📅')
 	.setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.')
 	.setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사')
-	.setUseDateParse(0, true, true)
-	.setQuery({학교행사: null})
-	.setExecute((self, chat, channel, { 학교행사, duration: { from, to },}) => {
+	.setUseDateParse(0, true)
+	.setQuery({
+		학교행사: null,
+		duration: null
+	})
+	.setExecute((self, chat, channel, { 학교행사, duration: { from, to } }) => {
 		if (chat.filteredText.replace(/\s+/g, '').length > 0)
 			return;
 		
@@ -533,7 +533,7 @@ bot.start();
 
 } catch (err) {
 	if (isValidChannel(logRoom))
-		logRoom.error(`봇 가동 중 오류가 발생했습니다.\n\n${err}`);
+		logRoom.error(`봇 가동 중 오류가 발생했습니다.\n\n${err.stack}`);
 
-	Log.error(err);
+	Log.error(err.stack);
 }

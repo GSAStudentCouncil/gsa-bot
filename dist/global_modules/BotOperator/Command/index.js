@@ -39,10 +39,11 @@ var _require = require('../DateTime'),
   DateTime = _require.DateTime;
 var _require2 = require('../util'),
   isValidChannel = _require2.isValidChannel;
+var _require3 = require('../util'),
+  compress = _require3.compress;
 require('../util');
 var S = "/sdcard/msgbot/global_modules/BotOperator/Command";
 var IS_DIST = true;
-var COMPRESS = "\u200B".repeat(500);
 try {
   var _StructuredCommand, _NaturalCommand, _Registry;
   var Command = /*#__PURE__*/function () {
@@ -86,7 +87,7 @@ try {
     }, {
       key: "createManual",
       value: function createManual(contents) {
-        var ret = ["\uD83E\uDDE9 '".concat(this.name, "' \uBA85\uB839\uC5B4 \uB3C4\uC6C0\uB9D0").concat(COMPRESS), '——————————', this.description, ''].concat(_toConsumableArray(contents), ['']);
+        var ret = ["\uD83E\uDDE9 '".concat(this.name, "' \uBA85\uB839\uC5B4 \uB3C4\uC6C0\uB9D0").concat(compress), '——————————', this.description, ''].concat(_toConsumableArray(contents), ['']);
         if (this.cronJobs.length > 0) {
           ret.push('📌 자동 실행 주기');
           ret.push('——');
@@ -444,7 +445,7 @@ try {
         }
         this.examples = examples.map(function (e) {
           return Array.isArray(e) ? e.map(function (e2, i) {
-            return i == 0 ? e2 : '┗' + '━'.repeat(i - 1) + ' ' + e2;
+            return i === 0 ? e2 : '╰' + '─'.repeat(i - 1) + ' ' + e2;
           }).join('\n') + '\n' : e;
         });
         return this;
@@ -549,6 +550,11 @@ try {
       }
     }]);
   }(Command);
+  /**
+   * @param {Command} cmd
+   * @param {Number} idx
+   * @param {DateTime} datetime
+   */
   _NaturalCommand = NaturalCommand;
   _defineProperty(NaturalCommand, "Builder", /*#__PURE__*/function () {
     function _class2() {
@@ -596,11 +602,11 @@ try {
       }
     }, {
       key: "setUseDateParse",
-      value: function setUseDateParse(margin, useDateParse) {
-        var useDuration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-        var filterIncludeEnding = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+      value: function setUseDateParse(margin) {
+        var useDuration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+        var filterIncludeEnding = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
         this.margin = margin;
-        this.useDateParse = useDateParse;
+        this.useDateParse = true;
         this.useDuration = useDuration;
         this.filterIncludeEnding = filterIncludeEnding;
         return this;
@@ -636,7 +642,7 @@ try {
         }
         this.examples = examples.map(function (e) {
           return Array.isArray(e) ? e.map(function (e2, i) {
-            return i == 0 ? e2 : '┗' + '━'.repeat(i - 1) + ' ' + e2;
+            return i === 0 ? e2 : '╰' + '─'.repeat(i - 1) + ' ' + e2;
           }).join('\n') + '\n' : e;
         });
         return this;
@@ -669,6 +675,12 @@ try {
       }
     }]);
   }());
+  var CronLog = function CronLog(cmd, idx, datetime) {
+    return ["\uD638\uCD9C\uB41C \uBA85\uB839\uC5B4: Cronjob of ".concat(cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand", "(").concat(cmd.icon, " ").concat(cmd.name, ")"), "\uBA85\uB839\uC5B4 \uC778\uC790: ".concat(JSON.stringify({
+      idx: idx,
+      datetime: datetime
+    })), "\uC2DC\uAC04: ".concat(datetime.toString())].join('\n');
+  };
   var Registry = /*#__PURE__*/function () {
     function Registry() {
       _classCallCheck(this, Registry);
@@ -746,40 +758,46 @@ try {
             if (after != null) java.lang.Thread.sleep(after);
             var datetime = DateTime.now();
             command.executeCron(idx, datetime);
-            if (isValidChannel(logRoom)) {
-              var msg = ["\uD638\uCD9C\uB41C \uBA85\uB839\uC5B4: Cronjob of ".concat(command instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand", "(").concat(command.icon, " ").concat(command.name, ")"), "\uBA85\uB839\uC5B4 \uC778\uC790: ".concat(JSON.stringify({
-                idx: idx,
-                datetime: datetime
-              })), "\uC2DC\uAC04: ".concat(datetime.toString())].join('\n');
-              logRoom.send(msg);
-            }
+            if (isValidChannel(logRoom)) logRoom.send(CronLog(command, idx, datetime)).then(function () {}, function (e) {
+              return Log.e(e.stack);
+            });
           }, cronOpt);
         };
         for (var idx = 0; idx < command.cronJobs.length; idx++) {
           _loop2(idx);
         }
       }
+
+      /**
+       * @param {Chat} chat 
+       * @param {Channel} channel 
+       * @param {Channel[]} debugRooms 
+       * @param {Boolean} isDebugMod 
+       */
     }, {
       key: "get",
       value: function get(chat, channel, debugRooms, isDebugMod) {
+        /** @param {Channel[]} channels */
+        var channelToIdArray = function channelToIdArray(channels) {
+          return channels.filter(function (c) {
+            return c != null;
+          }).map(function (c) {
+            return c.id;
+          });
+        };
         var _iterator5 = _createForOfIteratorHelper(this.data),
           _step5;
         try {
           var _loop3 = function _loop3() {
               var cmd = _step5.value;
-              if (isDebugMod && !debugRooms.filter(function (c) {
-                return c != null;
-              }).map(function (c) {
-                return c.id;
-              }).includes(channel.id)) // 디버그 모드일 경우
-                return 0; // continue
-              else if (cmd.channels.length !== 0 && ![].concat(_toConsumableArray(cmd.channels), _toConsumableArray(debugRooms)).filter(function (c) {
-                return c != null;
-              }).map(function (c) {
-                return c.id;
-              }).includes(channel.id)) // 방이 포함되어 있지 않을 경우
-                return 0; // continue
-              var ret = {};
+              // 디버그 모드일 경우, 디버그 방에만 명령어를 실행할 수 있도록 함
+              if (isDebugMod && !channelToIdArray(debugRooms).includes(channel.id)) return 0; // continue
+              // 디버그 모드가 아닐 때, 방이 포함되어 있지 않을 경우 실행하지 않음
+              else if (cmd.channels.length !== 0 && !channelToIdArray([].concat(_toConsumableArray(cmd.channels), _toConsumableArray(debugRooms))).includes(channel.id)) return 0; // continue
+
+              /**
+               * @type {Args}
+               */
               var args;
               if (cmd instanceof StructuredCommand) {
                 args = {};
@@ -858,7 +876,9 @@ try {
                     }
                   }
                 }
-                chat.filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+
+                // chat.filteredText = filteredText.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+                chat.filteredText = filteredText;
                 for (var _token in foundTokens) {
                   chat.filteredText = chat.filteredText.replace(foundTokens[_token], '');
                 }
@@ -869,6 +889,7 @@ try {
                     is_full = false;
                     break;
                   }
+
                   // 기본값이 함수인 경우, 특히 날짜 관련 함수일 경우 호출 시간이 중요하므로 이 때 호출.
                   else if (typeof args[key] === 'function') {
                     args[key] = args[key]();
@@ -907,5 +928,5 @@ try {
   exports.NaturalCommand = NaturalCommand;
   exports.CommandRegistry = Registry.CommandRegistry;
 } catch (e) {
-  Log.e(e);
+  Log.e(e.stack);
 }

@@ -21,12 +21,35 @@ var _require3 = require('./Event'),
 var _require4 = require('./Command'),
   CommandRegistry = _require4.CommandRegistry,
   StructuredCommand = _require4.StructuredCommand,
-  NaturalCommand = _require4.NaturalCommand;
+  Command = _require4.Command;
 var _require5 = require('./DateTime'),
   DateTime = _require5.DateTime;
 var _require6 = require('./util'),
-  isValidChannel = _require6.isValidChannel;
+  isValidChannel = _require6.isValidChannel,
+  compress = _require6.compress;
 var IS_DIST = true;
+
+/**
+ * @param {Command} cmd
+ * @param {Chat} chat
+ * @param {Channel} channel
+ * @param {Object} args
+ */
+var DefaultLog = function DefaultLog(cmd, chat, channel, args) {
+  return ["\uC720\uC800: ".concat(chat.user.name, "(").concat(chat.user.id, ")"), "\uCC44\uB110: ".concat(channel.name, "(").concat(channel.id, ")"), "\uBA54\uC2DC\uC9C0: ".concat(chat.text), "\uD638\uCD9C\uB41C \uBA85\uB839\uC5B4: ".concat(cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand", "(").concat(cmd.icon, " ").concat(cmd.name, ")"), "\uBA85\uB839\uC5B4 \uC778\uC790: ".concat(JSON.stringify(args)), "\uC2DC\uAC04: ".concat(DateTime.now().toString())].join('\n');
+};
+
+/**
+ * @param {Command} cmd
+ * @param {Chat} chat
+ * @param {Chat} prevChat
+ * @param {Channel} channel
+ * @param {Channel} prevChannel
+ * @param {Object} args
+ */
+var LazyLog = function LazyLog(cmd, chat, prevChat, channel, prevChannel, args) {
+  return ["\uC720\uC800: ".concat(chat.user.name, "(").concat(chat.user.id, ")"), "\uCC44\uB110: ".concat(channel.name, "(").concat(channel.id, ")"), "\uBA54\uC2DC\uC9C0: ".concat(chat.text), "\uD638\uCD9C\uB41C \uBA85\uB839\uC5B4: Lazy of ".concat(cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand", "(").concat(cmd.icon, " ").concat(cmd.name, ")"), "\uBA85\uB839\uC5B4 \uC778\uC790: ".concat(JSON.stringify(args)), "\uC2DC\uAC04: ".concat(DateTime.now().toString())].join('\n');
+};
 try {
   var Bot = /*#__PURE__*/function () {
     function Bot() {
@@ -42,22 +65,17 @@ try {
       this.logRoom = null;
       this.debugRooms = [];
       this.commandEvent = function (chat, channel, command, args) {};
-      this._findCommand = function (chat, channel) {
-        for (var i = 0; i < _this._lazyArgsQueue.length; i++) {
-          var _this$_lazyArgsQueue$ = _slicedToArray(_this._lazyArgsQueue[i], 4),
-            prevChat = _this$_lazyArgsQueue$[0],
-            prevChannel = _this$_lazyArgsQueue$[1],
-            _cmd = _this$_lazyArgsQueue$[2],
-            _args = _this$_lazyArgsQueue$[3];
+      this.executeCommand = function (chat, channel) {
+        for (var i = 0; i < _this._lazyQueue.length; i++) {
+          var _this$_lazyQueue$i = _slicedToArray(_this._lazyQueue[i], 4),
+            prevChat = _this$_lazyQueue$i[0],
+            prevChannel = _this$_lazyQueue$i[1],
+            _cmd = _this$_lazyQueue$i[2],
+            _args = _this$_lazyQueue$i[3];
           if (prevChat.user.id === chat.user.id && prevChannel.id === channel.id) {
             _cmd.executeLazy(chat, prevChat, channel, prevChannel, _args);
-
-            // 명령어 사용 로그 전송
-            if (isValidChannel(_this.logRoom)) {
-              var msg = ["\uC720\uC800: ".concat(chat.user.name, "(").concat(chat.user.id, ")"), "\uCC44\uB110: ".concat(channel.name, "(").concat(channel.id, ")"), "\uBA54\uC2DC\uC9C0: ".concat(chat.text), "\uD638\uCD9C\uB41C \uBA85\uB839\uC5B4: Lazy of ".concat(_cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand", "(").concat(_cmd.icon, " ").concat(_cmd.name, ")"), "\uBA85\uB839\uC5B4 \uC778\uC790: ".concat(JSON.stringify(_args)), "\uC2DC\uAC04: ".concat(DateTime.now().toString())].join('\n');
-              _this.logRoom.send(msg);
-            }
-            _this._lazyArgsQueue.splice(i, 1);
+            if (isValidChannel(_this.logRoom)) _this.logRoom.send(LazyLog(_cmd, chat, prevChat, channel, prevChannel, _args));
+            _this._lazyQueue.splice(i, 1);
             return;
           }
         }
@@ -67,17 +85,10 @@ try {
         if (cmd == null) return;
         _this.commandEvent(chat, channel, cmd, args);
         cmd.execute(chat, channel, args);
-
-        // 명령어 사용 로그 전송
-        if (isValidChannel(_this.logRoom)) {
-          var _msg = ["\uC720\uC800: ".concat(chat.user.name, "(").concat(chat.user.id, ")"), "\uCC44\uB110: ".concat(channel.name, "(").concat(channel.id, ")"), "\uBA54\uC2DC\uC9C0: ".concat(chat.text), "\uD638\uCD9C\uB41C \uBA85\uB839\uC5B4: ".concat(cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand", "(").concat(cmd.icon, " ").concat(cmd.name, ")"), "\uBA85\uB839\uC5B4 \uC778\uC790: ".concat(JSON.stringify(args)), "\uC2DC\uAC04: ".concat(DateTime.now().toString())].join('\n');
-          _this.logRoom.send(_msg);
-        }
-        if (cmd.lazy) {
-          _this._lazyArgsQueue.push([chat, channel, cmd, args]);
-        }
+        if (isValidChannel(_this.logRoom)) _this.logRoom.send(DefaultLog(cmd, chat, channel, args));
+        if (cmd.lazy) _this._lazyQueue.push([chat, channel, cmd, args]);
       };
-      this._lazyArgsQueue = [];
+      this._lazyQueue = [];
     }
     return _createClass(Bot, [{
       key: "on",
@@ -218,13 +229,10 @@ try {
         ret.dblistener = dbManager.getInstance(init);
         ret.botManager = botManager;
         ret.bot = ret.botManager.getCurrentBot();
-        ret.dblistener.on(Event.MESSAGE, ret._findCommand);
+        ret.dblistener.on(Event.MESSAGE, ret.executeCommand);
         ret.bot.addListener('notificationPosted', function (sbn, rm) {
           ret.dblistener.addChannel(sbn);
         });
-
-        // NOTE: 이렇게 하면 봇 소스가 여러 개일 때, 컴파일 때마다 초기화되어서
-        //  한 쪽 봇 코드의 말만 듣는 현상이 생김. 그렇다고 off를 뺄 수는 없어 그냥 둠.
         ret.bot.addListener('startCompile', function () {
           ret.dblistener.stop();
           ret.cronManager.setWakeLock(false);
@@ -256,5 +264,5 @@ try {
     return new BotOperator(botManager);
   };
 } catch (e) {
-  Log.e(e);
+  Log.e(e.stack);
 }

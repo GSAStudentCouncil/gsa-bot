@@ -1,4 +1,4 @@
-export declare class Duration {
+export declare class TimeDelta {
 	constructor(millisecond: number);
 	
 	get amount(): number;
@@ -38,7 +38,7 @@ export declare class Date {
 	
 	eq(dateObject: Date | DateTemplate): boolean;
 	
-	subtract(dateObject: Date | Duration | DateTemplate): Duration | Date;
+	subtract(dateObject: Date | TimeDelta | DateTemplate): TimeDelta | Date;
 	
 	toString(): string;
 	
@@ -69,7 +69,7 @@ export declare class Time {
 	
 	eq(timeObject: Time | TimeTemplate): boolean;
 	
-	subtract(timeObject: Time | Duration | TimeTemplate): Duration | Time;
+	subtract(timeObject: Time | TimeDelta | TimeTemplate): TimeDelta | Time;
 	
 	toString(): string;
 	
@@ -107,6 +107,9 @@ export declare interface DurationTemplate {
 	second?: number;
 	millisecond?: number;
 }
+
+type Duration = { from: DateTime, to: DateTime };
+type DurationCanNull = { from: DateTime | undefined, to: DateTime | undefined };
 
 export declare class DateTime {
 	constructor(datetimeObject?: DateTime | $D | SetDateTimeTemplate | number | string, locale?: string);
@@ -163,10 +166,10 @@ export declare class DateTime {
 	static fromTimestamp(timestamp: number): DateTime;
 	
 	// @ts-ignore
-	static fromString(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime;
+	static fromString(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime | DurationCanNull | { parse: DateTime | DurationCanNull, string: string };
 	
 	// @ts-ignore
-	static dehumanize(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime;
+	static dehumanize(dateString: string, useDuration?: boolean = false, getString?: boolean = false, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string = 'ko-KR'): DateTime | DurationCanNull | { parse: DateTime | DurationCanNull, string: string };
 	
 	static fromNumber(timestamp: number): DateTime;
 	
@@ -174,9 +177,9 @@ export declare class DateTime {
 	
 	static fromObject(datetimeObject: SetDateTimeTemplate, standard?: DateTime | SetDateTimeTemplate): DateTime;
 	
-	add(datetimeObject: DateTime | Duration | DurationTemplate): DateTime;
+	add(datetimeObject: DateTime | TimeDelta | DurationTemplate): DateTime;
 	
-	subtract(datetimeObject: DateTime | Duration | DurationTemplate): DateTime | Duration;
+	subtract(datetimeObject: DateTime | TimeDelta | DurationTemplate): DateTime | TimeDelta;
 	
 	set(datetimeObject: DateTime | SetDateTimeTemplate | Date | Time): DateTime;
 	
@@ -202,14 +205,11 @@ export declare class DateTime {
 	
 	// @ts-ignore
 	static parseDuration(dateString: string, getString: true, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): {
-		parse: {
-			from: DateTime | undefined,
-			to: DateTime | undefined
-		}, string: string
+		parse: DurationCanNull, string: string
 	};
 	
 	// @ts-ignore
-	static parseDuration(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): { from: DateTime | undefined, to: DateTime | undefined };
+	static parseDuration(dateString: string, getString?: false, filterIncludeEnding?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): DurationCanNull;
 	
 	// @ts-ignore
 	static parse(dateString: string, getString: true, filterIncludeEnding?: boolean = true, trim?: boolean = true, std?: DateTime = DateTime.now(), locale?: string): {

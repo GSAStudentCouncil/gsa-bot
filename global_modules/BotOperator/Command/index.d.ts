@@ -1,15 +1,14 @@
 import { Channel, Chat } from "../DBManager/classes";
 import { CronJobFactor } from "../CronJob/cron-job-manager/lib/cron-job-factor";
-import { DateTime } from "../DateTime";
+import { DateTime, Duration } from "../DateTime";
 
 type ChatWithFiltered = { [K in keyof Chat]: Chat[K] } & { filteredText: string };
 
 type ArgType = [string, number, DateTime, Duration];
 type ArgTypeUnion = ArgType[number];
-type Duration = { from: DateTime, to: DateTime };
 
-type Query = { [token: string]: null | (typeof NaN) | string | (() => ArgTypeUnion) };
-type Args = { [key: string]: (typeof NaN) | ArgTypeUnion | ArgTypeUnion[] };
+type Query = { [token: string]: null | ArgTypeUnion | (() => ArgTypeUnion) };
+type Args = { [key: string]: ArgTypeUnion | ArgTypeUnion[], datetime?: DateTime, duration?: Duration };
 type ArgsWithDateTime = {
 	[key: string]: ArgTypeUnion | ArgTypeUnion[],
 	datetime?: DateTime,
@@ -234,7 +233,7 @@ export declare namespace NaturalCommand {
 
 		setExecute(execute: Execute<ChatWithFiltered>, executeLazy?: ExecuteLazy<ChatWithFiltered>): this;
 
-		setUseDateParse(margin: number, useDateParse: boolean, useDuration?: boolean, filterIncludeEnding?: boolean): this;
+		setUseDateParse(margin: number, useDuration?: boolean, filterIncludeEnding?: boolean): this;
 
 		build(): NaturalCommand;
 	}

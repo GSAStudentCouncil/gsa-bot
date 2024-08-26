@@ -13,7 +13,8 @@ export declare class Bot {
     public botManager: any;
     public commandRegistry: Registry;
     public commandEvent: Execute<any>;
-    private _lazyArgsQueue: [Chat, Channel, Command, Args][];
+    public executeCommand: (chat: Chat, channel: Channel) => void;
+    private _lazyQueue: [Chat, Channel, Command, Args][];
 
     public isDebugMod: boolean;
     public logRoom: Channel | null;

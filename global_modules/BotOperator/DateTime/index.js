@@ -15,7 +15,7 @@ const getCultureInfo = locale => {
 	return ret;
 };
 
-class Duration {
+class TimeDelta {
 	constructor(millisecond) {
 		this._amount = millisecond;
 	}
@@ -41,7 +41,7 @@ class Duration {
 	}
 	
 	toString() {
-		return `Duration(day=${this.day}, second=${this.second}, millisecond=${this.millisecond})`;
+		return `TimeDelta(day=${this.day}, second=${this.second}, millisecond=${this.millisecond})`;
 	}
 }
 
@@ -69,8 +69,8 @@ class Date {
 	
 	subtract(dateObject) {
 		if (dateObject instanceof Date)
-			return new Duration(this._source.getTime() - dateObject._source.getTime());
-		else if (dateObject instanceof Duration) {
+			return new TimeDelta(this._source.getTime() - dateObject._source.getTime());
+		else if (dateObject instanceof TimeDelta) {
 			let dt = new $D(this._source);
 			dt.setMilliseconds(dt.getMilliseconds() - dateObject.amount);
 			return new Date(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
@@ -129,8 +129,8 @@ class Time {
 	
 	subtract(timeObject) {
 		if (timeObject instanceof Time)
-			return new Duration(this._source.getTime() - timeObject._source.getTime());
-		else if (timeObject instanceof Duration) {
+			return new TimeDelta(this._source.getTime() - timeObject._source.getTime());
+		else if (timeObject instanceof TimeDelta) {
 			let dt = new $D(this._source);
 			dt.setMilliseconds(dt.getMilliseconds() - timeObject.amount);
 			return new Time(dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds());
@@ -571,7 +571,7 @@ class DateTime {
 	}
 	
 	add(datetimeObject) {
-		if (datetimeObject instanceof Duration) {
+		if (datetimeObject instanceof TimeDelta) {
 			let dt = this.toDate();
 			dt.setMilliseconds(dt.getMilliseconds() + datetimeObject.amount);
 			return new DateTime(dt, this.locale);
@@ -592,8 +592,8 @@ class DateTime {
 	
 	subtract(datetimeObject) {
 		if (datetimeObject instanceof DateTime)
-			return new Duration(this.timestamp() - datetimeObject.timestamp());
-		else if (datetimeObject instanceof Duration) {
+			return new TimeDelta(this.timestamp() - datetimeObject.timestamp());
+		else if (datetimeObject instanceof TimeDelta) {
 			let dt = this.toDate();
 			dt.setMilliseconds(dt.getMilliseconds() - datetimeObject.amount);
 			return new DateTime(dt, this.locale);

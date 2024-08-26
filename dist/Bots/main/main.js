@@ -159,15 +159,14 @@ var getMeals = function getMeals(dt, bullet) {
     for (var i = 0; i < elements.length; i++) {
       var element = elements.get(i);
       var mealType = String(element.select('MMEAL_SC_CODE').text());
-      var dishName = String(element.select('DDISH_NM').text()).split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g).filter(Boolean).map(function (e) {
+      meals[mealType - 1] = String(element.select('DDISH_NM').text()).split(/ (?:\(\d+\.?(?:.\d+)*\))?(?:<br\/>|$)/g).filter(Boolean).map(function (e) {
         return bullet + e;
       }).join('\n');
-      meals[mealType - 1] = dishName;
     }
     return meals;
   } catch (e) {
-    if (isValidChannel(logRoom)) logRoom.send("Error: ".concat(e));
-    Log.e(e);
+    if (isValidChannel(logRoom)) logRoom.send("Error:".concat(e.stack));
+    Log.e(e.stack);
     return [null, null, null];
   }
 };
@@ -235,15 +234,17 @@ try {
   ////////////////////// 급식 명령어
   bot.addCommand(new NaturalCommand.Builder().setName('급식', '🍚').setDescription("\uC785\uB825\uD55C \uC2DC\uAC04\uC5D0 \uB9DE\uCDB0 \uAE09\uC2DD\uC744 \uC804\uC1A1\uD569\uB2C8\uB2E4. \uC2DC\uAC04\uC744 \uC0DD\uB7B5\uD558\uBA74 \uBA54\uC2DC\uC9C0\uB97C \uC804\uC1A1\uD55C \uC2DC\uAC01\uC73C\uB85C \uC124\uC815\uB429\uB2C8\uB2E4.\n\uC608\uB97C \uB4E4\uC5B4, \uC544\uCE68\uACFC \uC810\uC2EC \uC2DC\uAC04 \uC0AC\uC774\uC5D0 \uBA85\uB839\uC5B4\uB97C \uD638\uCD9C\uD558\uBA74 \uC810\uC2EC \uAE09\uC2DD\uC744 \uC54C\uB824\uC8FC\uACE0, \uC810\uC2EC\uACFC \uC800\uB141 \uC2DC\uAC04 \uC0AC\uC774\uC5D0\uB294 \uC800\uB141 \uAE09\uC2DD\uC744 \uC54C\uB824\uC90D\uB2C8\uB2E4.\n\uB610\uD55C, \uB9E4\uC77C \uC790\uC815 \uADF8 \uB0A0\uC758 \uBAA8\uB4E0 \uAE09\uC2DD\uC744 \uC54C\uB824\uC8FC\uACE0, 3\uAD50\uC2DC\uC5D0\uC11C 4\uAD50\uC2DC\uB85C \uAC00\uB294 \uC26C\uB294 \uC2DC\uAC04\uC5D0\uB294 \uC810\uC2EC, 7\uAD50\uC2DC \uC774\uD6C4 \uCCAD\uC18C \uC2DC\uAC04\uC5D0 \uC800\uB141 \uAE09\uC2DD\uC744 \uC815\uAE30\uC801\uC73C\uB85C \uC804\uC1A1\uD569\uB2C8\uB2E4.").setExamples('그제 급식', '오늘 밥', '모레 급식', '석식', '내일 점심밥', '금요일 아침', '급식 3/29', '급식 다다음주 목요일').setQuery({
     급식: null,
-    datetime: NaN
-  }).setUseDateParse(0, true, false, false).setExecute(function (self, chat, channel, _ref2) {
+    datetime: function datetime() {
+      return DateTime.now();
+    }
+  }).setUseDateParse(0, false, false).setExecute(function (self, chat, channel, _ref2) {
     var 급식 = _ref2.급식,
       datetime = _ref2.datetime;
-    if (isNaN(datetime)) {
-      datetime = DateTime.now();
-    }
+    // if (isNaN(datetime)) {
+    // 	datetime = DateTime.now();
+    // }
 
-    // 급식의 의미를 담은 토큰이 시간의 의미도 동시에 갖는 경우 처리
+    // 급식의 토큰이 시간의 의미도 동시에 갖는 경우를 처리
     if (급식 === '조식' || 급식 === '아침') {
       datetime = datetime.parse('아침');
     } else if (급식 === '중식' || 급식 === '점심') {
@@ -425,8 +426,9 @@ try {
   }).build());
 
   ////////////////////// 학사일정 명령어
-  bot.addCommand(new NaturalCommand.Builder().setName('행사', '📅').setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').setUseDateParse(0, true, true).setQuery({
-    학교행사: null
+  bot.addCommand(new NaturalCommand.Builder().setName('행사', '📅').setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').setUseDateParse(0, true).setQuery({
+    학교행사: null,
+    duration: null
   }).setExecute(function (self, chat, channel, _ref6) {
     var 학교행사 = _ref6.학교행사,
       _ref6$duration = _ref6.duration,
@@ -496,6 +498,6 @@ try {
   ////////////////////// 봇 가동 시작
   bot.start();
 } catch (err) {
-  if (isValidChannel(logRoom)) logRoom.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err));
-  Log.error(err);
+  if (isValidChannel(logRoom)) logRoom.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err.stack));
+  Log.error(err.stack);
 }

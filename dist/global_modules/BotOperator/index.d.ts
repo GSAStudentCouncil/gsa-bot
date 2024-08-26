@@ -13,12 +13,13 @@ export declare class Bot {
     public botManager: any;
     public commandRegistry: Registry;
     public commandEvent: Execute<any>;
-    private _lazyArgsQueue: [Chat, Channel, Command, Args][];
+    private _lazyQueue: [Chat, Channel, Command, Args][];
 
     public isDebugMod: boolean;
     public logRoom: Channel | null;
 
     static getCurrentBot(botManager: any, dbManager: DBManager, init?: InstanceType): Bot;
+    executeCommand(chat: Chat, channel: Channel): void;
     
     on<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;
     addListener<E extends keyof EventMap>(event: E, listener: EventMap[E]): this;

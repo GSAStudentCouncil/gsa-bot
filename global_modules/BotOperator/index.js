@@ -1,11 +1,51 @@
 const { DBManager } = require('./DBManager');
 const { CronJob } = require('./CronJob');
 const { Event } = require('./Event');
-const { CommandRegistry, StructuredCommand, NaturalCommand } = require('./Command');
+const { CommandRegistry, StructuredCommand, Command } = require('./Command');
 const { DateTime } = require('./DateTime');
-const { isValidChannel } = require('./util');
+const { isValidChannel, compress } = require('./util');
 
 const IS_DIST = false;
+
+/**
+ * @param {Command} cmd
+ * @param {Chat} chat
+ * @param {Channel} channel
+ * @param {Object} args
+ */
+const DefaultLog = (cmd, chat, channel, args) => {
+    return [
+        `유저: ${chat.user.name}(${chat.user.id})`,
+        `채널: ${channel.name}(${channel.id})`,
+        `메시지: ${chat.text}`,
+        `호출된 명령어: ${cmd instanceof StructuredCommand ?
+            "StructuredCommand" :
+            "NaturalCommand"}(${cmd.icon} ${cmd.name})`,
+        `명령어 인자: ${JSON.stringify(args)}`,
+        `시간: ${DateTime.now().toString()}`
+    ].join('\n');
+};
+
+/**
+ * @param {Command} cmd
+ * @param {Chat} chat
+ * @param {Chat} prevChat
+ * @param {Channel} channel
+ * @param {Channel} prevChannel
+ * @param {Object} args
+ */
+const LazyLog = (cmd, chat, prevChat, channel, prevChannel, args) => {
+    return [
+        `유저: ${chat.user.name}(${chat.user.id})`,
+        `채널: ${channel.name}(${channel.id})`,
+        `메시지: ${chat.text}`,
+        `호출된 명령어: Lazy of ${cmd instanceof StructuredCommand ?
+            "StructuredCommand" :
+            "NaturalCommand"}(${cmd.icon} ${cmd.name})`,
+        `명령어 인자: ${JSON.stringify(args)}`,
+        `시간: ${DateTime.now().toString()}`
+    ].join('\n');
+};
 
 try {
     class Bot {
@@ -22,87 +62,59 @@ try {
             this.logRoom = null;
             this.debugRooms = [];
 
-            this.commandEvent = (chat, channel, command, args) => {
-            };
-
-            this._findCommand = (chat, channel) => {
-                for (let i = 0; i < this._lazyArgsQueue.length; i++) {
-                    const [prevChat, prevChannel, cmd, args] = this._lazyArgsQueue[i];
-            
+            this.commandEvent = (chat, channel, command, args) => {};
+            this.executeCommand = (chat, channel) => {
+                for (let i = 0; i < this._lazyQueue.length; i++) {
+                    const [prevChat, prevChannel, cmd, args] = this._lazyQueue[i];
+                    
                     if (prevChat.user.id === chat.user.id && prevChannel.id === channel.id) {
                         cmd.executeLazy(chat, prevChat, channel, prevChannel, args);
                         
-                        // 명령어 사용 로그 전송
-                        if (isValidChannel(this.logRoom)) {
-                            let msg = [
-                                `유저: ${chat.user.name}(${chat.user.id})`,
-                                `채널: ${channel.name}(${channel.id})`,
-                                `메시지: ${chat.text}`,
-                                `호출된 명령어: Lazy of ${cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand"}(${cmd.icon} ${cmd.name})`,
-                                `명령어 인자: ${JSON.stringify(args)}`,
-                                `시간: ${DateTime.now().toString()}`
-                            ].join('\n');
-                            
-                            this.logRoom.send(msg);
-                        }
-
-                        this._lazyArgsQueue.splice(i, 1);
+                        if (isValidChannel(this.logRoom))
+                            this.logRoom.send(LazyLog(cmd, chat, prevChat, channel, prevChannel, args));
+                        
+                        this._lazyQueue.splice(i, 1);
                         return;
                     }
                 }
-            
+                
                 const { cmd, args } = this.commandRegistry.get(chat, channel, this.debugRooms, this.isDebugMod);
-                if (cmd == null)
-                    return;
-
+                if (cmd == null) return;
+                
                 this.commandEvent(chat, channel, cmd, args);
                 cmd.execute(chat, channel, args);
-
-                // 명령어 사용 로그 전송
-                if (isValidChannel(this.logRoom)) {
-                    let msg = [
-                        `유저: ${chat.user.name}(${chat.user.id})`,
-                        `채널: ${channel.name}(${channel.id})`,
-                        `메시지: ${chat.text}`,
-                        `호출된 명령어: ${cmd instanceof StructuredCommand ? "StructuredCommand" : "NaturalCommand"}(${cmd.icon} ${cmd.name})`,
-                        `명령어 인자: ${JSON.stringify(args)}`,
-                        `시간: ${DateTime.now().toString()}`
-                    ].join('\n');
-
-                    this.logRoom.send(msg);
-                }
-        
-                if (cmd.lazy) {
-                    this._lazyArgsQueue.push([chat, channel, cmd, args]);
-                }
-            }
-
-            this._lazyArgsQueue = [];
+                
+                if (isValidChannel(this.logRoom))
+                    this.logRoom.send(DefaultLog(cmd, chat, channel, args));
+                
+                if (cmd.lazy)
+                    this._lazyQueue.push([chat, channel, cmd, args]);
+            };
+            
+            this._lazyQueue = [];
         }
-
+        
         static getCurrentBot(botManager, dbManager, init) {
             let ret = new Bot();
             ret.dblistener = dbManager.getInstance(init);
             ret.botManager = botManager;
             ret.bot = ret.botManager.getCurrentBot();
-
-            ret.dblistener.on(Event.MESSAGE, ret._findCommand);
-
+            
+            ret.dblistener.on(Event.MESSAGE, ret.executeCommand);
+            
             ret.bot.addListener('notificationPosted', (sbn, rm) => {
                 ret.dblistener.addChannel(sbn);
             });
-
-            // NOTE: 이렇게 하면 봇 소스가 여러 개일 때, 컴파일 때마다 초기화되어서
-            //  한 쪽 봇 코드의 말만 듣는 현상이 생김. 그렇다고 off를 뺄 수는 없어 그냥 둠.
+            
             ret.bot.addListener('startCompile', () => {
                 ret.dblistener.stop();
                 ret.cronManager.setWakeLock(false);
                 ret.cronManager.off();
             });
-
+            
             return ret;
         }
-
+        
         on(event, listener) {
             if (!Object.values(Event).includes(event)) {
                 throw new Error('Invalid event');
@@ -230,5 +242,5 @@ try {
 
     exports.from = botManager => new BotOperator(botManager);
 } catch (e) {
-    Log.e(e);
+    Log.e(e.stack);
 }
