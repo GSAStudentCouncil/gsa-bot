@@ -362,6 +362,11 @@ bot.addCommand(new StructuredCommand.Builder()
 		
 		channel.info(`${chat.user.name}님, ${부서.으로}서 ${기수List.join(', ')}기에 공지할 내용을 작성해주세요.\n'취소'라고 보내면 중단됩니다.`);
 	}, (self, chat, prevChat, channel, prevChannel, { 부서, 기수: 기수List }) => {
+		if (기수List.length === 0) {
+			let thirdNth = DateTime.now().year - 2000 + 15;
+			기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
+		}
+		
 		// 취소 시 중단
 		if (chat.text === '취소') {
 			channel.success('취소되었습니다.');
