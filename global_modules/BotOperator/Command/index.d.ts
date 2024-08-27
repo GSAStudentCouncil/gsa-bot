@@ -249,7 +249,7 @@ declare class Registry {
 
 	loop(callback: (command: Command) => void): void;
 
-	register(command: Command, logRoom: Channel): void;
+	register(command: Command, logRoom?: Channel): void;
 
 	get(chat: Chat, channel: Channel, debugRooms: Channel[], isDebugMod: boolean): {
 		cmd: Command | null,

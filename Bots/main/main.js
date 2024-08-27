@@ -14,7 +14,7 @@ const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../gl
 const { Event } = require('../../global_modules/BotOperator/Event');
 const { DateTime } = require('../../global_modules/BotOperator/DateTime');
 const { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
-const { isNumber, isNaN, isValidChannel, compress } = require('../../global_modules/BotOperator/util');
+const { isNumber, isValidChannel, compress } = require('../../global_modules/BotOperator/util');
 
 ////////////////////// 봇 객체 선언
 const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
@@ -441,7 +441,7 @@ bot.addCommand(new StructuredCommand.Builder()
 
 ////////////////////// 학사일정 명령어
 bot.addCommand(new NaturalCommand.Builder()
-	.setName('행사', '📅')
+	.setName('일정', '📅')
 	.setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.')
 	.setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사')
 	.setUseDateParse(0, true)

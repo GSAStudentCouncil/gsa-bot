@@ -629,16 +629,16 @@ class NaturalCommand extends Command {
 		];
 
 		for (let key in this.query) {
-			if (key === 'datetime')
+			if (key === 'datetime' || key === 'duration')
 				continue;
 
 			let tmp = `· ${key.을를} 의미하는 용어 (ex. ${this.map.filter(e => e[1] === key).map(e => e[0]).slice(0, 4).join(', ')}, ...) `;
 			let humanize = value => value instanceof DateTime ? value.humanize() : value;
 
 			if (typeof this.query[key] === 'function')
-				tmp += `(생략 시 기본값 = ${humanize(this.query[key]())})`;
+				tmp += ` (생략 시 기본값 = ${humanize(this.query[key]())})`;
 			else if (this.query[key] != null && !Number.isNaN(this.query[key]))
-				tmp += `(생략 시 기본값 = ${humanize(this.query[key])})`;
+				tmp += ` (생략 시 기본값 = ${humanize(this.query[key])})`;
 			
 			ret.push(tmp);
 		}
@@ -646,16 +646,16 @@ class NaturalCommand extends Command {
 		if (this.useDateParse) {
 			let tmp;
 			if (this.useDuration)
-				tmp = `· '기간'을 의미하는 용어 (ex. 다음 주까지, 내일부터 모레 저녁까지, ...)`;
+				tmp = `· 기간을 의미하는 용어 (ex. 다음 주까지, 내일부터 모레 저녁까지, ...)`;
 			else
-				tmp = `· '날짜 및 시간'을 의미하는 용어 (ex. 3월 14일, 내일 저녁, 4일 뒤 5시, ...)`;
+				tmp = `· 날짜 및 시간을 의미하는 용어 (ex. 3월 14일, 내일 저녁, 4일 뒤 5시, ...)`;
 
 			let humanize = value => value instanceof DateTime ? value.humanize() : value;
 			
 			if (typeof this.query['datetime'] === 'function')
-				tmp += `(생략 시 기본값 = ${humanize(this.query['datetime']())})`;
+				tmp += ` (생략 시 기본값 = ${humanize(this.query['datetime']())})`;
 			else if (this.query['datetime'] != null && !Number.isNaN(this.query['datetime']))
-				tmp += `(생략 시 기본값 = ${humanize(this.query['datetime'])})`;
+				tmp += ` (생략 시 기본값 = ${humanize(this.query['datetime'])})`;
 
 			ret.push(tmp);
 		}
