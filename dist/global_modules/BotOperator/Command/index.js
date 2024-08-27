@@ -513,7 +513,7 @@ try {
         var _this8 = this;
         var ret = ['📌 필수 포함 용어', '——'];
         var _loop = function _loop(key) {
-          if (key === 'datetime') return 1; // continue
+          if (key === 'datetime' || key === 'duration') return 1; // continue
           var tmp = "\xB7 ".concat(key.을를, " \uC758\uBBF8\uD558\uB294 \uC6A9\uC5B4 (ex. ").concat(_this8.map.filter(function (e) {
             return e[1] === key;
           }).map(function (e) {
@@ -522,7 +522,7 @@ try {
           var humanize = function humanize(value) {
             return value instanceof DateTime ? value.humanize() : value;
           };
-          if (typeof _this8.query[key] === 'function') tmp += "(\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(_this8.query[key]()), ")");else if (_this8.query[key] != null && !Number.isNaN(_this8.query[key])) tmp += "(\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(_this8.query[key]), ")");
+          if (typeof _this8.query[key] === 'function') tmp += " (\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(_this8.query[key]()), ")");else if (_this8.query[key] != null && !Number.isNaN(_this8.query[key])) tmp += " (\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(_this8.query[key]), ")");
           ret.push(tmp);
         };
         for (var key in this.query) {
@@ -530,11 +530,11 @@ try {
         }
         if (this.useDateParse) {
           var tmp;
-          if (this.useDuration) tmp = "\xB7 '\uAE30\uAC04'\uC744 \uC758\uBBF8\uD558\uB294 \uC6A9\uC5B4 (ex. \uB2E4\uC74C \uC8FC\uAE4C\uC9C0, \uB0B4\uC77C\uBD80\uD130 \uBAA8\uB808 \uC800\uB141\uAE4C\uC9C0, ...)";else tmp = "\xB7 '\uB0A0\uC9DC \uBC0F \uC2DC\uAC04'\uC744 \uC758\uBBF8\uD558\uB294 \uC6A9\uC5B4 (ex. 3\uC6D4 14\uC77C, \uB0B4\uC77C \uC800\uB141, 4\uC77C \uB4A4 5\uC2DC, ...)";
+          if (this.useDuration) tmp = "\xB7 \uAE30\uAC04\uC744 \uC758\uBBF8\uD558\uB294 \uC6A9\uC5B4 (ex. \uB2E4\uC74C \uC8FC\uAE4C\uC9C0, \uB0B4\uC77C\uBD80\uD130 \uBAA8\uB808 \uC800\uB141\uAE4C\uC9C0, ...)";else tmp = "\xB7 \uB0A0\uC9DC \uBC0F \uC2DC\uAC04\uC744 \uC758\uBBF8\uD558\uB294 \uC6A9\uC5B4 (ex. 3\uC6D4 14\uC77C, \uB0B4\uC77C \uC800\uB141, 4\uC77C \uB4A4 5\uC2DC, ...)";
           var humanize = function humanize(value) {
             return value instanceof DateTime ? value.humanize() : value;
           };
-          if (typeof this.query['datetime'] === 'function') tmp += "(\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(this.query['datetime']()), ")");else if (this.query['datetime'] != null && !Number.isNaN(this.query['datetime'])) tmp += "(\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(this.query['datetime']), ")");
+          if (typeof this.query['datetime'] === 'function') tmp += " (\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(this.query['datetime']()), ")");else if (this.query['datetime'] != null && !Number.isNaN(this.query['datetime'])) tmp += " (\uC0DD\uB7B5 \uC2DC \uAE30\uBCF8\uAC12 = ".concat(humanize(this.query['datetime']), ")");
           ret.push(tmp);
         }
         var manual = _superPropGet(NaturalCommand, "createManual", this, 3)([ret]);

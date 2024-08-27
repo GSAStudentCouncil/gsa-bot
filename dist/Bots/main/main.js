@@ -43,7 +43,6 @@ var _require4 = require('BotOperator/DBManager/classes'),
   Channel = _require4.Channel;
 var _require5 = require('BotOperator/util'),
   isNumber = _require5.isNumber,
-  isNaN = _require5.isNaN,
   isValidChannel = _require5.isValidChannel,
   compress = _require5.compress;
 
@@ -431,7 +430,7 @@ try {
   }).build());
 
   ////////////////////// 학사일정 명령어
-  bot.addCommand(new NaturalCommand.Builder().setName('행사', '📅').setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').setUseDateParse(0, true).setQuery({
+  bot.addCommand(new NaturalCommand.Builder().setName('일정', '📅').setDescription('2024년 학사일정을 입력한 날짜 및 기간에 맞춰 알려줍니다.').setExamples('행사 3월 1일', '3월 1일부터 3월 5일까지 학사일정', '다음 주까지 학교 행사').setUseDateParse(0, true).setQuery({
     학교행사: null,
     duration: null
   }).setExecute(function (self, chat, channel, _ref6) {
