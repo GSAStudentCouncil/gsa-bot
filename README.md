@@ -62,3 +62,9 @@ adb pull /dist/example.js /sdcard/msgbot/bots/example/example.js
 - 봇에 디버그 모드를 추가함. 새로 추가된 `디버그 명령어`를 사용하여 디버그 모드를 활성화할 수 있음. 디버그 모드가 활성화되면 봇은 디버그 방에만 응답함. `Bot#isDebugMod`로 확인 가능.
 - 디버그 용도의 방을 추가할 수 있게 됨. `Bot#setDebugRooms`으로 설정 가능.
 - `CronJob` 모듈의 버전을 v1.2로 업데이트함.
+
+### [v1.4](https://github.com/GSAStudentCouncil/gsa-bot/releases/tag/v1.4)
+
+- 공지 명령어에 파일, 이미지, 영상 전송 기능 추가
+- 버그 수정 (call by ref에 의한 `기수List` 복사 안됨 버그)
+- 유틸리티 함수 추가 (URL 단축, pretty time/bytes)
