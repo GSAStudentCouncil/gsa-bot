@@ -1,0 +1,9 @@
+{
+    "main": "manual.js",
+    "option": {
+        "apiLevel": 1,
+        "useUnifiedParams": false,
+        "useBabel": false,
+        "scriptPower": true
+    }
+}

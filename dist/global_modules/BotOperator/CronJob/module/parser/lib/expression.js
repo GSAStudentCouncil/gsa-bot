@@ -1052,7 +1052,7 @@ CronExpression[c(0x1ad)] = ['second', y(0x258), c(0x25b), c(0x17e) + 'th', y(0x1
     }
   } else {
     for (v = 0x0, E = g; N[kw(0x173)](v, E); v--) try {
-      a = this[kw(0x19f)](), (l[kw(gP.v)](a), O && O(a, v));
+      a = this[kw(0x19f)](), l[kw(gP.v)](a), O && O(a, v);
     } catch (D) {
       break;
     }

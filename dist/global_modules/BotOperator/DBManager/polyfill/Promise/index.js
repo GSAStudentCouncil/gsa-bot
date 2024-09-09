@@ -4301,14 +4301,14 @@ var _a = require(Dy(0x454) + 'js'),
                   return !D4[Io(Tc.z)]['dispatch' + IF(0x2bb)](Ds);
                 };
               }
-              if (Z['Xfvaw'](Z[IG(TR.d)], typeof Event === "undefined" ? "undefined" : _typeof(Event))) return DS = new Event(Z[IG(TR.t)]), (D4[Ij(TR.c)][Ij(TR.m) + 'Event'](DS), function (Da, Di) {
+              if (Z['Xfvaw'](Z[IG(TR.d)], typeof Event === "undefined" ? "undefined" : _typeof(Event))) return DS = new Event(Z[IG(TR.t)]), D4[Ij(TR.c)][Ij(TR.m) + 'Event'](DS), function (Da, Di) {
                 var Ib = IG,
                   Ih = Ij,
                   Ds = new Event(Da['toLowerC' + 'ase'](), {
                     'cancelable': !0x0
                   });
                 return Ds[Ib(Tm.z)] = Di, !D4[Ib(0x6a4)][Ib(Tm.B) + 'Event'](Ds);
-              });
+              };
               return (DS = document['createEv' + Ij(TR.U)](Z[Ij(TR.X)]))[Ij(TR.R) + Ij(TR.J)](Ij(TR.q) + IG(TR.K), !0x1, !0x0, {}), D4[IG(0x6a4)]['dispatch' + Ij(TR.H)](DS), function (Da, Di) {
                 var IC = Ij,
                   IE = IG,
@@ -10580,7 +10580,7 @@ var _a = require(Dy(0x454) + 'js'),
                 } catch (h) {
                   return !0x1;
                 }
-              }(u)) return F = new X(R), (u['_then'](F[Hv(p5.U)], F[Hg(p5.X)], void 0x0, F, null), F);
+              }(u)) return F = new X(R), u['_then'](F[Hv(p5.U)], F[Hg(p5.X)], void 0x0, F, null), F;
               return function (b, C, E) {
                 var p3 = {
                     z: 0x229,
@@ -10590,7 +10590,7 @@ var _a = require(Dy(0x454) + 'js'),
                   Hy = Hg,
                   T = new X(R),
                   P = T;
-                E && E[HM(p4.z) + HM(0x63c)](), (T[Hy(p4.B) + HM(p4.O) + 'ce'](), E && E[HM(0x4c9) + HM(p4.I)]());
+                E && E[HM(p4.z) + HM(0x63c)](), T[Hy(p4.B) + HM(p4.O) + 'ce'](), E && E[HM(0x4c9) + HM(p4.I)]();
                 var A = !0x0,
                   Q = q['tryCatch'](C)[HM(0x4ec)](b, S, N);
                 A = !0x1, T && Q === K && (T[Hy(p4.r) + Hy(p4.d)](Q['e'], !0x0, !0x0), T = null);
