@@ -25,8 +25,27 @@ Object.defineProperties(String.prototype, {
     '와과': { get() { return getJosa(this, '와과'); } }
 });
 
+const shortURL = url => org.jsoup.Jsoup.connect(`https://tinyurl.com/api-create.php?url=${url}`).get().text().substring('https://'.length);
+
+const prettyBytes = bytes => {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    let i = 0;
+    while (bytes >= 1024 && ++i) bytes /= 1024;
+    return `${bytes.toFixed(2)} ${units[i]}`;
+}
+
+const prettyDuration = seconds => {
+    const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor(seconds % 3600 / 60)).padStart(2, '0');
+    const secs = String(Math.floor(seconds % 60)).padStart(2, '0');
+    return (hours !== "00" ? `${hours}: ` : '') + `${minutes}:${secs}`;
+}
+
 exports.isNumber = name => /^\d+$/.test(name);
 exports.isNaN = n => Number.isNaN(n);
 exports.compress = '\u200b'.repeat(500);
 exports.getJosa = getJosa;
 exports.isValidChannel = channel => channel != null && channel.send != null;
+exports.shortURL = shortURL;
+exports.prettyBytes = prettyBytes;
+exports.prettyDuration = prettyDuration;

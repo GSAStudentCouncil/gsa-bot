@@ -14,7 +14,7 @@ const { StructuredCommand, NaturalCommand, CommandRegistry } = require('../../gl
 const { Event } = require('../../global_modules/BotOperator/Event');
 const { DateTime } = require('../../global_modules/BotOperator/DateTime');
 const { Channel } = require('../../global_modules/BotOperator/DBManager/classes');
-const { isNumber, isValidChannel, compress } = require('../../global_modules/BotOperator/util');
+const { isNumber, isValidChannel, compress, shortURL, prettyBytes, prettyDuration } = require('../../global_modules/BotOperator/util');
 
 ////////////////////// 봇 객체 선언
 const BotOperator = require('../../global_modules/BotOperator').from(BotManager);
@@ -101,7 +101,8 @@ let getMeals = (dt, bullet) => {
 		['ATPT_OFCDC_SC_CODE', 'F10'],
 		['SD_SCHUL_CODE', 7380031],
 		['MLSV_YMD', dt.toString('YYMMDD')],
-		['Type', 'xml']];
+		['Type', 'xml']
+	];
 	
 	try {
 		let doc = org.jsoup.Jsoup.connect(
@@ -330,7 +331,7 @@ bot.addCommand(new NaturalCommand.Builder()
 ////////////////////// 공지 명령어
 bot.addCommand(new StructuredCommand.Builder()
 	.setName('공지', '📢')
-	.setDescription(`학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항을 작성해 한 번 더 전송하세요.\n공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.\n<부서>에는 다음과 같은 문자열이 들어갑니다. ${부서명List.join(', ')}`)
+	.setDescription(`학생회 공지를 전송합니다. 기수를 지정하지 않으면 재학 중인 기수 톡방에 전송됩니다.\n먼저 입력 양식에 맞춰 명령어를 작성해 전송한 뒤, 공지사항(메시지, 사진, 영상, 파일)을 작성해 한 번 더 전송하세요.\n공지사항 내용 대신 메시지로 \'취소\'라고 보낼 경우 공지 명령어가 중단됩니다.\n<부서>에는 다음과 같은 문자열이 들어갑니다. ${부서명List.join(', ')}`)
 	.setUsage(`<부서:str> 알림 <기수:int[]? min=${DateTime.now().year - 2000 + 15} max=${DateTime.now().year - 2000 + 17}>`)
 	.setChannels(staffRoom)
 	.setExamples([
@@ -347,7 +348,7 @@ bot.addCommand(new StructuredCommand.Builder()
 		'$user: 취소',
 		'봇: 취소되었습니다.'
 	])
-	.setExecute((self, chat, channel, { 부서, 기수: 기수List }) => {
+	.setExecute((self, chat, channel, { 부서, 기수 }) => {
 		// 부서가 적절한지 확인
 		if (!부서명List.includes(부서)) {
 			channel.warn(`${부서.은는} 적절한 부서가 아닙니다.\n\n가능한 부서: ${부서명List.join(', ')}`);
@@ -355,18 +356,13 @@ bot.addCommand(new StructuredCommand.Builder()
 		}
 		
 		// 기수가 없으면 재학 중인 기수로 설정
-		if (기수List.length === 0) {
+		if (기수.length === 0) {
 			let thirdNth = DateTime.now().year - 2000 + 15;
-			기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
+			기수.push(thirdNth, thirdNth + 1, thirdNth + 2);
 		}
 		
-		channel.info(`${chat.user.name}님, ${부서.으로}서 ${기수List.join(', ')}기에 공지할 내용을 작성해주세요.\n'취소'라고 보내면 중단됩니다.`);
-	}, (self, chat, prevChat, channel, prevChannel, { 부서, 기수: 기수List }) => {
-		if (기수List.length === 0) {
-			let thirdNth = DateTime.now().year - 2000 + 15;
-			기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
-		}
-		
+		channel.info(`${chat.user.name}님, ${부서.으로}서 ${기수.join(', ')}기에 공지할 내용을 작성해주세요.\n'취소'라고 보내면 중단됩니다.`);
+	}, (self, chat, prevChat, channel, prevChannel, { 부서, 기수 }) => {
 		// 취소 시 중단
 		if (chat.text === '취소') {
 			channel.success('취소되었습니다.');
@@ -381,20 +377,34 @@ bot.addCommand(new StructuredCommand.Builder()
 		}
 		else {
 			// 공지 전송
-			for (let 기수 of 기수List) {
-				if (!studentRooms[기수]) {
-					channel.warn(`${기수}기 톡방은 존재하지 않습니다.`);
+			for (let n of 기수) {
+				if (!studentRooms[n]) {
+					channel.warn(`${n}기 톡방은 존재하지 않습니다.`);
 					continue;
 				}
 
-				if (!isValidChannel(studentRooms[기수])) {
-					channel.warn(`${기수}기 톡방이 등록되지 않습니다. 더미 메시지를 보내주세요.`);
+				if (!isValidChannel(studentRooms[n])) {
+					channel.warn(`${n}기 톡방이 등록되지 않습니다. 더미 메시지를 보내주세요.`);
 					continue;
 				}
 				
-				studentRooms[기수].send(`${self.icon} ${부서} 알림\n——\n${chat.text}`)
-					.then(() => channel.success(`${기수}기에 ${부서} 공지가 전송되었습니다.`))
-					.catch(e => channel.warn(`${기수}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
+				let msg;
+				if (chat.isFile())
+					msg = `📄 ${shortURL(chat.file.url)} (${chat.file.name}, ${prettyBytes(chat.file.size)})`;
+				else if (chat.isPhoto())
+					msg = `🖼 ${shortURL(chat.photo.url)} (${prettyBytes(chat.photo.s)})`;
+				else if (chat.isMultiPhoto())
+					msg = chat.photoList.imageUrls.map((url, i) =>
+						`🖼 ${shortURL(url)} (${prettyBytes(chat.photoList.sl[i])})`
+					).join('\n');
+				else if (chat.isVideo())
+					msg = `🎥 ${shortURL(chat.video.url)} (${prettyDuration(chat.video.d)}, ${prettyBytes(chat.video.s)})`;
+				else
+					msg = chat.text;
+
+				studentRooms[n].send(`${self.icon} ${부서} 알림\n——\n${msg}`)
+					.then(() => channel.success(`${n}기에 ${부서} 공지가 전송되었습니다.`))
+					.catch(e => channel.warn(`${n}기에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
 			}
 		}
 	})

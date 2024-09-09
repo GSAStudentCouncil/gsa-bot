@@ -1,4 +1,4 @@
-const { DateTime } = require('./global_modules/BotOperator/DateTime');
+const { DateTime } = require('../global_modules/BotOperator/DateTime');
 
 let start = Date.now();
 let dt = DateTime.now();

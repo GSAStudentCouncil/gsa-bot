@@ -1,9 +1,0 @@
-{
-    "main": "eval_code.js",
-    "option": {
-        "apiLevel": 1,
-        "useUnifiedParams": true,
-        "useBabel": false,
-        "scriptPower": true
-    }
-}

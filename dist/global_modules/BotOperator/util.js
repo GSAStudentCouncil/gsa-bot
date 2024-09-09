@@ -48,6 +48,21 @@ Object.defineProperties(String.prototype, {
     }
   }
 });
+var shortURL = function shortURL(url) {
+  return org.jsoup.Jsoup.connect("https://tinyurl.com/api-create.php?url=".concat(url)).get().text().substring('https://'.length);
+};
+var prettyBytes = function prettyBytes(bytes) {
+  var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  var i = 0;
+  while (bytes >= 1024 && ++i) bytes /= 1024;
+  return "".concat(bytes.toFixed(2), " ").concat(units[i]);
+};
+var prettyDuration = function prettyDuration(seconds) {
+  var hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+  var minutes = String(Math.floor(seconds % 3600 / 60)).padStart(2, '0');
+  var secs = String(Math.floor(seconds % 60)).padStart(2, '0');
+  return (hours !== "00" ? "".concat(hours, ": ") : '') + "".concat(minutes, ":").concat(secs);
+};
 exports.isNumber = function (name) {
   return /^\d+$/.test(name);
 };
@@ -59,3 +74,6 @@ exports.getJosa = getJosa;
 exports.isValidChannel = function (channel) {
   return channel != null && channel.send != null;
 };
+exports.shortURL = shortURL;
+exports.prettyBytes = prettyBytes;
+exports.prettyDuration = prettyDuration;

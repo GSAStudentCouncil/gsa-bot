@@ -73,3 +73,19 @@ shop = chat2`${Literal('buy', 'sell')} ${Int} ${Int}`.execute((literal, a, b) =>
 );
 upper = chat2`${Annotated(Str, s => s.isUpperCase())}`;
 slap = chat2`${Greedy(Int)}`;
+
+E = {
+    coffee_name: ['아메리카노', '라떼', '마끼아또']
+};
+
+$ = (entry) => {
+    for (let key in E) {
+        if (E[key].includes(entry)) {
+            return { [key]: entry };
+        }
+    }
+}
+
+$ = Object.assign($, E);
+
+chat`${$('라떼')} 마실래요?`;

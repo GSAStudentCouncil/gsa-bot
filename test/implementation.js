@@ -97,6 +97,22 @@ class Chat {
 		this.text = text;
 		this.user = user;
 	}
+
+	isFile() {
+		return false;
+	}
+
+	isPhoto() {
+		return false;
+	}
+
+	isMultiPhoto() {
+		return false;
+	}
+
+	isVideo() {
+		return false;
+	}
 }
 
 class Channel {

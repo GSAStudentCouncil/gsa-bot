@@ -122,13 +122,11 @@ const message = (msg, channel=studentRooms[min], username='rhs') => {
 ///////////////////////////////////////
 // todo: CronJob 테스트는 불가능
 
-message("정보부 알림", staffRoom);
-message("테스트 공지입니다.", staffRoom);
+// message("정보부 알림", staffRoom);
+// message("테스트 공지입니다.", staffRoom);
 
 // message("정보부 알림 39 41", staffRoom);
 // message("테스트 39, 41기 공지입니다.", staffRoom);
-
-// message("정보부 알림", staffRoom);
 
 // message("회장 알림", staffRoom);
 // message("취소", staffRoom);

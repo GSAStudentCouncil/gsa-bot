@@ -44,7 +44,10 @@ var _require4 = require('BotOperator/DBManager/classes'),
 var _require5 = require('BotOperator/util'),
   isNumber = _require5.isNumber,
   isValidChannel = _require5.isValidChannel,
-  compress = _require5.compress;
+  compress = _require5.compress,
+  shortURL = _require5.shortURL,
+  prettyBytes = _require5.prettyBytes,
+  prettyDuration = _require5.prettyDuration;
 
 ////////////////////// 봇 객체 선언
 var BotOperator = require('BotOperator').from(BotManager);
@@ -340,7 +343,7 @@ try {
   ////////////////////// 공지 명령어
   bot.addCommand(new StructuredCommand.Builder().setName('공지', '📢').setDescription("\uD559\uC0DD\uD68C \uACF5\uC9C0\uB97C \uC804\uC1A1\uD569\uB2C8\uB2E4. \uAE30\uC218\uB97C \uC9C0\uC815\uD558\uC9C0 \uC54A\uC73C\uBA74 \uC7AC\uD559 \uC911\uC778 \uAE30\uC218 \uD1A1\uBC29\uC5D0 \uC804\uC1A1\uB429\uB2C8\uB2E4.\n\uBA3C\uC800 \uC785\uB825 \uC591\uC2DD\uC5D0 \uB9DE\uCDB0 \uBA85\uB839\uC5B4\uB97C \uC791\uC131\uD574 \uC804\uC1A1\uD55C \uB4A4, \uACF5\uC9C0\uC0AC\uD56D\uC744 \uC791\uC131\uD574 \uD55C \uBC88 \uB354 \uC804\uC1A1\uD558\uC138\uC694.\n\uACF5\uC9C0\uC0AC\uD56D \uB0B4\uC6A9 \uB300\uC2E0 \uBA54\uC2DC\uC9C0\uB85C '\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0BC \uACBD\uC6B0 \uACF5\uC9C0 \uBA85\uB839\uC5B4\uAC00 \uC911\uB2E8\uB429\uB2C8\uB2E4.\n<\uBD80\uC11C>\uC5D0\uB294 \uB2E4\uC74C\uACFC \uAC19\uC740 \uBB38\uC790\uC5F4\uC774 \uB4E4\uC5B4\uAC11\uB2C8\uB2E4. ".concat(부서명List.join(', '))).setUsage("<\uBD80\uC11C:str> \uC54C\uB9BC <\uAE30\uC218:int[]? min=".concat(DateTime.now().year - 2000 + 15, " max=").concat(DateTime.now().year - 2000 + 17, ">")).setChannels(staffRoom).setExamples(['$user: 생체부 알림', '봇: $user님, 39, 40, 41기에 생체부로서 공지할 내용을 작성해주세요.', '$user: 기숙사 3월 기상곡입니다 ...'], ['$user: 정책부 알림 39', '봇: $user님, 39기에 정책부로서 공지할 내용을 작성해주세요.', '$user: 정책부에서 야간자율학습 휴대폰 사용 자유 관련 문의를 ...'], ['$user: 홍보부 알림 40 41', '봇: $user님, 40, 41기에 홍보부로서 공지할 내용을 작성해주세요.', '$user: 취소', '봇: 취소되었습니다.']).setExecute(function (self, chat, channel, _ref3) {
     var 부서 = _ref3.부서,
-      기수List = _ref3.기수;
+      기수 = _ref3.기수;
     // 부서가 적절한지 확인
     if (!부서명List.includes(부서)) {
       channel.warn("".concat(부서.은는, " \uC801\uC808\uD55C \uBD80\uC11C\uAC00 \uC544\uB2D9\uB2C8\uB2E4.\n\n\uAC00\uB2A5\uD55C \uBD80\uC11C: ").concat(부서명List.join(', ')));
@@ -348,19 +351,14 @@ try {
     }
 
     // 기수가 없으면 재학 중인 기수로 설정
-    if (기수List.length === 0) {
+    if (기수.length === 0) {
       var thirdNth = DateTime.now().year - 2000 + 15;
-      기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
+      기수.push(thirdNth, thirdNth + 1, thirdNth + 2);
     }
-    channel.info("".concat(chat.user.name, "\uB2D8, ").concat(부서.으로, "\uC11C ").concat(기수List.join(', '), "\uAE30\uC5D0 \uACF5\uC9C0\uD560 \uB0B4\uC6A9\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694.\n'\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0B4\uBA74 \uC911\uB2E8\uB429\uB2C8\uB2E4."));
+    channel.info("".concat(chat.user.name, "\uB2D8, ").concat(부서.으로, "\uC11C ").concat(기수.join(', '), "\uAE30\uC5D0 \uACF5\uC9C0\uD560 \uB0B4\uC6A9\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694.\n'\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0B4\uBA74 \uC911\uB2E8\uB429\uB2C8\uB2E4."));
   }, function (self, chat, prevChat, channel, prevChannel, _ref4) {
     var 부서 = _ref4.부서,
-      기수List = _ref4.기수;
-    if (기수List.length === 0) {
-      var thirdNth = DateTime.now().year - 2000 + 15;
-      기수List = [thirdNth, thirdNth + 1, thirdNth + 2];
-    }
-
+      기수 = _ref4.기수;
     // 취소 시 중단
     if (chat.text === '취소') {
       channel.success('취소되었습니다.');
@@ -370,23 +368,27 @@ try {
       if (channel.id === debugRoom1.id) debugRoom2.send("".concat(chat.text));else debugRoom1.send("".concat(chat.text));
     } else {
       // 공지 전송
-      var _iterator2 = _createForOfIteratorHelper(기수List),
+      var _iterator2 = _createForOfIteratorHelper(기수),
         _step2;
       try {
         var _loop = function _loop() {
-            var 기수 = _step2.value;
-            if (!studentRooms[기수]) {
-              channel.warn("".concat(기수, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
+            var n = _step2.value;
+            if (!studentRooms[n]) {
+              channel.warn("".concat(n, "\uAE30 \uD1A1\uBC29\uC740 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."));
               return 0; // continue
             }
-            if (!isValidChannel(studentRooms[기수])) {
-              channel.warn("".concat(기수, "\uAE30 \uD1A1\uBC29\uC774 \uB4F1\uB85D\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB354\uBBF8 \uBA54\uC2DC\uC9C0\uB97C \uBCF4\uB0B4\uC8FC\uC138\uC694."));
+            if (!isValidChannel(studentRooms[n])) {
+              channel.warn("".concat(n, "\uAE30 \uD1A1\uBC29\uC774 \uB4F1\uB85D\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB354\uBBF8 \uBA54\uC2DC\uC9C0\uB97C \uBCF4\uB0B4\uC8FC\uC138\uC694."));
               return 0; // continue
             }
-            studentRooms[기수].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(chat.text)).then(function () {
-              return channel.success("".concat(기수, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
+            var msg;
+            if (chat.isFile()) msg = "\uD83D\uDCC4 ".concat(chat.file.name, " (").concat(prettyBytes(chat.file.size), ")\n").concat(shortURL(chat.file.url));else if (chat.isPhoto()) msg = "\uD83D\uDDBC ".concat(shortURL(chat.photo.url), " (").concat(prettyBytes(chat.photo.s), ")");else if (chat.isMultiPhoto()) msg = chat.photoList.imageUrls.map(function (url, i) {
+              return "\uD83D\uDDBC ".concat(shortURL(url), " (").concat(prettyBytes(chat.photoList.sl[i]), ")");
+            }).join('\n');else if (chat.isVideo()) msg = "\uD83C\uDFA5 ".concat(shortURL(chat.video.url), " (").concat(prettyDuration(chat.video.d), ", ").concat(prettyBytes(chat.video.s), ")");else msg = chat.text;
+            studentRooms[n].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(msg)).then(function () {
+              return channel.success("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
             })["catch"](function (e) {
-              return channel.warn("".concat(기수, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
+              return channel.warn("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
             });
           },
           _ret;
