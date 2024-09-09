@@ -364,8 +364,20 @@ try {
       channel.success('취소되었습니다.');
       return;
     }
+    var msg;
+    if (chat.isFile()) msg = "\uD83D\uDCC4 ".concat(shortURL(chat.file.url), " (").concat(chat.file.name, ", ").concat(prettyBytes(chat.file.size), ")");else if (chat.isPhoto()) msg = "\uD83D\uDDBC ".concat(shortURL(chat.photo.url), " (").concat(prettyBytes(chat.photo.s), ")");else if (chat.isMultiPhoto()) msg = chat.photoList.imageUrls.map(function (url, i) {
+      return "\uD83D\uDDBC ".concat(shortURL(url), " (").concat(prettyBytes(chat.photoList.sl[i]), ")");
+    }).join('\n');else if (chat.isVideo()) msg = "\uD83C\uDFA5 ".concat(shortURL(chat.video.url), " (").concat(prettyDuration(chat.video.d), ", ").concat(prettyBytes(chat.video.s), ")");else msg = chat.text;
     if (bot.isDebugMod) {
-      if (channel.id === debugRoom1.id) debugRoom2.send("".concat(chat.text));else debugRoom1.send("".concat(chat.text));
+      if (channel.id === debugRoom1.id) debugRoom2.send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(msg)).then(function () {
+        return channel.success("debugRoom2\uC5D0 ".concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
+      })["catch"](function (e) {
+        return channel.warn("debugRoom2\uC5D0 ".concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
+      });else if (channel.id === debugRoom2.id) debugRoom1.send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(msg)).then(function () {
+        return channel.success("debugRoom1\uC5D0 ".concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
+      })["catch"](function (e) {
+        return channel.warn("debugRoom1\uC5D0 ".concat(부서, " \uACF5\uC9C0 \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4.\n").concat(e));
+      });
     } else {
       // 공지 전송
       var _iterator2 = _createForOfIteratorHelper(기수),
@@ -381,10 +393,6 @@ try {
               channel.warn("".concat(n, "\uAE30 \uD1A1\uBC29\uC774 \uB4F1\uB85D\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB354\uBBF8 \uBA54\uC2DC\uC9C0\uB97C \uBCF4\uB0B4\uC8FC\uC138\uC694."));
               return 0; // continue
             }
-            var msg;
-            if (chat.isFile()) msg = "\uD83D\uDCC4 ".concat(shortURL(chat.file.url), " (").concat(chat.file.name, ", ").concat(prettyBytes(chat.file.size), ")");else if (chat.isPhoto()) msg = "\uD83D\uDDBC ".concat(shortURL(chat.photo.url), " (").concat(prettyBytes(chat.photo.s), ")");else if (chat.isMultiPhoto()) msg = chat.photoList.imageUrls.map(function (url, i) {
-              return "\uD83D\uDDBC ".concat(shortURL(url), " (").concat(prettyBytes(chat.photoList.sl[i]), ")");
-            }).join('\n');else if (chat.isVideo()) msg = "\uD83C\uDFA5 ".concat(shortURL(chat.video.url), " (").concat(prettyDuration(chat.video.d), ", ").concat(prettyBytes(chat.video.s), ")");else msg = chat.text;
             studentRooms[n].send("".concat(self.icon, " ").concat(부서, " \uC54C\uB9BC\n\u2014\u2014\n").concat(msg)).then(function () {
               return channel.success("".concat(n, "\uAE30\uC5D0 ").concat(부서, " \uACF5\uC9C0\uAC00 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4."));
             })["catch"](function (e) {
