@@ -369,11 +369,29 @@ bot.addCommand(new StructuredCommand.Builder()
 			return;
 		}
 
+		let msg;
+		if (chat.isFile())
+			msg = `📄 ${shortURL(chat.file.url)} (${chat.file.name}, ${prettyBytes(chat.file.size)})`;
+		else if (chat.isPhoto())
+			msg = `🖼 ${shortURL(chat.photo.url)} (${prettyBytes(chat.photo.s)})`;
+		else if (chat.isMultiPhoto())
+			msg = chat.photoList.imageUrls.map((url, i) =>
+				`🖼 ${shortURL(url)} (${prettyBytes(chat.photoList.sl[i])})`
+			).join('\n');
+		else if (chat.isVideo())
+			msg = `🎥 ${shortURL(chat.video.url)} (${prettyDuration(chat.video.d)}, ${prettyBytes(chat.video.s)})`;
+		else
+			msg = chat.text;
+
 		if (bot.isDebugMod) {
 			if (channel.id === debugRoom1.id)
-				debugRoom2.send(`${chat.text}`);
-			else
-				debugRoom1.send(`${chat.text}`);
+				debugRoom2.send(`${self.icon} ${부서} 알림\n——\n${msg}`)
+					.then(() => channel.success(`debugRoom2에 ${부서} 공지가 전송되었습니다.`))
+					.catch(e => channel.warn(`debugRoom2에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
+			else if (channel.id === debugRoom2.id)
+				debugRoom1.send(`${self.icon} ${부서} 알림\n——\n${msg}`)
+					.then(() => channel.success(`debugRoom1에 ${부서} 공지가 전송되었습니다.`))
+					.catch(e => channel.warn(`debugRoom1에 ${부서} 공지 전송에 실패했습니다.\n${e}`));
 		}
 		else {
 			// 공지 전송
@@ -387,20 +405,6 @@ bot.addCommand(new StructuredCommand.Builder()
 					channel.warn(`${n}기 톡방이 등록되지 않습니다. 더미 메시지를 보내주세요.`);
 					continue;
 				}
-				
-				let msg;
-				if (chat.isFile())
-					msg = `📄 ${shortURL(chat.file.url)} (${chat.file.name}, ${prettyBytes(chat.file.size)})`;
-				else if (chat.isPhoto())
-					msg = `🖼 ${shortURL(chat.photo.url)} (${prettyBytes(chat.photo.s)})`;
-				else if (chat.isMultiPhoto())
-					msg = chat.photoList.imageUrls.map((url, i) =>
-						`🖼 ${shortURL(url)} (${prettyBytes(chat.photoList.sl[i])})`
-					).join('\n');
-				else if (chat.isVideo())
-					msg = `🎥 ${shortURL(chat.video.url)} (${prettyDuration(chat.video.d)}, ${prettyBytes(chat.video.s)})`;
-				else
-					msg = chat.text;
 
 				studentRooms[n].send(`${self.icon} ${부서} 알림\n——\n${msg}`)
 					.then(() => channel.success(`${n}기에 ${부서} 공지가 전송되었습니다.`))
