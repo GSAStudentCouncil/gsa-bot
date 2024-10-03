@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var D = o,
   V = o;
 (function (g, O) {
@@ -28,7 +27,7 @@ var D = o,
     }
   }
 })(k, 0x5ea6f);
-var __extends = void 0 && (void 0)[D(0x9c) + 's'] || function () {
+var __extends = this && this[D(0x9c) + 's'] || function () {
   var S = {
       g: 0x8a,
       O: 0x96,
@@ -57,36 +56,36 @@ var __extends = void 0 && (void 0)[D(0x9c) + 's'] || function () {
     J = D,
     m = D,
     g = {
-      'xCtXA': function xCtXA(N, l) {
+      'xCtXA': function (N, l) {
         return N instanceof l;
       },
-      'faSMF': function faSMF(N, l) {
+      'faSMF': function (N, l) {
         return N != l;
       },
       'CYmYt': J(S.g),
-      'bKjSx': function bKjSx(N, l) {
+      'bKjSx': function (N, l) {
         return N + l;
       },
       'QhZJH': J(S.O) + J(S.N) + 'lue\x20',
-      'Ckoaj': function Ckoaj(N, l) {
+      'Ckoaj': function (N, l) {
         return N(l);
       },
       'ivMmC': m(S.l) + 'a\x20constr' + 'uctor\x20or' + m(S.s),
-      'DjfmP': function DjfmP(N, l, s) {
+      'DjfmP': function (N, l, s) {
         return N(l, s);
       },
-      'XwRvz': function XwRvz(N, l) {
+      'XwRvz': function (N, l) {
         return N === l;
       }
     },
-    _O = function O(N, l) {
+    O = function (N, l) {
       var i = {
           g: 0xae,
           O: 0xab
         },
         M = J,
         x = J;
-      return _O = Object[M(h.g) + M(0x9b)] || g[M(0x86)]({
+      return O = Object[M(h.g) + M(0x9b)] || g[M(0x86)]({
         '__proto__': []
       }, Array) && function (s, v) {
         var n = M;
@@ -95,23 +94,23 @@ var __extends = void 0 && (void 0)[D(0x9c) + 's'] || function () {
         var e = M,
           W = x;
         for (var E in v) Object['prototyp' + 'e']['hasOwnPr' + e(i.g)][e(i.O)](v, E) && (s[E] = v[E]);
-      }, _O(N, l);
+      }, O(N, l);
     };
   return function (N, l) {
     var T = J,
       j = m;
-    if (g[T(q.g)](g['CYmYt'], _typeof(l)) && null !== l) throw new TypeError(g['bKjSx'](g[j(q.O)](g[j(q.N)], g[j(q.l)](String, l)), g[T(0x94)]));
+    if (g[T(q.g)](g['CYmYt'], typeof l) && null !== l) throw new TypeError(g['bKjSx'](g[j(q.O)](g[j(q.N)], g[j(q.l)](String, l)), g[T(0x94)]));
     function s() {
       var X = j,
         z = T;
       this[X(R.g) + z(R.O)] = N;
     }
-    g['DjfmP'](_O, N, l), N[T(q.s) + 'e'] = g[j(0xa2)](null, l) ? Object[T(0x9f)](l) : (s['prototyp' + 'e'] = l[j(q.v) + 'e'], new s());
+    g['DjfmP'](O, N, l), N[T(q.s) + 'e'] = g[j(0xa2)](null, l) ? Object[T(0x9f)](l) : (s['prototyp' + 'e'] = l[j(q.v) + 'e'], new s());
   };
 }();
 function o(g, O) {
   var N = k();
-  return o = function o(l, s) {
+  return o = function (l, s) {
     l = l - 0x86;
     var v = N[l];
     return v;
@@ -122,7 +121,7 @@ Object[V(0x98) + D(0xae)](exports, V(0x9d) + 'le', {
 }), exports[V(0x91) + 'arams'] = void 0x0;
 function k() {
   var H = ['ivMmC', '17312966pFvNfA', 'Class\x20ex', 'construc', 'definePr', '228UJnwaR', 'eVPOu', 'typeOf', '__extend', '__esModu', '2943516lhJkCm', 'create', '\x20null', 'tends\x20va', 'XwRvz', 'UhZQS', 'tor', '\x20is\x20not\x20', 'QhZJH', 'prototyp', '함수\x20인자가\x20올', '14hzhUoM', 'faSMF', 'call', 'apply', '43881DCsILx', 'operty', '__proto_', 'xCtXA', 'bKjSx', '2115EGDQJu', '2088976VTVfif', 'function', 'setProto', 'bBdtX', '46385mWjuVU', '74sSeoMG', '바르지\x20않습니다', '10340tehbWf', 'InvalidP', 'Ckoaj', '722647WncIeQ'];
-  k = function k() {
+  k = function () {
     return H;
   };
   return k();
@@ -140,11 +139,11 @@ var InvalidParams = function (g) {
     C = D,
     w = D,
     O = {
-      'bBdtX': function bBdtX(l, s) {
+      'bBdtX': function (l, s) {
         return l !== s;
       },
       'UhZQS': C(U.g) + C(U.O),
-      'eVPOu': function eVPOu(l, s, v) {
+      'eVPOu': function (l, s, v) {
         return l(s, v);
       }
     };

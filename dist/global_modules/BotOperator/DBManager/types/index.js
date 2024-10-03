@@ -4,7 +4,7 @@ var H = w,
   G = w;
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xe3;
     var d = O[I];
     return d;
@@ -32,7 +32,7 @@ function w(z, B) {
     }
   }
 })(D, 0xefbc3);
-var __createBinding = void 0 && (void 0)['__create' + 'Binding'] || (Object['create'] ? function (z, B, O, I) {
+var __createBinding = this && this['__create' + 'Binding'] || (Object['create'] ? function (z, B, O, I) {
     var b = {
         z: 0xfc,
         B: 0xee,
@@ -46,7 +46,7 @@ var __createBinding = void 0 && (void 0)['__create' + 'Binding'] || (Object['cre
       J = w,
       q = w,
       d = {
-        'XfevL': function XfevL(m, U) {
+        'XfevL': function (m, U) {
           return m === U;
         },
         'fWCRz': 'get'
@@ -55,7 +55,7 @@ var __createBinding = void 0 && (void 0)['__create' + 'Binding'] || (Object['cre
     var c = Object[q(b.B) + 'opertyDe' + q(b.O)](B, O);
     c && !(d[J(b.I)] in c ? !B[J(b.r) + 'le'] : c['writable'] || c[q(b.d) + J(0xe3)]) || (c = {
       'enumerable': !0x0,
-      'get': function get() {
+      'get': function () {
         return B[O];
       }
     }), Object[q(b.t) + q(b.c)](z, I, c);
@@ -65,13 +65,13 @@ var __createBinding = void 0 && (void 0)['__create' + 'Binding'] || (Object['cre
       },
       K = w,
       d = {
-        'jnAOA': function jnAOA(c, m) {
+        'jnAOA': function (c, m) {
           return c === m;
         }
       };
     d[K(C.z)](void 0x0, I) && (I = O), z[I] = B[O];
   }),
-  __exportStar = void 0 && (void 0)[H(0xed) + 'Star'] || function (z, B) {
+  __exportStar = this && this[H(0xed) + 'Star'] || function (z, B) {
     var P = {
         z: 0xe6,
         B: 0xef,
@@ -81,10 +81,10 @@ var __createBinding = void 0 && (void 0)['__create' + 'Binding'] || (Object['cre
       Z = H,
       u = H,
       O = {
-        'ksEhx': function ksEhx(d, c) {
+        'ksEhx': function (d, c) {
           return d === c;
         },
-        'zeadV': function zeadV(d, c, m, U) {
+        'zeadV': function (d, c, m, U) {
           return d(c, m, U);
         }
       };
@@ -95,7 +95,7 @@ Object['definePr' + G(0xfe)](exports, G(0xf1) + 'le', {
 }), __exportStar(require(H(0x103)), exports), __exportStar(require(G(0x102) + H(0xf3)), exports), __exportStar(require(H(0xea) + 'e'), exports), __exportStar(require(H(0xf8)), exports), __exportStar(require(H(0xf7) + 'l'), exports), __exportStar(require('./manage' + 'r'), exports);
 function D() {
   var n = ['1565208YZFSDv', 'call', '78687sSajGw', 'XfevL', 'zeadV', 'operty', '54PkQbdU', '5498205uGzPUW', '1384620wWzyEw', './attach', './chat', 'able', '24489CrlSff', '2QkhtPE', 'prototyp', 'jnAOA', '6zHfHYB', '296bYFYOy', './messag', 'configur', 'fWCRz', '__export', 'getOwnPr', 'hasOwnPr', '233937ktsCiR', '__esModu', 'scriptor', 'ment', 'definePr', '6440988InMvpi', '660NdihJC', './channe', './user'];
-  D = function D() {
+  D = function () {
     return n;
   };
   return D();

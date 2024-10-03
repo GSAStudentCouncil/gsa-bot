@@ -70,7 +70,7 @@ const getMeals = (dt, bullet) => {
 		
 		return meals;
 	} catch (e) {
-		console.error(`Error: ${e.stack}`);
+		console.error(`Error: ${e}\n${e.stack}`);
 		return [null, null, null];
 	}
 };

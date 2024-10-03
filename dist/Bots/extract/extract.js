@@ -1,15 +1,12 @@
-"use strict";
-
-var BotOperator = require('BotOperator').from(BotManager);
-var bot = BotOperator.getCurrentBot();
-var _require = require('BotOperator/Event'),
-  Event = _require.Event;
-bot.on(Event.MESSAGE, function (chat, channel) {
+const BotOperator = require('BotOperator').from(BotManager);
+const bot = BotOperator.getCurrentBot();
+const {
+  Event
+} = require('BotOperator/Event');
+bot.on(Event.MESSAGE, (chat, channel) => {
   if (chat.text === '/id') {
-    channel.send("channel.id: ".concat(channel.id));
-    channel.send("chat.user.id:\n".concat(channel.members.map(function (member) {
-      return " - ".concat(member.name, ": ").concat(member.id);
-    }).join('\n')));
+    channel.send(`channel.id: ${channel.id}`);
+    channel.send(`chat.user.id:\n${channel.members.map(member => ` - ${member.name}: ${member.id}`).join('\n')}`);
   }
 });
 bot.start();

@@ -142,9 +142,9 @@ let getMeals = (dt, bullet) => {
 		return meals;
 	} catch (e) {
 		if (isValidChannel(logRoom))
-			logRoom.send(`Error:${e.stack}`);
+			logRoom.send(`Error:${e}\n${e.stack}`);
 
-		Log.e(e.stack);
+		Log.e(e + '\n' + e.stack);
 		return [null, null, null];
 	}
 };
@@ -552,7 +552,7 @@ bot.start();
 
 } catch (err) {
 	if (isValidChannel(logRoom))
-		logRoom.error(`봇 가동 중 오류가 발생했습니다.\n\n${err.stack}`);
+		logRoom.error(`봇 가동 중 오류가 발생했습니다.\n\n${err}\n${err.stack}`);
 
-	Log.error(err.stack);
+	Log.error(err + '\n' + err.stack);
 }

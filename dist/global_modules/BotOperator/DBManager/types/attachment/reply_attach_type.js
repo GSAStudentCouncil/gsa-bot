@@ -29,7 +29,7 @@ var c = w,
 })(D, 0x7c009);
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x12c;
     var d = O[I];
     return d;
@@ -37,7 +37,7 @@ function w(z, B) {
 }
 function D() {
   var X = ['1871810UsQKAG', '2436130zSBcUE', '__esModu', '3215Ejzezm', 'definePr', '6htAXFw', '1lEjYXS', '27EXTqvm', '4328AaNPdH', 'operty', '7045072ZkvjWE', '470225JcCNEL', '775005znsbRj', '18568517Ejflkr'];
-  D = function D() {
+  D = function () {
     return X;
   };
   return D();

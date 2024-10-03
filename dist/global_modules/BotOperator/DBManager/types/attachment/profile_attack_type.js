@@ -28,7 +28,7 @@ var c = w,
 })(D, 0x81808);
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x1dc;
     var d = O[I];
     return d;
@@ -39,7 +39,7 @@ Object[c(0x1e1) + m(0x1e8)](exports, m(0x1de) + 'le', {
 });
 function D() {
   var X = ['1997140bAlkjy', '20324bkoKvD', 'definePr', '936677vHsWJs', '4980310JbiNOK', '411660DSXoTI', '18OvXWhs', '241220hkTuuv', '6959312SLsMXr', 'operty', '12rvwcDN', '309MmBwrM', '__esModu'];
-  D = function D() {
+  D = function () {
     return X;
   };
   return D();

@@ -242,5 +242,5 @@ try {
 
     exports.from = botManager => new BotOperator(botManager);
 } catch (e) {
-    Log.e(e.stack);
+    Log.e(e + '\n' + e.stack);
 }

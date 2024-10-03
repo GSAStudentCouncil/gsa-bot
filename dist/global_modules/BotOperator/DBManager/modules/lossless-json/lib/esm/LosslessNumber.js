@@ -1,11 +1,10 @@
 "use strict";
 
-function _typeof2(o) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof2(o); }
 function _typeof(e) {
-  return _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
-    return _typeof2(e);
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
+    return typeof e;
   } : function (e) {
-    return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : _typeof2(e);
+    return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
   }, _typeof(e);
 }
 function _classCallCheck(e, t) {
@@ -64,7 +63,7 @@ exports.LosslessNumber = function () {
   }
   return _createClass(e, [{
     key: "valueOf",
-    value: function value() {
+    value: function () {
       var e = (0, utils_js_1.getUnsafeNumberReason)(this.value);
       if (void 0 === e || e === utils_js_1.UnsafeNumberReason.truncate_float) return parseFloat(this.value);
       if ((0, utils_js_1.isInteger)(this.value)) return BigInt(this.value);
@@ -72,7 +71,7 @@ exports.LosslessNumber = function () {
     }
   }, {
     key: "toString",
-    value: function value() {
+    value: function () {
       return this.value;
     }
   }]), e;

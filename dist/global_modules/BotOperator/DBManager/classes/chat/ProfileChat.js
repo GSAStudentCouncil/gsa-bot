@@ -1,9 +1,8 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function D() {
   var g = ['lue\x20', '252940wmiEcR', 'nfJJM', 'operty', 'construc', 'profile', 'call', '__extend', '11GtXrIy', '301648MzGxbq', 'wIrRW', 'MtqHC', 'ProfileC', 'HBLTz', 'hasOwnPr', '__esModu', 'typeOf', '\x20is\x20not\x20', 'DssaI', 'hat', '242938EDyxJF', 'Class\x20ex', 'Chat', 'raw', 'prototyp', 'attachme', 'a\x20constr', 'tor', '56UkMqzM', 'definePr', '657RwMOmh', 'qzsaE', 'isProfil', '2390652GuIBhO', 'setProto', 'Yidqg', '3157365CPfmkw', 'uzHlB', '3409608xprexz', '1061608grIPhJ', './Chat', '__proto_', 'uctor\x20or'];
-  D = function D() {
+  D = function () {
     return g;
   };
   return D();
@@ -33,13 +32,13 @@ var R = w,
 })(D, 0xd689e);
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x1f1;
     var d = O[I];
     return d;
   }, w(z, B);
 }
-var __extends = void 0 && (void 0)[R(0x20a) + 's'] || function () {
+var __extends = this && this[R(0x20a) + 's'] || function () {
   var W = {
       z: 0x218,
       B: 0x203,
@@ -62,26 +61,26 @@ var __extends = void 0 && (void 0)[R(0x20a) + 's'] || function () {
     J = R,
     q = R,
     z = {
-      'uzHlB': function uzHlB(O, I, r) {
+      'uzHlB': function (O, I, r) {
         return O(I, r);
       },
-      'NqXXB': function NqXXB(O, I) {
+      'NqXXB': function (O, I) {
         return O != I;
       },
       'HBLTz': 'function',
-      'MtqHC': function MtqHC(O, I) {
+      'MtqHC': function (O, I) {
         return O !== I;
       },
       'nfJJM': J(W.z) + 'tends\x20va' + J(W.B),
-      'qzsaE': function qzsaE(O, I) {
+      'qzsaE': function (O, I) {
         return O(I);
       },
       'wIrRW': J(0x214) + q(W.O) + q(0x202) + '\x20null',
-      'Yidqg': function Yidqg(O, I, r) {
+      'Yidqg': function (O, I, r) {
         return O(I, r);
       }
     },
-    _B = function B(O, I) {
+    B = function (O, I) {
       var s = {
           z: 0x21b,
           B: 0x211,
@@ -89,7 +88,7 @@ var __extends = void 0 && (void 0)[R(0x20a) + 's'] || function () {
         },
         K = q,
         H = q;
-      return _B = Object[K(N.z) + H(0x213)] || {
+      return B = Object[K(N.z) + H(0x213)] || {
         '__proto__': []
       } instanceof Array && function (d, c) {
         var Z = K;
@@ -98,7 +97,7 @@ var __extends = void 0 && (void 0)[R(0x20a) + 's'] || function () {
         var u = H,
           G = H;
         for (var m in c) Object[u(s.z) + 'e'][G(s.B) + G(s.O)][u(0x209)](c, m) && (d[m] = c[m]);
-      }, z[K(N.B)](_B, O, I);
+      }, z[K(N.B)](B, O, I);
     };
   return function (O, I) {
     var V = {
@@ -106,13 +105,13 @@ var __extends = void 0 && (void 0)[R(0x20a) + 's'] || function () {
       },
       j = q,
       o = q;
-    if (z['NqXXB'](z[j(p.z)], _typeof(I)) && z[o(p.B)](null, I)) throw new TypeError(z[o(p.O)] + z[o(p.I)](String, I) + z[o(p.r)]);
+    if (z['NqXXB'](z[j(p.z)], typeof I) && z[o(p.B)](null, I)) throw new TypeError(z[o(p.O)] + z[o(p.I)](String, I) + z[o(p.r)]);
     function d() {
       var F = o,
         b = j;
       this[F(0x207) + F(V.z)] = O;
     }
-    z[o(p.d)](_B, O, I), O['prototyp' + 'e'] = null === I ? Object['create'](I) : (d[j(p.t) + 'e'] = I[o(p.c) + 'e'], new d());
+    z[o(p.d)](B, O, I), O['prototyp' + 'e'] = null === I ? Object['create'](I) : (d[j(p.t) + 'e'] = I[o(p.c) + 'e'], new d());
   };
 }();
 Object[R(0x1f5) + h(0x206)](exports, h(0x212) + 'le', {
@@ -131,7 +130,7 @@ var Chat_1 = require(R(0x200)),
       C = R,
       E = h,
       B = {
-        'DssaI': function DssaI(I, r, d) {
+        'DssaI': function (I, r, d) {
           return I(r, d);
         },
         'FcOUO': C(0x208)
@@ -140,7 +139,7 @@ var Chat_1 = require(R(0x200)),
       return z['call'](this, I) || this;
     }
     return B[E(0x215)](__extends, O, z), Object[E(0x1f5) + 'operty'](O['prototyp' + 'e'], B['FcOUO'], {
-      'get': function get() {
+      'get': function () {
         var T = E,
           P = C;
         return this[T(k.z)][T(k.B) + 'nt'];

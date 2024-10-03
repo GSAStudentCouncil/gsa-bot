@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var X = w,
   b = w;
 (function (z, B) {
@@ -28,13 +27,13 @@ var X = w,
 })(D, 0x35ed7);
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xdc;
     var d = O[I];
     return d;
   }, w(z, B);
 }
-var __extends = void 0 && (void 0)[X(0xee) + 's'] || function () {
+var __extends = this && this[X(0xee) + 's'] || function () {
   var p = {
       z: 0x103,
       B: 0xfc,
@@ -63,29 +62,29 @@ var __extends = void 0 && (void 0)[X(0xee) + 's'] || function () {
     R = X,
     J = X,
     z = {
-      'ofIup': function ofIup(O, I) {
+      'ofIup': function (O, I) {
         return O instanceof I;
       },
-      'kzgFM': function kzgFM(O, I) {
+      'kzgFM': function (O, I) {
         return O != I;
       },
       'MRHTm': 'function',
-      'vUXkO': function vUXkO(O, I) {
+      'vUXkO': function (O, I) {
         return O + I;
       },
       'WwkoO': R(0xe3) + R(p.z) + J(p.B),
       'HWBXa': J(p.O) + R(0x100) + J(p.I) + J(0xf0),
-      'tmkVG': function tmkVG(O, I, r) {
+      'tmkVG': function (O, I, r) {
         return O(I, r);
       },
-      'TqpTd': function TqpTd(O, I) {
+      'TqpTd': function (O, I) {
         return O === I;
       }
     },
-    _B = function B(O, I) {
+    B = function (O, I) {
       var q = J,
         K = R;
-      return _B = Object[q(s.z) + K(s.B)] || z[K(s.O)]({
+      return B = Object[q(s.z) + K(s.B)] || z[K(s.O)]({
         '__proto__': []
       }, Array) && function (r, d) {
         var H = q;
@@ -94,7 +93,7 @@ var __extends = void 0 && (void 0)[X(0xee) + 's'] || function () {
         var Z = K,
           u = K;
         for (var c in d) Object[Z(i.z) + 'e'][u(0xed) + 'operty'][u(i.B)](d, c) && (r[c] = d[c]);
-      }, _B(O, I);
+      }, B(O, I);
     };
   return function (O, I) {
     var N = {
@@ -103,18 +102,18 @@ var __extends = void 0 && (void 0)[X(0xee) + 's'] || function () {
       },
       G = J,
       j = R;
-    if (z[G(V.z)](z[G(V.B)], _typeof(I)) && null !== I) throw new TypeError(z[G(V.O)](z['WwkoO'], String(I)) + z[j(V.I)]);
+    if (z[G(V.z)](z[G(V.B)], typeof I) && null !== I) throw new TypeError(z[G(V.O)](z['WwkoO'], String(I)) + z[j(V.I)]);
     function r() {
       var o = G,
         F = j;
       this[o(N.z) + o(N.B)] = O;
     }
-    z[j(V.r)](_B, O, I), O[G(V.d) + 'e'] = z['TqpTd'](null, I) ? Object[j(V.t)](I) : (r[j(0xff) + 'e'] = I[G(V.c) + 'e'], new r());
+    z[j(V.r)](B, O, I), O[G(V.d) + 'e'] = z['TqpTd'](null, I) ? Object[j(V.t)](I) : (r[j(0xff) + 'e'] = I[G(V.c) + 'e'], new r());
   };
 }();
 function D() {
   var v = ['Emoticon', 'SRziY', 'Class\x20ex', 'definePr', './Chat', 'HWBXa', 'kzgFM', 'emoticon', '71830FivRiA', '82589lkRYnc', 'tor', 'setProto', 'hasOwnPr', '__extend', 'uctor\x20or', '\x20null', '110SNQkDM', '144sZCuyA', '_raw', '227693sgTzYx', 'vUXkO', 'construc', '4094vPzBgb', '252tLPJLE', 'create', 'tmkVG', '116JcGMOk', 'lue\x20', '1813LlvFwO', '42935owZNqQ', 'prototyp', 'a\x20constr', 'Chat', 'ofIup', 'tends\x20va', 'GmbZo', '\x20is\x20not\x20', '__proto_', '213776wvNiGc', 'isEmotic', 'typeOf', 'call', '__esModu', '183HOEQLY', 'MRHTm', '8118psnaOr'];
-  D = function D() {
+  D = function () {
     return v;
   };
   return D();
@@ -140,7 +139,7 @@ var Chat_1 = require(b(0xe5)),
       h = b,
       E = b,
       B = {
-        'SRziY': function SRziY(I, r, d) {
+        'SRziY': function (I, r, d) {
           return I(r, d);
         },
         'GmbZo': h(L.z)
@@ -150,7 +149,7 @@ var Chat_1 = require(b(0xe5)),
       return z[C(l.z)](this, I) || this;
     }
     return B[h(L.B)](__extends, O, z), Object[E(L.O) + 'operty'](O[h(L.I) + 'e'], B[E(0x104)], {
-      'get': function get() {
+      'get': function () {
         var T = E;
         return this[T(Y.z)]['attachme' + 'nt'];
       },

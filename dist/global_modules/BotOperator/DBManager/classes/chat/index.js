@@ -27,12 +27,12 @@ var J = w,
 })(D, 0x97010);
 function D() {
   var e = ['hat', '1764560pemlMP', '49PZAEVs', './Chat', '2239576kMTjsK', '__create', './FileCh', './Profil', 'definePr', '__export', './PhotoC', './Normal', 'onChat', 'prototyp', 'scriptor', './FeedCh', 'configur', '117tZpOIe', 'writable', '271984XWWyrP', '1953291bySBKF', 'NITVU', 'Chat', 'Binding', '614748QyffFw', './AudioC', 'opertyDe', './VideoC', './ReplyC', 'Star', '__esModu', 'default', '929810udiiYA', './OldEmo', '2595500OpFgaQ', 'eChat', './Emotic', 'TIvPJ', 'operty', 'ticonCha', 'JqvPL', 'call'];
-  D = function D() {
+  D = function () {
     return e;
   };
   return D();
 }
-var __createBinding = void 0 && (void 0)[J(0x15b) + q(0x143)] || (Object['create'] ? function (z, B, O, I) {
+var __createBinding = this && this[J(0x15b) + q(0x143)] || (Object['create'] ? function (z, B, O, I) {
     var h = {
         z: 0x151,
         B: 0x146,
@@ -45,10 +45,10 @@ var __createBinding = void 0 && (void 0)[J(0x15b) + q(0x143)] || (Object['create
       K = J,
       H = q,
       d = {
-        'TIvPJ': function TIvPJ(m, U) {
+        'TIvPJ': function (m, U) {
           return m === U;
         },
-        'NITVU': function NITVU(m, U) {
+        'NITVU': function (m, U) {
           return m in U;
         },
         'rGRAQ': 'get'
@@ -57,7 +57,7 @@ var __createBinding = void 0 && (void 0)[J(0x15b) + q(0x143)] || (Object['create
     var c = Object['getOwnPr' + H(h.B) + H(h.O)](B, O);
     c && !(d[H(h.I)](d['rGRAQ'], c) ? !B[H(0x14a) + 'le'] : c[H(h.r)] || c[H(h.d) + 'able']) || (c = {
       'enumerable': !0x0,
-      'get': function get() {
+      'get': function () {
         return B[O];
       }
     }), Object['definePr' + H(h.t)](z, I, c);
@@ -67,13 +67,13 @@ var __createBinding = void 0 && (void 0)[J(0x15b) + q(0x143)] || (Object['create
       },
       Z = J,
       d = {
-        'JqvPL': function JqvPL(c, m) {
+        'JqvPL': function (c, m) {
           return c === m;
         }
       };
     d[Z(E.z)](void 0x0, I) && (I = O), z[I] = B[O];
   }),
-  __exportStar = void 0 && (void 0)[q(0x15f) + J(0x149)] || function (z, B) {
+  __exportStar = this && this[q(0x15f) + J(0x149)] || function (z, B) {
     var n = {
         z: 0x14b,
         B: 0x152,
@@ -82,11 +82,11 @@ var __createBinding = void 0 && (void 0)[J(0x15b) + q(0x143)] || (Object['create
       u = q,
       G = q,
       O = {
-        'YUbyb': function YUbyb(d, c) {
+        'YUbyb': function (d, c) {
           return d === c;
         },
         'VYAzo': u(n.z),
-        'VnrYx': function VnrYx(d, c, m, U) {
+        'VnrYx': function (d, c, m, U) {
           return d(c, m, U);
         }
       };
@@ -94,7 +94,7 @@ var __createBinding = void 0 && (void 0)[J(0x15b) + q(0x143)] || (Object['create
   };
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x13a;
     var d = O[I];
     return d;

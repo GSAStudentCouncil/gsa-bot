@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var X = o,
   z = o;
 (function (g, O) {
@@ -29,13 +28,13 @@ var X = o,
 })(k, 0xc4d42);
 function o(g, O) {
   var N = k();
-  return o = function o(l, s) {
+  return o = function (l, s) {
     l = l - 0xa0;
     var v = N[l];
     return v;
   }, o(g, O);
 }
-var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
+var __extends = this && this['__extend' + 's'] || function () {
   var S = {
       g: 0xb6,
       O: 0xbe,
@@ -63,41 +62,41 @@ var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
     D = o,
     J = o,
     g = {
-      'StQCX': function StQCX(N, l) {
+      'StQCX': function (N, l) {
         return N instanceof l;
       },
-      'LdttH': function LdttH(N, l, s) {
+      'LdttH': function (N, l, s) {
         return N(l, s);
       },
-      'yIYDc': function yIYDc(N, l) {
+      'yIYDc': function (N, l) {
         return N != l;
       },
       'bWcBG': D(S.g),
-      'lKKvt': function lKKvt(N, l) {
+      'lKKvt': function (N, l) {
         return N !== l;
       },
-      'kuGcr': function kuGcr(N, l) {
+      'kuGcr': function (N, l) {
         return N + l;
       },
       'ScngF': D(S.O) + J(S.N) + 'lue\x20',
-      'qAWMo': function qAWMo(N, l) {
+      'qAWMo': function (N, l) {
         return N(l);
       },
       'cPlhX': D(S.l) + J(S.s) + 'uctor\x20or' + D(S.v),
-      'Jjxec': function Jjxec(N, l, s) {
+      'Jjxec': function (N, l, s) {
         return N(l, s);
       },
-      'BXfEM': function BXfEM(N, l) {
+      'BXfEM': function (N, l) {
         return N === l;
       }
     },
-    _O = function O(N, l) {
+    O = function (N, l) {
       var P = {
           g: 0xac
         },
         m = D,
         M = D;
-      return _O = Object[m(0xbb) + m(h.g)] || g['StQCX']({
+      return O = Object[m(0xbb) + m(h.g)] || g['StQCX']({
         '__proto__': []
       }, Array) && function (s, v) {
         var x = m;
@@ -106,7 +105,7 @@ var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
         var n = M,
           e = m;
         for (var E in v) Object[n(0xc0) + 'e']['hasOwnPr' + n(i.g)][e(i.O)](v, E) && (s[E] = v[E]);
-      }, g[m(h.O)](_O, N, l);
+      }, g[m(h.O)](O, N, l);
     };
   return function (N, l) {
     var R = {
@@ -114,17 +113,17 @@ var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
       },
       W = J,
       T = J;
-    if (g['yIYDc'](g[W(q.g)], _typeof(l)) && g[T(q.O)](null, l)) throw new TypeError(g[W(q.N)](g[T(q.l)] + g['qAWMo'](String, l), g[T(q.s)]));
+    if (g['yIYDc'](g[W(q.g)], typeof l) && g[T(q.O)](null, l)) throw new TypeError(g[W(q.N)](g[T(q.l)] + g['qAWMo'](String, l), g[T(q.s)]));
     function s() {
       var j = W;
       this['construc' + j(R.g)] = N;
     }
-    g['Jjxec'](_O, N, l), N[T(q.v) + 'e'] = g[W(0xba)](null, l) ? Object['create'](l) : (s[W(q.v) + 'e'] = l[W(0xc0) + 'e'], new s());
+    g['Jjxec'](O, N, l), N[T(q.v) + 'e'] = g[W(0xba)](null, l) ? Object['create'](l) : (s[W(q.v) + 'e'] = l[W(0xc0) + 'e'], new s());
   };
 }();
 function k() {
   var H = ['call', '__esModu', '__proto_', '올바르지\x20않습니', '7621545vgKvgF', '283545YWjaMy', 'ParseErr', '\x20is\x20not\x20', '4102908lSTafb', 'lxqmH', '4jyjXSQ', '1607640WFaHIh', 'function', 'definePr', 'LdttH', '1430PPDEte', 'BXfEM', 'setProto', 'ScngF', 'message', 'Class\x20ex', 'lKKvt', 'prototyp', '\x20null', 'tends\x20va', 'cPlhX', 'operty', 'a\x20constr', 'kuGcr', '크론\x20표현식이\x20', '1657568mYQUWL', 'tor', 'bWcBG', '12NVqhKt', '3553599lmtftS', '374427ByTMgF', 'typeOf', 'apply'];
-  k = function k() {
+  k = function () {
     return H;
   };
   return k();
@@ -139,10 +138,10 @@ var ParseError = function (g) {
     },
     w = z,
     O = {
-      'ajjXX': function ajjXX(l, s) {
+      'ajjXX': function (l, s) {
         return l !== s;
       },
-      'lxqmH': function lxqmH(l, s, v) {
+      'lxqmH': function (l, s, v) {
         return l(s, v);
       }
     };

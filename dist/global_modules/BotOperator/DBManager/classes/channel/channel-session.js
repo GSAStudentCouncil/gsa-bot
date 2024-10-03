@@ -4,7 +4,7 @@ var G = w,
   j = w;
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x10b;
     var d = O[I];
     return d;
@@ -86,16 +86,16 @@ var utils_1 = require('../../ut' + j(0x127)),
       o = G,
       h = G,
       z = {
-        'JNQkm': function JNQkm(O, I) {
+        'JNQkm': function (O, I) {
           return O < I;
         },
-        'rsdpu': function rsdpu(O, I) {
+        'rsdpu': function (O, I) {
           return O(I);
         },
-        'PCAbD': function PCAbD(O, I) {
+        'PCAbD': function (O, I) {
           return O(I);
         },
-        'JEWKh': function JEWKh(O, I) {
+        'JEWKh': function (O, I) {
           return O !== I;
         },
         'Jnvfk': o(D2.z)
@@ -106,14 +106,14 @@ var utils_1 = require('../../ut' + j(0x127)),
       this['_id'] = O, this[F(0x10c)] = I, this[F(k.z) + F(k.B)] = r, this['_readAct' + 'ion'] = d;
     }
     return Object[h(D2.B) + o(D2.O)](B[o(D2.I) + 'e'], 'id', {
-      'get': function get() {
+      'get': function () {
         var C = o;
         return this[C(L.z)];
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[h(D2.B) + o(0x113)](B[h(D2.I) + 'e'], 'raw', {
-      'get': function get() {
+      'get': function () {
         return {
           'id': this['_id'],
           'name': this['_name']
@@ -122,7 +122,7 @@ var utils_1 = require('../../ut' + j(0x127)),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object['definePr' + h(D2.O)](B[o(D2.r) + 'e'], z[o(0x131)], {
-      'get': function get() {
+      'get': function () {
         var E = o;
         return this[E(g.z)];
       },
@@ -190,7 +190,7 @@ var utils_1 = require('../../ut' + j(0x127)),
   }();
 function D() {
   var D3 = ['__esModu', '1403jmyPlV', '4475tqmlIZ', 'tent', '3391630QXttfu', '2454oyMUvh', '_name', 'ext', 'putCharS', '_id', '_isAPI2', 'definePr', '_readAct', 'operty', 'JNQkm', 'prototyp', 'Api', 'actionIn', 'length', 'content', 'toString', 'RemoteIn', 'getPromi', 'JEWKh', 'eInputs', 'ion', '1654bijfwN', 'Intent', 'name', 'ession', '9wqraly', 'addResul', '12DTsQRV', 'ils', 'getConte', 'app', '2070884uiLQws', 'rsdpu', 'tion', 'read', 'send', 'tsToInte', '_getCont', 'Jnvfk', '10177538qCYffY', '6tDBbYH', '_replyAc', 'ChannelS', 'getRemot', '9725264ahTSTE', '4325651ApJLoh'];
-  D = function D() {
+  D = function () {
     return D3;
   };
   return D();

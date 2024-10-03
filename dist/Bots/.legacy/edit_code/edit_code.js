@@ -1,7 +1,5 @@
-"use strict";
-
-var scriptName = "edit_code";
-var path = "sdcard/msgbot/bots/";
+const scriptName = "edit_code";
+const path = "sdcard/msgbot/bots/";
 var a;
 var b;
 var c;
@@ -24,7 +22,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         replier.reply("소스 목록:소스목록\n소스확인 (소스이름):소스내용\n소스수정 (소스이름) (몇)줄:몇번째 줄 소스\n소스교체 /(소스이름)/(교체내용)/(몇)줄:몇번째 줄 소스를 교체내용으로 교체함");
       }
       if (msg == "소스 목록") {
-        replier.reply("소스 목록입니다. \n" + "\u200B".repeat(500) + array.join("\n"));
+        replier.reply("소스 목록입니다. \n" + "\u200b".repeat(500) + array.join("\n"));
       }
       if (msg.startsWith("소스확인 ")) {
         if (a.includes(msg.substr(5)) == true) {
@@ -34,7 +32,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
           for (i = 1; i <= c.length; i++) {
             array[i] = i + "." + c[i - 1];
           }
-          replier.reply(msg.substr(5) + "소스입니다.\n" + "\u200B".repeat(500) + array.join("\n"));
+          replier.reply(msg.substr(5) + "소스입니다.\n" + "\u200b".repeat(500) + array.join("\n"));
         } else {
           replier.reply(msg.substr(5) + "소스는 없습니다. 소스목록을 확인해주세요.");
         }
@@ -80,7 +78,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             for (i = 1; i <= c.length; i++) {
               array[i] = i + "." + c[i - 1];
             }
-            replier.reply(f + "소스가 아래와 같이 변했습니다.\n" + "\u200B".repeat(500) + array.join("\n"));
+            replier.reply(f + "소스가 아래와 같이 변했습니다.\n" + "\u200b".repeat(500) + array.join("\n"));
             Api.compile(f);
           } else {
             replier.reply(f + "소스" + q + "번째 줄" + "소스는 없습니다.");

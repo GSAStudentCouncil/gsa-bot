@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var X = w,
   F = w;
 (function (z, B) {
@@ -26,12 +25,12 @@ var X = w,
 })(D, 0x36d6a);
 function D() {
   var g = ['construc', 'FDwlj', '_raw', 'attachme', 'prototyp', 'definePr', '528651UsLuQc', '3578679SGxEPL', 'OZTkI', 'lue\x20', '\x20null', 'operty', '2485656rwMyPD', 'mHspQ', '360138DPjxur', 'uctor\x20or', 'Class\x20ex', '\x20is\x20not\x20', '__esModu', 'hasOwnPr', '__proto_', 'AudioCha', 'VDcVG', 'function', '48diKwwS', 'yFphT', 'Chat', '109645AJGeeN', 'typeOf', 'jnDVt', 'tends\x20va', '1VWAxsj', '1238956lWzQQX', 'create', '__extend', 'BDOSI', 'setProto', '20OjLdrf', '2786672TIDcxM'];
-  D = function D() {
+  D = function () {
     return g;
   };
   return D();
 }
-var __extends = void 0 && (void 0)[X(0xc0) + 's'] || function () {
+var __extends = this && this[X(0xc0) + 's'] || function () {
   var W = {
       z: 0xd5,
       B: 0xbc,
@@ -54,32 +53,32 @@ var __extends = void 0 && (void 0)[X(0xc0) + 's'] || function () {
     R = X,
     J = X,
     z = {
-      'jnDVt': function jnDVt(O, I) {
+      'jnDVt': function (O, I) {
         return O instanceof I;
       },
-      'BDOSI': function BDOSI(O, I) {
+      'BDOSI': function (O, I) {
         return O != I;
       },
       'grekC': R(0xdc),
-      'VDcVG': function VDcVG(O, I) {
+      'VDcVG': function (O, I) {
         return O !== I;
       },
-      'ToDwO': function ToDwO(O, I) {
+      'ToDwO': function (O, I) {
         return O + I;
       },
       'LYSAT': J(W.z) + J(W.B) + J(0xce),
-      'vSoaJ': function vSoaJ(O, I) {
+      'vSoaJ': function (O, I) {
         return O(I);
       },
       'CKzEX': J(0xd6) + 'a\x20constr' + J(W.O) + J(W.I),
-      'FDwlj': function FDwlj(O, I, r) {
+      'FDwlj': function (O, I, r) {
         return O(I, r);
       },
-      'mHspQ': function mHspQ(O, I) {
+      'mHspQ': function (O, I) {
         return O === I;
       }
     },
-    _B = function B(O, I) {
+    B = function (O, I) {
       var s = {
           z: 0xc9
         },
@@ -88,7 +87,7 @@ var __extends = void 0 && (void 0)[X(0xc0) + 's'] || function () {
         },
         q = R,
         K = R;
-      return _B = Object[q(0xc2) + K(N.z)] || z[q(N.B)]({
+      return B = Object[q(0xc2) + K(N.z)] || z[q(N.B)]({
         '__proto__': []
       }, Array) && function (r, d) {
         var H = K;
@@ -97,7 +96,7 @@ var __extends = void 0 && (void 0)[X(0xc0) + 's'] || function () {
         var Z = K,
           u = q;
         for (var c in d) Object[Z(s.z) + 'e'][u(0xd8) + 'operty']['call'](d, c) && (r[c] = d[c]);
-      }, _B(O, I);
+      }, B(O, I);
     };
   return function (O, I) {
     var V = {
@@ -105,17 +104,17 @@ var __extends = void 0 && (void 0)[X(0xc0) + 's'] || function () {
       },
       G = J,
       j = J;
-    if (z[G(p.z)](z['grekC'], _typeof(I)) && z[G(p.B)](null, I)) throw new TypeError(z['ToDwO'](z['LYSAT'] + z['vSoaJ'](String, I), z['CKzEX']));
+    if (z[G(p.z)](z['grekC'], typeof I) && z[G(p.B)](null, I)) throw new TypeError(z['ToDwO'](z['LYSAT'] + z['vSoaJ'](String, I), z['CKzEX']));
     function d() {
       var o = j;
       this[o(V.z) + 'tor'] = O;
     }
-    z[j(p.O)](_B, O, I), O[j(p.I) + 'e'] = z[G(p.r)](null, I) ? Object[j(p.d)](I) : (d[G(p.t) + 'e'] = I['prototyp' + 'e'], new d());
+    z[j(p.O)](B, O, I), O[j(p.I) + 'e'] = z[G(p.r)](null, I) ? Object[j(p.d)](I) : (d[G(p.t) + 'e'] = I['prototyp' + 'e'], new d());
   };
 }();
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xb7;
     var d = O[I];
     return d;
@@ -137,7 +136,7 @@ var Chat_1 = require('./Chat'),
       b = X,
       h = F,
       B = {
-        'OZTkI': function OZTkI(I, r, d) {
+        'OZTkI': function (I, r, d) {
           return I(r, d);
         },
         'yFphT': 'audio'
@@ -148,7 +147,7 @@ var Chat_1 = require('./Chat'),
     return B[b(0xcd)](__extends, O, z), O[h(v.z) + 'e']['isAudio'] = function () {
       return !0x0;
     }, Object[b(v.B) + h(v.O)](O[h(v.z) + 'e'], B[h(0xb7)], {
-      'get': function get() {
+      'get': function () {
         var C = b,
           E = b;
         return this[C(0xc7)][C(L.z) + 'nt'];
