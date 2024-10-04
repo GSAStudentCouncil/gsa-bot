@@ -2,7 +2,7 @@
 
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xd1;
     var d = O[I];
     return d;
@@ -36,12 +36,12 @@ var J = w,
 })(D, 0x5159a);
 function D() {
   var P = ['TKPkX', 'qJiZe', 'default', 'ger', 'writable', '374806bysYyo', '87815tnoGBW', 'Star', 'operty', './DBMana', 'Binding', '8HmVdce', 'opertyDe', '7235327akxHGD', 'rQTru', '__export', '200IRxUQg', '1443798xEeTxy', '__esModu', '40CQTkfY', '809500zdcWSW', 'prototyp', 'configur', '702066HYZCtZ', '68268VClVzC', '3tEDbEf'];
-  D = function D() {
+  D = function () {
     return P;
   };
   return D();
 }
-var __createBinding = void 0 && (void 0)['__create' + J(0xe7)] || (Object['create'] ? function (z, B, O, I) {
+var __createBinding = this && this['__create' + J(0xe7)] || (Object['create'] ? function (z, B, O, I) {
     var h = {
         z: 0xe9,
         B: 0xde,
@@ -53,10 +53,10 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xe7)] || (Object['creat
       q = J,
       K = J,
       d = {
-        'ChPuP': function ChPuP(m, U) {
+        'ChPuP': function (m, U) {
           return m === U;
         },
-        'qJiZe': function qJiZe(m, U) {
+        'qJiZe': function (m, U) {
           return m in U;
         },
         'TKPkX': 'get'
@@ -65,7 +65,7 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xe7)] || (Object['creat
     var c = Object['getOwnPr' + q(h.z) + 'scriptor'](B, O);
     c && !(d[K(h.B)](d[K(h.O)], c) ? !B[K(0xd5) + 'le'] : c[K(h.I)] || c[q(h.r) + 'able']) || (c = {
       'enumerable': !0x0,
-      'get': function get() {
+      'get': function () {
         return B[O];
       }
     }), Object['definePr' + q(h.d)](z, I, c);
@@ -75,13 +75,13 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xe7)] || (Object['creat
       },
       H = J,
       d = {
-        'rQTru': function rQTru(c, m) {
+        'rQTru': function (c, m) {
           return c === m;
         }
       };
     d[H(E.z)](void 0x0, I) && (I = O), z[I] = B[O];
   }),
-  __exportStar = void 0 && (void 0)[J(0xd2) + J(0xe4)] || function (z, B) {
+  __exportStar = this && this[J(0xd2) + J(0xe4)] || function (z, B) {
     var T = {
         z: 0xd8,
         B: 0xe5

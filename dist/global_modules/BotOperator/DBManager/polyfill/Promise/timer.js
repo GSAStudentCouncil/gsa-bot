@@ -2,7 +2,7 @@
 
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xd5;
     var d = O[I];
     return d;
@@ -50,13 +50,13 @@ function w(z, B) {
     G = w,
     I = {
       'YHaie': u(n.z) + u(n.B),
-      'jltEW': function jltEW(c, m) {
+      'jltEW': function (c, m) {
         return c !== m;
       }
     },
     d = [];
   z[u(0xda)] = {
-    'setTimeout': function setTimeout(c, m) {
+    'setTimeout': function (c, m) {
       var j = u,
         o = G,
         U = I[j(T.z)][j(T.B)]('|'),
@@ -71,7 +71,7 @@ function w(z, B) {
           case '2':
             var J = new java[j(T.O)]['Timer'](),
               q = new java[o(T.I)][o(T.r) + 'k']({
-                'run': function run() {
+                'run': function () {
                   var F = o;
                   c[F(0xd5)](this, R);
                 }
@@ -90,7 +90,7 @@ function w(z, B) {
         break;
       }
     },
-    'clearTimeout': function clearTimeout(c) {
+    'clearTimeout': function (c) {
       var b = u,
         m = d[c];
       I[b(P.z)](void 0x0, m) && m['cancel']();
@@ -99,7 +99,7 @@ function w(z, B) {
 }(module, exports, require);
 function D() {
   var e = ['16dDZzxs', '3|1', 'YHaie', '912JoaOVi', 'call', '97349RRwHZb', 'split', '993717CvHwnX', '230gjTPtJ', 'exports', '1562090mQIotF', '497155YpvsPe', '132EtFoMj', 'size', 'jltEW', '243352AQGsJY', 'TimerTas', 'pop', 'util', '2678202HzQDWn', 'schedule', '0|5|2|4|'];
-  D = function D() {
+  D = function () {
     return e;
   };
   return D();

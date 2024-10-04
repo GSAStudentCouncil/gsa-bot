@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var n = w,
   p = w;
 (function (z, B) {
@@ -28,7 +27,7 @@ var n = w,
     }
   }
 })(D, 0xa4311);
-var __extends = void 0 && (void 0)[n(0x162) + 's'] || function () {
+var __extends = this && this[n(0x162) + 's'] || function () {
   var Dn = {
       z: 0x106,
       B: 0x82,
@@ -55,32 +54,32 @@ var __extends = void 0 && (void 0)[n(0x162) + 's'] || function () {
     e = n,
     A = n,
     z = {
-      'PbVQR': function PbVQR(O, I) {
+      'PbVQR': function (O, I) {
         return O instanceof I;
       },
       'zzIwY': e(Dn.z),
-      'IOynG': function IOynG(O, I) {
+      'IOynG': function (O, I) {
         return O !== I;
       },
-      'KXQdO': function KXQdO(O, I) {
+      'KXQdO': function (O, I) {
         return O + I;
       },
       'xrcrs': A(Dn.B) + 'tends\x20va' + e(Dn.O),
-      'jPISd': function jPISd(O, I) {
+      'jPISd': function (O, I) {
         return O(I);
       },
       'PcEHy': A(0x1cc) + A(Dn.I) + A(Dn.r) + e(0x181),
-      'dkMPQ': function dkMPQ(O, I, r) {
+      'dkMPQ': function (O, I, r) {
         return O(I, r);
       },
-      'KqAEc': function KqAEc(O, I) {
+      'KqAEc': function (O, I) {
         return O === I;
       }
     },
-    _B = function B(O, I) {
+    B = function (O, I) {
       var Q = e,
         S = e;
-      return _B = Object['setProto' + Q(DE.z)] || z[S(DE.B)]({
+      return B = Object['setProto' + Q(DE.z)] || z[S(DE.B)]({
         '__proto__': []
       }, Array) && function (r, d) {
         r['__proto_' + '_'] = d;
@@ -88,7 +87,7 @@ var __extends = void 0 && (void 0)[n(0x162) + 's'] || function () {
         var a = Q,
           i = Q;
         for (var c in d) Object[a(DC.z) + 'e'][i(DC.B) + i(DC.O)][a(0x1cd)](d, c) && (r[c] = d[c]);
-      }, _B(O, I);
+      }, B(O, I);
     };
   return function (O, I) {
     var DT = {
@@ -96,12 +95,12 @@ var __extends = void 0 && (void 0)[n(0x162) + 's'] || function () {
       },
       s = A,
       N = e;
-    if (z['zzIwY'] != _typeof(I) && z[s(DP.z)](null, I)) throw new TypeError(z['KXQdO'](z['xrcrs'], z[N(DP.B)](String, I)) + z['PcEHy']);
+    if (z['zzIwY'] != typeof I && z[s(DP.z)](null, I)) throw new TypeError(z['KXQdO'](z['xrcrs'], z[N(DP.B)](String, I)) + z['PcEHy']);
     function r() {
       var V = s;
       this[V(DT.z) + 'tor'] = O;
     }
-    z[s(0x1bb)](_B, O, I), O[s(DP.O) + 'e'] = z[s(DP.I)](null, I) ? Object[N(0x99)](I) : (r['prototyp' + 'e'] = I[N(DP.r) + 'e'], new r());
+    z[s(0x1bb)](B, O, I), O[s(DP.O) + 'e'] = z[s(DP.I)](null, I) ? Object[N(0x99)](I) : (r['prototyp' + 'e'] = I[N(DP.r) + 'e'], new r());
   };
 }();
 Object['definePr' + p(0x7e)](exports, n(0xed) + 'le', {
@@ -109,7 +108,7 @@ Object['definePr' + p(0x7e)](exports, n(0xed) + 'le', {
 }), exports[n(0x94) + 'r'] = void 0x0;
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x75;
     var d = O[I];
     return d;
@@ -130,7 +129,7 @@ var eventemitter_1 = require(p(0xa5) + n(0x14c) + n(0x7f) + p(0x1e9)),
   wakeLock = null;
 function D() {
   var wP = ['MMhFj', 'KCLQI', 'l_profil', 'SYNCDLMS', 'exec', 'VERSION_', '/data/da', 'FzjHJ', 'Channel', 'NDgdN', 'eed', '\x20\x20\x20\x20\x0a\x20\x20\x20', 'UfRin', 'IOynG', '22712964HzUaJP', '7969806WdYskL', '\x20\x0a\x20\x20\x20\x20\x20\x20', 'ENABLE_W', 'boolean', 'nds.user', 'mkdir', 'nge', 'ate', 'acquire', 'ds.full_', 'IFufO', 'getConte', 'aRZHV', '/sdcard/', 'SELECT\x20\x0a', 'cuXcl', 'typeOf', '\x20\x20\x20full_', 'invite', 'delete', 'setWakeL', '\x20old_nam', 'message', 'ge_url\x20t', '_userKey', '\x20\x20\x20\x20user', '\x20\x20\x20\x20orig', '\x20\x20\x20\x20\x20\x20\x20\x20', 'ARY\x20KEY,', 'kakaobot', 'ISTS\x20upd', 'e_texts', 'l\x20<>old_', '\x20\x20\x20\x20upda', '/db_util', 'getRunti', 'ame', 'newSched', 'age_url,', 'EXISTS\x20\x20', 'd\x20as\x20cha', 'le_image', '지\x20않습니다.', '__esModu', 'LE\x20IF\x20EX', 'ds.user_', 'ginal_pr', '_id', '9EzHeEl', 'Attach\x20`', 'PbVQR', 'execSQL', 'F_NECESS', 'setJavaP', '../utils', 'profile_', '_dbObs', 'WRITE', 'qaZhS', 'content', 'getPath', 'file\x20LIM', 'MsSzg', '\x20\x20\x20\x20\x20\x20\x20\x0a', 'er_id,\x0a\x20', 'ta/', 'qhmlb', 'RITE_AHE', 'function', 'AD_LOGGI', 'es/Kakao', 'FNNPc', 'HvySO', '59661VoNVmz', 'DROP\x20TRI', 'ock', 'ds\x20WHERE', 'ARY', 'getSyste', 'construc', 'replace', 'RVICE', 'fPOJi', '\x0a\x20\x20\x20\x20\x20\x20e', 'ONDS', 'SrTql', 'rl,\x0a\x20\x20\x20\x20', 'DELMEM', 'isFeed', 'DROP\x20TAB', '756180FVAwun', 'actory', 'MILLISEC', '1256kusepB', 'rzsnf', 'as\x20old_p', 'javascri', 'ine', 'schedule', 'isRoot', '_lastID', 'openData', 'T\x20JOIN\x20D', 'cGXGH', 'lineNumb', 'stack', 'ChannelS', 'ate_frie', '267038XdgSmU', 'getChann', 'uctor\x20or', '\x0a\x20\x20\x20\x20upd', '\x20as\x20DB1', 'text,\x0a\x20\x20', 'lang', 'rmpNh', '자동\x20유저\x20아이', 'MkLlt', '30035oVlTQH', 'nGfpC', 'FzeUc', '\x20as\x20new_', 'kuhlT', 'url\x20as\x20o', 'twwkP', 'Talk.db`', 'concurre', 'rawQuery', '1212NkHYea', 'shutdown', 'l\x20\x20as\x20ne', 'stop', 'date_fri', '_id\x20inte', '11ZnRdUP', 'FpTON', 'chmod\x20-R', '4686NVjXAR', 'es/emitt', 'l,\x0a\x20\x20\x20\x20u', '\x20SELECT\x20', 'mhvdw', 'image_ur', 'chat_id\x20', 'iginal_p', '\x20type\x20=\x20', 'vent', '\x20\x20\x20\x20\x20nam', '_url\x20\x20as', 'PowerMan', 'FEpmD', 'w_friend', 'Azjah', 'name,\x0a\x20\x20', 'adPool', 'kmihm', '\x20\x20\x20\x20\x20\x20pr', 'SQLiteDa', 'DBUtil', 'new_name', '__extend', 'nce', 'ext,\x0a\x20\x20\x20', 'CREATE_I', 'ygxVf', 'getInt', 'PARTIAL_', 'lue\x20', 'rst', '/databas', 'a\x20constr', 'fkklJ', '\x20\x20\x20\x0a\x20\x20\x20\x20', 'Feed', 'l\x20)\x20', 'ocfhX', 'nFhpy', 'eWamV', 'ROM\x20DB2.', 'my1;', 'sLWrO', 'MZqQc', 'nds\x20(\x0a\x20\x20', '_friends', 'nc\x20integ', '_isWakeL', ',\x20full_p', '-wal', 'elById', 'Now', 'Mine', '\x20null', 'kFLEA', 'TimeUnit', 'url,enc)', 'aGRTE', 'hasOwnPr', 'decrypt', '_onUserE', 'ew_frien', 'startWat', '_onEvent', 'rqojm', 'isOpenCh', 'HYuxa', 'RE\x20(old_', 'as\x20enc\x0a\x20', 'FROM\x20upd', 'rofile_i', 'ofile_im', '1000', '_id\x20=\x20ne', 'mage_url', '_url,enc', 'original', 'getWrapF', 'ager', 'GGER\x20IF\x20', 'nds.enc\x20', 'KqAEc', 'd_chat_i', 'SELECT\x20u', 'fmGiK', 'newWakeL', 'aHdKf', 'Runnable', 'rver', ',\x0a\x20\x20\x20\x20up', 'id\x20as\x20us', 'Mapper', 'rimitive', '_userObs', 'ds\x20as\x20ne', 'prototyp', 'FwfIN', '_threadP', 'cdVRQ', '`\x20as\x20DB2', 'release', 'l\x20\x20text,', 'string', 'elInfoBy', 'tabase', '_runDB', 'iends.or', 'stopWatc', 'ypxsZ', 'age_url\x20', 'moveToFi', 'dkMPQ', 'rEqFx', 'raw', '\x20OR\x20new_', '\x20777\x20/da', 'ljyBc', 'ger\x20PRIM', 'NEWMEM', 'close', 'hing', 'l,\x0a\x20\x20\x20\x20n', 'Executor', 'SYNCMEMT', 'waitFor', 'CREATE\x20T', '_db', 'MONIE', '\x20is\x20not\x20', 'call', '_reactBy', 'ntContex', 'ABLE\x20upd', 'Runtime', 'INTO\x20upd', 'file_ima', 'SYNCREWR', 'iends.pr', 'id,\x20name', 'atKicked', 'Api', 'mozilla', '968gQXJnM', 'rl,full_', 'reactByM', 'wKEyx', 'WtogC', 'Context', 'r_id,nam', 'object', 'ool', 'e,\x0a\x20\x20\x20\x20u', '올바르지\x20않아요', 'user_id', '_package', 'File', '\x20\x20\x20\x20\x20\x20)', 'emitter', 'ElSVX', 'emit', '_instanc', 'packageN', '../class', 'ES6', 'length', 'isLeaveF', 'Name', '\x20new_ori', 'e,chat_i', 'text,\x20\x0a\x20', 'ISTS\x20hid', 'ffXId', 'open_pro', 'operty', 'er/event', 'pdate_fr', 'AtFixedR', 'Class\x20ex', 'util', 'nds', 'Xvcva', 's\x20ON\x20upd', 'file_cha', 'base', 'addChann', 'jPISd', '_db2', 's.chat_i', '_image_u', 'isArray', 'jBULL', 'sqlite', 'keys', 'bjOAt', 'hnZha', 'DBManage', 'PGhiJ', 'Talk2.db', 'getStrin', 'userID', 'create', 'CHATINFO', 'B2.frien', 'bind', 'xuLwq', ',origina', 'uledThre', 'database', 'HZJRy', 'member_t', 'getLastI', 'AaPSu', '../modul', 'nds.name', 'MODIFY', 'Wrap', 'ZDEfo', '실패했어요', 'cBRDc', 'ype_chan', 'ser_id\x20F', 'nager', 'XJzXa', 'CyApj', '.name\x20as', 'XacVz'];
-  D = function D() {
+  D = function () {
     return wP;
   };
   return D();
@@ -485,96 +484,96 @@ var FILE_DIR = n(0xcf) + p(0xdf),
       B = {
         'gzkvH': W(wT.z) + 'ame',
         'rEqFx': 'reactByM' + l(wT.B),
-        'WtogC': function WtogC(I, r) {
+        'WtogC': function (I, r) {
           return I == r;
         },
-        'XacVz': function XacVz(I, r) {
+        'XacVz': function (I, r) {
           return I == r;
         },
-        'MMhFj': function MMhFj(I, r) {
+        'MMhFj': function (I, r) {
           return I === r;
         },
         'GTcQM': l(wT.O),
-        'rmpNh': function rmpNh(I, r) {
+        'rmpNh': function (I, r) {
           return I !== r;
         },
         'AaPSu': '인자가\x20형태가\x20' + l(wT.I),
-        'nGfpC': function nGfpC(I, r) {
+        'nGfpC': function (I, r) {
           return I === r;
         },
-        'KCLQI': function KCLQI(I, r) {
+        'KCLQI': function (I, r) {
           return I !== r;
         },
-        'xuLwq': function xuLwq(I, r) {
+        'xuLwq': function (I, r) {
           return I !== r;
         },
         'fPOJi': 'com.kaka' + 'o.talk',
-        'twwkP': function twwkP(I, r) {
+        'twwkP': function (I, r) {
           return I + r;
         },
         'ljyBc': l(wT.r) + W(wT.d) + 'ta/data/',
-        'HvySO': function HvySO(I, r) {
+        'HvySO': function (I, r) {
           return I + r;
         },
         'FzeUc': '/databas' + l(wT.t) + 'Talk.db',
-        'cuXcl': function cuXcl(I, r) {
+        'cuXcl': function (I, r) {
           return I | r;
         },
         'cGXGH': W(wT.c) + 'ta/',
-        'HYuxa': function HYuxa(I, r) {
+        'HYuxa': function (I, r) {
           return I + r;
         },
         'nFhpy': l(wT.m) + l(0xb9) + l(wT.U),
         'MONIE': W(0x16b) + 'es/Kakao' + 'Talk2.db' + W(0x1af),
-        'mhvdw': function mhvdw(I, r) {
+        'mhvdw': function (I, r) {
           return I === r;
         },
         'JxqkK': l(0x19f) + l(0xad) + l(wT.X) + l(wT.R) + W(0xff) + 'IT\x201',
         'qaZhS': l(wT.J) + '디\x20불러오는걸\x20' + W(0xaa),
-        'ocfhX': function ocfhX(I, r) {
+        'ocfhX': function (I, r) {
           return I(r);
         },
-        'toHfY': function toHfY(I, r) {
+        'toHfY': function (I, r) {
           return I + r;
         },
         'jBULL': '/profile' + '.db',
-        'ZDEfo': function ZDEfo(I, r) {
+        'ZDEfo': function (I, r) {
           return I + r;
         },
-        'MsSzg': function MsSzg(I, r) {
+        'MsSzg': function (I, r) {
           return I + r;
         },
-        'rWlLG': function rWlLG(I, r) {
+        'rWlLG': function (I, r) {
           return I + r;
         },
         'xBYNh': '/databas' + l(wT.q) + W(wT.K) + l(wT.H),
         'SrTql': l(0x11b) + l(wT.Z) + W(wT.u) + l(wT.G),
-        'ygxVf': function ygxVf(I, r) {
+        'ygxVf': function (I, r) {
           return I + r;
         },
-        'PQytm': function PQytm(I, r) {
+        'PQytm': function (I, r) {
           return I === r;
         },
-        'Xvcva': function Xvcva(I, r) {
+        'Xvcva': function (I, r) {
           return I > r;
         },
         'kFLEA': '인자\x20개수가\x20맞' + l(0xec),
-        'kuhlT': function kuhlT(I, r) {
+        'kuhlT': function (I, r) {
           return I === r;
         },
-        'XJzXa': function XJzXa(I, r) {
+        'XJzXa': function (I, r) {
           return I != r;
         },
-        'NDgdN': function NDgdN(I, r) {
+        'NDgdN': function (I, r) {
           return I & r;
         },
-        'IFufO': function IFufO(I, r) {
+        'IFufO': function (I, r) {
           return I === r;
         },
-        'EwatH': function EwatH(I, r) {
+        'EwatH': function (I, r) {
           return I - r;
         },
-        'jdFOV': function jdFOV(I, r) {
+        'jdFOV': function (I, r) {
           return I !== r;
         },
         'sLWrO': 'MSG',
@@ -588,18 +587,18 @@ var FILE_DIR = n(0xcf) + p(0xdf),
         'wNcYG': 'hide',
         'MkLlt': W(wT.C),
         'MZqQc': W(0xa2) + W(wT.E) + 'ge',
-        'PJYdL': function PJYdL(I, r) {
+        'PJYdL': function (I, r) {
           return I + r;
         },
-        'cBRDc': function cBRDc(I, r) {
+        'cBRDc': function (I, r) {
           return I(r);
         },
-        'aGRTE': function aGRTE(I, r) {
+        'aGRTE': function (I, r) {
           return I === r;
         },
         'eWamV': l(wT.R) + l(wT.wP) + W(wT.wn),
         'PGhiJ': 'REPLACE\x20' + W(wT.we) + W(wT.wA) + 'nds\x20(use' + l(wT.wQ) + W(wT.wS) + 'd,name,p' + 'rofile_i' + 'mage_url' + l(wT.wa) + W(wT.wi) + W(0x196) + l(wT.ws) + l(wT.wN) + 'e_image_' + l(wT.wV) + l(wT.wp) + l(0x1d6) + ',involve' + W(wT.wW) + 'ds,name,' + '\x20profile' + W(0x8d) + W(wT.wl) + W(wT.wY) + l(wT.wk) + 'l,origin' + 'al_profi' + l(0xeb) + W(0x197) + '\x20\x20FROM\x20D' + l(wT.wL) + l(wT.wv) + l(wT.wg) + W(wT.wx),
-        'fmGiK': function fmGiK(I, r, d) {
+        'fmGiK': function (I, r, d) {
           return I(r, d);
         }
       };
@@ -639,26 +638,26 @@ var FILE_DIR = n(0xcf) + p(0xdf),
         c = {
           'FNNPc': B['gzkvH'],
           'ATKND': B[Y(wH.z)],
-          'bjOAt': function bjOAt(u, G) {
+          'bjOAt': function (u, G) {
             return u === G;
           },
-          'ypxsZ': function ypxsZ(u, G) {
+          'ypxsZ': function (u, G) {
             var k = Y;
             return B[k(0x1de)](u, G);
           },
-          'qhmlb': function qhmlb(u, G) {
+          'qhmlb': function (u, G) {
             var L = Y;
             return B[L(0xb2)](u, G);
           },
-          'UfRin': function UfRin(u, G) {
+          'UfRin': function (u, G) {
             var v = Y;
             return B[v(wz.z)](u, G);
           },
-          'FEpmD': function FEpmD(u, G) {
+          'FEpmD': function (u, G) {
             return u == G;
           },
           'Azjah': B['GTcQM'],
-          'aHdKf': function aHdKf(u, G) {
+          'aHdKf': function (u, G) {
             var g = Y;
             return B[g(0x135)](u, G);
           }
@@ -679,33 +678,33 @@ var FILE_DIR = n(0xcf) + p(0xdf),
           j = {
             'ffXId': c[f(0x109)],
             'HBGZr': c['ATKND'],
-            'hnZha': function hnZha(F, b) {
+            'hnZha': function (F, b) {
               return F === b;
             },
-            'ElSVX': function ElSVX(F, b) {
+            'ElSVX': function (F, b) {
               var M = f;
               return c[M(wr.z)](F, b);
             },
             'CyApj': y(0x1b2),
-            'FzjHJ': function FzjHJ(F, b) {
+            'FzjHJ': function (F, b) {
               var D0 = f;
               return c[D0(wd.z)](F, b);
             },
-            'cdVRQ': function cdVRQ(F, b) {
+            'cdVRQ': function (F, b) {
               var D1 = f;
               return c[D1(wt.z)](F, b);
             },
-            'HZJRy': function HZJRy(F, b) {
+            'HZJRy': function (F, b) {
               return c['bjOAt'](F, b);
             },
-            'wKEyx': function wKEyx(F, b) {
+            'wKEyx': function (F, b) {
               return F == b;
             },
-            'NsjbR': function NsjbR(F, b) {
+            'NsjbR': function (F, b) {
               return c['bjOAt'](F, b);
             }
           };
-        return c[f(0xbf)](void 0x0, G) && (G = !0x0), c[y(wK.z)](c[y(wK.B)], _typeof(u)) && c[y(0x1a2)](null, u) && c[f(wK.O)](!0x1, Array[y(wK.I)](u)) && function (F, b) {
+        return c[f(0xbf)](void 0x0, G) && (G = !0x0), c[y(wK.z)](c[y(wK.B)], typeof u) && c[y(0x1a2)](null, u) && c[f(wK.O)](!0x1, Array[y(wK.I)](u)) && function (F, b) {
           var wJ = {
               z: 0x98,
               B: 0x7c,
@@ -714,12 +713,12 @@ var FILE_DIR = n(0xcf) + p(0xdf),
             D3 = y,
             D4 = y,
             h = {
-              'rzsnf': function rzsnf(C, E) {
+              'rzsnf': function (C, E) {
                 var D2 = w;
                 return j[D2(wX.z)](C, E);
               }
             };
-          return j[D3(0x93)](void 0x0, b) && (b = !0x0), (j[D4(0x1ea)](void 0x0, F[D4(wq.z)]) || j[D4(0xb0)] == _typeof(F[D4(wq.B)])) && (void 0x0 === F[D4(wq.O) + D3(0xe6)] || j[D4(wq.I)](j[D3(wq.r)], _typeof(F[D3(wq.d) + D4(wq.t)]))) && (void 0x0 === F[D3(wq.c)] || j[D3(wq.m)](D3(wq.U), _typeof(F[D4(wq.X)]))) && (j[D3(wq.R)](void 0x0, F[D3(wq.J) + 'ine']) || j[D3(0x1dd)](D4(wq.U), _typeof(F[D4(wq.q) + D4(0x123)]))) && (j['NsjbR'](0x0, Object[D4(wq.K)](F)[D4(wq.H)]) || Object['keys'](F)['every'](function (C) {
+          return j[D3(0x93)](void 0x0, b) && (b = !0x0), (j[D4(0x1ea)](void 0x0, F[D4(wq.z)]) || j[D4(0xb0)] == typeof F[D4(wq.B)]) && (void 0x0 === F[D4(wq.O) + D3(0xe6)] || j[D4(wq.I)](j[D3(wq.r)], typeof F[D3(wq.d) + D4(wq.t)])) && (void 0x0 === F[D3(wq.c)] || j[D3(wq.m)](D3(wq.U), typeof F[D4(wq.X)])) && (j[D3(wq.R)](void 0x0, F[D3(wq.J) + 'ine']) || j[D3(0x1dd)](D4(wq.U), typeof F[D4(wq.q) + D4(0x123)])) && (j['NsjbR'](0x0, Object[D4(wq.K)](F)[D4(wq.H)]) || Object['keys'](F)['every'](function (C) {
             var wR = {
                 z: 0x120
               },
@@ -742,9 +741,9 @@ var FILE_DIR = n(0xcf) + p(0xdf),
         if (!Z[Y(0x1ba) + Y(wH.z1)]()) throw new Error(B[x(wH.z2)]);
         K = B[Y(wH.z3)](String, Z[x(0x97) + 'g'](0x0));
       }
-      return R[x(wH.d)] = K, new java['io']['File'](FILE_DIR)[x(wH.z4)](), R['_db2'] = android[x(wH.wQ)][x(0x90)][Y(wH.z5) + x(wH.z6)][x(wH.z7) + Y(wH.z8)](B['toHfY'](FILE_DIR, B[x(wH.z9)]), null, android[Y(wH.zD)][x(wH.zw)][x(wH.zz) + x(wH.zB)]['CREATE_I' + x(wH.wi) + 'ARY']), R[Y(wH.zO)][Y(wH.wV)](B[Y(wH.zI)](B[x(wH.zr)], R[Y(wH.I) + 'Name']) + B['MONIE'], []), R[x(0x8b)]['execSQL'](B[x(wH.zd)](B['rWlLG'](x(wH.zt) + x(0xb9) + 'ta/', R[Y(wH.zc) + Y(wH.wu)]), B['xBYNh']), []), R[Y(wH.zm)][Y(0xf5)](Y(wH.zU) + 'LE\x20IF\x20EX' + x(wH.zX) + Y(wH.zR) + x(wH.zJ), []), R['_db2']['execSQL'](B[Y(wH.zq)], []), R[Y(wH.zK)][Y(wH.wV)](Y(wH.zH) + Y(wH.zZ) + x(wH.zR) + x(wH.zu) + Y(wH.zG) + x(0x147) + Y(wH.zj) + Y(wH.zo) + '\x20\x0a\x20\x20\x20\x20\x20\x20' + Y(wH.zF) + x(0x7a) + x(0x155) + 'e\x20text,\x0a' + Y(0x15e) + x(wH.zb) + Y(wH.zh) + x(0x133) + x(0xdc) + 'inal_pro' + x(0x1d3) + Y(wH.zC) + Y(wH.zE) + x(wH.zT) + x(wH.zP) + Y(wH.zn) + Y(wH.ze) + x(wH.zA) + Y(0x17a) + 'er\x0a\x20\x20\x20\x20\x20' + Y(wH.zQ) + Y(wH.zQ) + Y(0x101) + x(wH.zQ) + x(wH.zQ) + Y(wH.zS) + Y(wH.za) + x(wH.zi) + x(wH.zQ) + Y(wH.zS) + Y(wH.zs) + Y(0xdd) + Y(wH.zQ) + x(wH.zN), []), db_util_1['DBUtil']['init'](R['_db'], K), R[x(0xfa)] = new JavaAdapter(FileObserver, {
+      return R[x(wH.d)] = K, new java['io']['File'](FILE_DIR)[x(wH.z4)](), R['_db2'] = android[x(wH.wQ)][x(0x90)][Y(wH.z5) + x(wH.z6)][x(wH.z7) + Y(wH.z8)](B['toHfY'](FILE_DIR, B[x(wH.z9)]), null, android[Y(wH.zD)][x(wH.zw)][x(wH.zz) + x(wH.zB)]['CREATE_I' + x(wH.wi) + 'ARY']), R[Y(wH.zO)][Y(wH.wV)](B[Y(wH.zI)](B[x(wH.zr)], R[Y(wH.I) + 'Name']) + B['MONIE'], []), R[x(0x8b)]['execSQL'](B[x(wH.zd)](B['rWlLG'](x(wH.zt) + x(0xb9) + 'ta/', R[Y(wH.zc) + Y(wH.wu)]), B['xBYNh']), []), R[Y(wH.zm)][Y(0xf5)](Y(wH.zU) + 'LE\x20IF\x20EX' + x(wH.zX) + Y(wH.zR) + x(wH.zJ), []), R['_db2']['execSQL'](B[Y(wH.zq)], []), (R[Y(wH.zK)][Y(wH.wV)](Y(wH.zH) + Y(wH.zZ) + x(wH.zR) + x(wH.zu) + Y(wH.zG) + x(0x147) + Y(wH.zj) + Y(wH.zo) + '\x20\x0a\x20\x20\x20\x20\x20\x20' + Y(wH.zF) + x(0x7a) + x(0x155) + 'e\x20text,\x0a' + Y(0x15e) + x(wH.zb) + Y(wH.zh) + x(0x133) + x(0xdc) + 'inal_pro' + x(0x1d3) + Y(wH.zC) + Y(wH.zE) + x(wH.zT) + x(wH.zP) + Y(wH.zn) + Y(wH.ze) + x(wH.zA) + Y(0x17a) + 'er\x0a\x20\x20\x20\x20\x20' + Y(wH.zQ) + Y(wH.zQ) + Y(0x101) + x(wH.zQ) + x(wH.zQ) + Y(wH.zS) + Y(wH.za) + x(wH.zi) + x(wH.zQ) + Y(wH.zS) + Y(wH.zs) + Y(0xdd) + Y(wH.zQ) + x(wH.zN), []), db_util_1['DBUtil']['init'](R['_db'], K), R[x(0xfa)] = new JavaAdapter(FileObserver, {
         'onEvent': R[Y(0x18b)][x(wH.zV)](R)
-      }, new File(B[Y(0x166)](R[Y(wH.zp)][x(0xfe)](), Y(wH.zW)))), R;
+      }, new File(B[Y(0x166)](R[Y(wH.zp)][x(0xfe)](), Y(wH.zW)))), R);
     }
     return B[l(0x1a0)](__extends, O, z), O['rawQuery'] = function (I, r) {
       var D8 = W,

@@ -1,9 +1,8 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function D() {
   var x = ['4734jObtrj', 'operty', './user', '7219947YSvUpn', 'utuvd', 'function', 'apply', 'Class\x20ex', 'zTAKU', 'ftFeb', 'isMine', '__extend', '42195sEOMSb', 'prototyp', '2292740ZSNOMt', '__proto_', 'vYefS', '42nTpwxz', 'fOMPv', '396556DzGYNy', '\x20null', '5352cqgPfW', 'lue\x20', 'auSGV', 'typeOf', '232058jXmefn', 'tor', '36BMJzYn', 'RWCeq', 'setProto', '\x20is\x20not\x20', 'DQZUm', '30740875gCqqoe', 'tends\x20va', '6sldhDn', '__esModu', 'create', 'UserSelf'];
-  D = function D() {
+  D = function () {
     return x;
   };
   return D();
@@ -34,7 +33,7 @@ var R = w,
     }
   }
 })(D, 0x99add);
-var __extends = void 0 && (void 0)[R(0xcf) + 's'] || function () {
+var __extends = this && this[R(0xcf) + 's'] || function () {
   var l = {
       z: 0xc9,
       B: 0xcb,
@@ -59,34 +58,34 @@ var __extends = void 0 && (void 0)[R(0xcf) + 's'] || function () {
     J = R,
     q = R,
     z = {
-      'RWCeq': function RWCeq(O, I) {
+      'RWCeq': function (O, I) {
         return O instanceof I;
       },
-      'xjXWb': function xjXWb(O, I, r) {
+      'xjXWb': function (O, I, r) {
         return O(I, r);
       },
-      'zTAKU': function zTAKU(O, I) {
+      'zTAKU': function (O, I) {
         return O != I;
       },
       'utuvd': J(l.z),
-      'DQZUm': function DQZUm(O, I) {
+      'DQZUm': function (O, I) {
         return O !== I;
       },
-      'auSGV': function auSGV(O, I) {
+      'auSGV': function (O, I) {
         return O + I;
       },
       'vYefS': q(l.B) + J(l.O) + q(l.I),
-      'RZJbX': function RZJbX(O, I) {
+      'RZJbX': function (O, I) {
         return O(I);
       },
-      'fOMPv': function fOMPv(O, I, r) {
+      'fOMPv': function (O, I, r) {
         return O(I, r);
       },
-      'fjKeD': function fjKeD(O, I) {
+      'fjKeD': function (O, I) {
         return O === I;
       }
     },
-    _B = function B(O, I) {
+    B = function (O, I) {
       var N = {
           z: 0xc5
         },
@@ -95,7 +94,7 @@ var __extends = void 0 && (void 0)[R(0xcf) + 's'] || function () {
         },
         K = J,
         H = J;
-      return _B = Object[K(0xbb) + K(V.z)] || z[K(V.B)]({
+      return B = Object[K(0xbb) + K(V.z)] || z[K(V.B)]({
         '__proto__': []
       }, Array) && function (d, c) {
         var Z = H;
@@ -103,7 +102,7 @@ var __extends = void 0 && (void 0)[R(0xcf) + 's'] || function () {
       } || function (d, c) {
         var u = H;
         for (var m in c) Object['prototyp' + 'e']['hasOwnPr' + u(N.z)]['call'](c, m) && (d[m] = c[m]);
-      }, z['xjXWb'](_B, O, I);
+      }, z['xjXWb'](B, O, I);
     };
   return function (O, I) {
     var p = {
@@ -111,12 +110,12 @@ var __extends = void 0 && (void 0)[R(0xcf) + 's'] || function () {
       },
       G = J,
       j = J;
-    if (z[G(W.z)](z[j(W.B)], _typeof(I)) && z[G(0xbd)](null, I)) throw new TypeError(z[j(W.O)](z[G(0xb5)](z[j(0xae)], z['RZJbX'](String, I)), G(W.I) + 'a\x20constr' + 'uctor\x20or' + G(W.r)));
+    if (z[G(W.z)](z[j(W.B)], typeof I) && z[G(0xbd)](null, I)) throw new TypeError(z[j(W.O)](z[G(0xb5)](z[j(0xae)], z['RZJbX'](String, I)), G(W.I) + 'a\x20constr' + 'uctor\x20or' + G(W.r)));
     function d() {
       var o = j;
       this['construc' + o(p.z)] = O;
     }
-    z[j(W.d)](_B, O, I), O[G(W.t) + 'e'] = z['fjKeD'](null, I) ? Object[G(W.c)](I) : (d[G(0xd1) + 'e'] = I[G(W.m) + 'e'], new d());
+    z[j(W.d)](B, O, I), O[G(W.t) + 'e'] = z['fjKeD'](null, I) ? Object[G(W.c)](I) : (d[G(0xd1) + 'e'] = I[G(W.m) + 'e'], new d());
   };
 }();
 Object['definePr' + R(0xc5)](exports, R(0xc1) + 'le', {
@@ -124,7 +123,7 @@ Object['definePr' + R(0xc5)](exports, R(0xc1) + 'le', {
 }), exports[R(0xc3)] = void 0x0;
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xae;
     var d = O[I];
     return d;
@@ -141,10 +140,10 @@ var user_1 = require(F(0xc6)),
       C = F,
       E = F,
       B = {
-        'ftFeb': function ftFeb(I, r) {
+        'ftFeb': function (I, r) {
           return I !== r;
         },
-        'xFSJV': function xFSJV(I, r, d) {
+        'xFSJV': function (I, r, d) {
           return I(r, d);
         }
       };

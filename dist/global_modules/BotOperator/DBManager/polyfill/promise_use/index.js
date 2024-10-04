@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var J = w,
   q = w;
 (function (z, B) {
@@ -26,7 +25,7 @@ var J = w,
     }
   }
 })(D, 0x89c19);
-var __createBinding = void 0 && (void 0)['__create' + J(0xc2)] || (Object[q(0xcd)] ? function (z, B, O, I) {
+var __createBinding = this && this['__create' + J(0xc2)] || (Object[q(0xcd)] ? function (z, B, O, I) {
     var P = {
         z: 0xe2,
         B: 0xce,
@@ -41,10 +40,10 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xc2)] || (Object[q(0xcd
       K = q,
       H = q,
       d = {
-        'DfWKG': function DfWKG(m, U) {
+        'DfWKG': function (m, U) {
           return m === U;
         },
-        'qEmwC': function qEmwC(m, U) {
+        'qEmwC': function (m, U) {
           return m in U;
         },
         'Affcv': K(P.z)
@@ -53,7 +52,7 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xc2)] || (Object[q(0xcd
     var c = Object[K(P.O) + K(P.I) + 'scriptor'](B, O);
     c && !(d[K(0xd6)](d[K(P.r)], c) ? !B[K(P.d) + 'le'] : c[K(P.t)] || c[H(0xc9) + K(P.c)]) || (c = {
       'enumerable': !0x0,
-      'get': function get() {
+      'get': function () {
         return B[O];
       }
     }), Object[H(P.m) + 'operty'](z, I, c);
@@ -63,13 +62,13 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xc2)] || (Object[q(0xcd
       },
       Z = q,
       d = {
-        'dOaTH': function dOaTH(c, m) {
+        'dOaTH': function (c, m) {
           return c === m;
         }
       };
     d[Z(e.z)](void 0x0, I) && (I = O), z[I] = B[O];
   }),
-  __setModuleDefault = void 0 && (void 0)[q(0xc7) + J(0xda) + 'lt'] || (Object[q(0xcd)] ? function (z, B) {
+  __setModuleDefault = this && this[q(0xc7) + J(0xda) + 'lt'] || (Object[q(0xcd)] ? function (z, B) {
     var A = {
         z: 0xcf,
         B: 0xd5,
@@ -91,7 +90,7 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xc2)] || (Object[q(0xcd
       j = J;
     z[j(Q.z)] = B;
   }),
-  __importStar = void 0 && (void 0)[q(0xdb) + q(0xdc)] || function (z) {
+  __importStar = this && this[q(0xdb) + q(0xdc)] || function (z) {
     var s = {
         z: 0xcf,
         B: 0xca,
@@ -100,14 +99,14 @@ var __createBinding = void 0 && (void 0)['__create' + J(0xc2)] || (Object[q(0xcd
       o = J,
       F = q,
       B = {
-        'BEqev': function BEqev(d, c) {
+        'BEqev': function (d, c) {
           return d != c;
         },
-        'zJNgB': function zJNgB(d, c) {
+        'zJNgB': function (d, c) {
           return d !== c;
         },
         'fOwKp': o(s.z),
-        'aVGTs': function aVGTs(d, c, m, U) {
+        'aVGTs': function (d, c, m, U) {
           return d(c, m, U);
         }
       };
@@ -124,7 +123,7 @@ Object[J(0xd5) + 'operty'](exports, q(0xe0) + 'le', {
 var PR = __importStar(require(q(0xde) + 'se'));
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0xbe;
     var d = O[I];
     return d;
@@ -135,11 +134,11 @@ function getPromise() {
     z = {
       'LIJSN': 'undefine' + 'd'
     };
-  return z['LIJSN'] != (typeof Promise === "undefined" ? "undefined" : _typeof(Promise)) ? Promise : PR[b(0xc5)];
+  return z['LIJSN'] != typeof Promise ? Promise : PR[b(0xc5)];
 }
 function D() {
   var V = ['Binding', '6026178bdWjqC', 'opertyDe', 'Promise', 'operty', '__setMod', 'able', 'configur', 'zJNgB', '20riiuuy', 'fOwKp', 'create', 'DfWKG', 'default', 'dOaTH', '6845031XhEDFL', '7htgxRJ', 'getOwnPr', '176034BCOdRL', 'definePr', 'qEmwC', '13050pzdFlx', '6606456hOoKmW', 'hasOwnPr', 'uleDefau', '__import', 'Star', 'getPromi', '../Promi', '52IORstx', '__esModu', 'Affcv', 'get', '17809470gKqXvQ', 'BEqev', 'aVGTs', 'nZbyL', '3868835GXgRNF', 'writable'];
-  D = function D() {
+  D = function () {
     return V;
   };
   return D();

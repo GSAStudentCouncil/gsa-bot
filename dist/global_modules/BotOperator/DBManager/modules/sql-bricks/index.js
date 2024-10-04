@@ -1,6 +1,5 @@
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 !function () {
   var t = "undefined" != typeof exports,
     e = {
@@ -24,28 +23,28 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     return o.isArray(t) ? [].concat(arr) : r({}, t);
   }
   var o = {
-    isObject: function isObject(t) {
-      return "object" == _typeof(t);
+    isObject: function (t) {
+      return "object" == typeof t;
     },
-    isArray: function isArray(t) {
+    isArray: function (t) {
       return t instanceof Array;
     },
-    isUndefined: function isUndefined(t) {
+    isUndefined: function (t) {
       return void 0 === t;
     },
-    isNull: function isNull(t) {
+    isNull: function (t) {
       return null === t;
     },
-    isNumber: function isNumber(t) {
+    isNumber: function (t) {
       return "number" == typeof t;
     },
-    isString: function isString(t) {
+    isString: function (t) {
       return "string" == typeof t;
     },
-    isBoolean: function isBoolean(t) {
+    isBoolean: function (t) {
       return "boolean" == typeof t;
     },
-    isDate: function isDate(t) {
+    isDate: function (t) {
       return t instanceof Date;
     }
   };
@@ -173,7 +172,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     exceptAll: "EXCEPT ALL"
   };
   function p(t, e) {
-    return this instanceof p ? (p.super_.call(this, "insert"), this.into.apply(this, arguments)) : "object" != _typeof(e) || o.isArray(e) ? new p(t, g(n(arguments).slice(1))) : new p(t, e);
+    return this instanceof p ? (p.super_.call(this, "insert"), this.into.apply(this, arguments)) : "object" != typeof e || o.isArray(e) ? new p(t, g(n(arguments).slice(1))) : new p(t, e);
   }
   function d(t, e) {
     return this instanceof d ? (d.super_.call(this, "update"), this._table = t, e && this.values(e), this) : new d(t, w(n(arguments).slice(1)));
@@ -193,7 +192,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     }) : n(t);
   }
   function w(t) {
-    if ("object" == _typeof(t[0])) return t[0];
+    if ("object" == typeof t[0]) return t[0];
     var e = {};
     return null != t[0] && (e[t[0]] = t[1]), e;
   }
@@ -298,7 +297,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     }.bind(this)).join(", ");
   }), d.defineClause("where", function (t) {
     if (this._where) return "WHERE ".concat(F(this._where, t));
-  }), u["delete"] = u.deleteFrom = Z(_, y), _.prototype.from = function (t) {
+  }), u.delete = u.deleteFrom = Z(_, y), _.prototype.from = function (t) {
     return this._from = t, this;
   }, _.prototype.where = _.prototype.and = l.prototype.where, _.defineClause("delete", function (t) {
     return "DELETE FROM ".concat(G(this._from, t));
@@ -346,7 +345,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       var e = !0;
       if (Object.keys(t).forEach(function (n) {
         var r = t[n];
-        "object" != _typeof(r) || r instanceof c || r instanceof u || null == r || (e = !1);
+        "object" != typeof r || r instanceof c || r instanceof u || null == r || (e = !1);
       }), e) return t[0] instanceof u && 1 == t.length ? [t[0]] : (Log.d("ok"), [u.equal(t[0], t[1])]);
       var n = [];
       return Object.keys(t).forEach(function (e) {
@@ -356,7 +355,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     }(t);
     return this[e].expressions = this[e].expressions.concat(n), this;
   }, y.prototype._addJoins = function (t, e) {
-    if (this.joins || (this.joins = []), "object" == _typeof(t[1])) {
+    if (this.joins || (this.joins = []), "object" == typeof t[1]) {
       var n = [t[0]],
         r = t[1];
       t[2];
@@ -564,7 +563,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     return new I(this.op, this.col);
   }, I.prototype.toString = function (t) {
     return z(this.col, t) + " " + this.op;
-  }, u["in"] = function (t, e) {
+  }, u.in = function (t, e) {
     return o.isArray(e) || e instanceof y ? new k(t, e) : new k(t, n(arguments).slice(1));
   }, u.In = k, k.prototype.clone = function () {
     var t = this.list instanceof y ? this.list.clone() : i(this.list);
@@ -583,22 +582,22 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     for (var e in u.conversions) if (o["is" + e](t)) return u.conversions[e](t);
     throw new Error("value is of an unsupported type and cannot be converted to SQL: " + t);
   }, u.conversions = {
-    String: function String(t) {
+    String: function (t) {
       return "'" + t.replace(/'/g, "''") + "'";
     },
-    Null: function Null() {
+    Null: function () {
       return "null";
     },
-    Undefined: function Undefined() {
+    Undefined: function () {
       return "null";
     },
-    Number: function Number(t) {
+    Number: function (t) {
       return t.toString();
     },
-    Boolean: function Boolean(t) {
+    Boolean: function (t) {
       return t.toString().toUpperCase();
     },
-    Date: function Date(t) {
+    Date: function (t) {
       return "TIMESTAMP WITH TIME ZONE '" + t.toISOString().replace("T", " ").replace("Z", "+00:00") + "'";
     }
   }, u._handleTables = D, u._handleTable = G, u._handleColumns = W;
@@ -657,7 +656,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     }), ["select", "insert", "update", "delete"].forEach(function (e) {
       var n = u[e];
       t[e] = K(n), t[e].defineClause = n.defineClause, t[e].prototype.clauses = n.prototype.clauses.slice();
-    }), t.insertInto = t.insert, t.deleteFrom = t["delete"], t;
+    }), t.insertInto = t.insert, t.deleteFrom = t.delete, t;
   }, u.exp = function (t, e) {
     var n = t.split("["),
       r = n[0],
@@ -686,9 +685,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       case "~":
         return u.like(r, e);
       case "^":
-        return Array.isArray(e) ? u["in"].apply(null, [r].concat(e)) : u["in"](r, e);
+        return Array.isArray(e) ? u.in.apply(null, [r].concat(e)) : u.in(r, e);
       case "!^":
-        return Array.isArray(e) ? u.not(u["in"].apply(null, [r].concat(e))) : u["in"](r, e);
+        return Array.isArray(e) ? u.not(u.in.apply(null, [r].concat(e))) : u.in(r, e);
       default:
         throw new Error("Unexpected Token");
     }

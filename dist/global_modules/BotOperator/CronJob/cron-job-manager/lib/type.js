@@ -4,7 +4,7 @@ var a = o,
   B = o;
 function k() {
   var J = ['5247LSapqw', '5xseMmq', '21009UDEgWY', '1246680XjbeVz', '9QNUKHt', '294772qfnGJr', '12gqgEPB', '1333661PBtLVi', '295130xcCecA', '__esModu', '1412604qsRlkp', 'definePr', '26hRrezL'];
-  k = function k() {
+  k = function () {
     return J;
   };
   return k();
@@ -34,7 +34,7 @@ function k() {
 })(k, 0x38a87);
 function o(g, O) {
   var N = k();
-  return o = function o(l, s) {
+  return o = function (l, s) {
     l = l - 0x181;
     var v = N[l];
     return v;

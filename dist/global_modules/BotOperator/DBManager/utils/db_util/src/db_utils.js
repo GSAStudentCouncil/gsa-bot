@@ -37,7 +37,7 @@ var DBUtil,
   decrypt_1 = require('../../de' + 'crypt'),
   classes_1 = require('../../..' + D8(0x1f3)),
   Executors = java['util'][D8(0x1b4) + 'nt'][D8(0x1c6) + 's'],
-  groupBy = function groupBy(z, B) {
+  groupBy = function (z, B) {
     var Dy = {
         z: 0x1d6
       },
@@ -48,14 +48,14 @@ var DBUtil,
   };
 function D() {
   var zw = ['M\x20chat_l', 'logs.use', 'LrHaU', 'GNyfZ', 'UserSelf', 'un\x20db\x20be', 'ackUK', 'rsByRoom', '|5|2|11|', 'getType', 'split', 'R_COLUMN', 'pper', '5|0', 's\x20WHERE\x20', '8937907kIJzIy', 'TYhsf', 'UMN', 'ctive_me', 'AND\x20c_ch', 'includes', 'Weylh', 'moveToFi', 'E\x20id\x20=\x20?', '/classes', 'vfdAo', '_id\x20<\x20?\x20', 'uTWry', 'gs.creat', 'MMxLs', 'ogs\x20LEFT', 'bleFutur', '\x20LIMIT\x201', '255Hkklsl', 'util', '\x20BY\x20_id\x20', '12DMttHu', 'definePr', 'OODTM', 'ember', 'IqEsA', '../../..', 'setUserK', 'Tktry', 'RIchT', '\x20LEFT\x20JO', 'pen_link', ',waterma', 'moveToLa', 'Completa', 'kUjzL', 'd\x20=\x20?', 'FIELD_TY', 'sYWRu', 'QocEl', 'fSlqi', 'init', 'lReoc', 'DESC\x20LIM', 's.id\x20)\x20A', 'FSET\x20?', 'BY\x20c_id\x20', '\x20chat_lo', 'USER_COL', 'from', 'PE_INTEG', 'channel', '?\x20AND\x20', 'user', 'PE_NULL', 'mXIje', 'UyLpW', 'SELECT\x20', 'nds', '\x20ON\x20\x20\x20r_', 'ALLyZ', 'aurzr', 'umn_cons', 'twEQH', '/modules', 'CHAT_USE', 'NGMkp', 'S\x20ct\x20FRO', 'join', 'getInt', 'EzDTP', 'getLastI', 'suCPD', '.user_id', '6|2|3|4|', 'getOneUs', 'getReadM', '../../ma', '2.friend', 'getMulti', 'arLlD', 'ync', 'eBtqp', '/sql-bri', 'cNFuO', '1|5|0', 'rst', 'R_JOIN_C', 'getLastC', '?\x20ORDER\x20', 'User', 'SceKj', 'filter', 'All', '\x20\x20WHERE\x20', 'iends.id', 'decrypt', ',\x20COUNT(', 'id\x20=\x20?\x20A', '\x20c__id', 'enc', '1048719ZhpIFW', 'lJuin', 'get', '\x20LIMIT\x20?', 'rawQuery', 'elInfoBy', 'where', 'IN\x20DB2.o', 'ER\x20BY\x20c_', '3|0|4|2|', 'database', 'ChatUser', 'mber_ids', 'MAX_SAFE', 'hatsByCh', 'cks', 'UserObje', 'at_logs.', 'cursorTo', 'supplyAs', 'values', 'uvKqA', '6979524cQHKNi', 'oms\x20WHER', '\x20WHERE\x20c', 'GroupByU', 'prepare', 'getColum', '35268QtBvQo', 'rks\x20from', 'moveToNe', '848plgGJH', 'UM_PREFI', 'Mapper', 'lYtsN', 'gs\x20ORDER', 'FmAUP', 'IRMRH', 'ByIDs', 'Channel', 'select', '1|10|0|4', 'HhdBO', 'OLUMN', 'length', 'BigJSON', 'hat', 'annel', '0|2|1|4|', 'TfmbD', '10LjLicG', 'id\x20=\x20?', 'pleUsers', '__esModu', 'getPrevC', 'getMembe', 'ceil', '\x20FROM\x20ch', 'uZGcf', 'PQIEG', 'NeNOj', 'BpzxI', 'close', '1538jLiCdF', 'getChann', 'nName', 'SeASF', 'chat_id', 'wZdZk', 'ND\x20chat_', 'AND\x20?\x20GR', 'chat_log', 'SELECT\x20_', 'getCount', 'sJUbX', 'gs.chat_', 'RHSrm', 'WlDhE', 'ADlZm', 'toString', '249WltaHT', '5|4|2|3|', 'link_id\x20', 'uxygZ', 'khVXx', 'shutdown', 'BREBt', 'hat_logs', 'TWEEN\x20?\x20', 'raw', 'vmHaZ', 'ALL_COLU', '5|2|4', 'erByID', 'id\x20<=\x20?\x20', '_COLUMN', 'DBUtil', 'CdONN', 'at_id\x20=\x20', 'count', 'push', 'concurre', '\x20\x20\x20WHERE', 'xyJwn', 'UeOwi', 'getLong', 'getNextC', 'qVwxF', 's\x20ON\x20\x20ch', 'userMapp', 'c_id\x20=\x20?', '53847OekOLL', 'OPEN_COL', 'getStrin', 'SELECT\x20a', '_INTEGER', 'Object', 'name', 'getUnrea', 'Executor', 'UMN_PREF', '\x20JOIN\x20DB', 'text', '/big_jso', 'hiVIK', 'aMbly', 'VdeSO', '\x20DESC\x20LI', 'getChatU', 'newFixed', 'YGFvb', 'Cursor', '1109805uFWrqT', '0|1', 'ed_at\x20BE', 'reduce', 'OxtGt', 'LYmPP', 'YdFLp', '3|1|0|6|'];
-  D = function D() {
+  D = function () {
     return zw;
   };
   return D();
 }
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x16c;
     var d = O[I];
     return d;
@@ -406,156 +406,156 @@ function w(z, B) {
     DD = D7,
     Dw = D8,
     B = {
-      'PQIEG': function PQIEG(J, q) {
+      'PQIEG': function (J, q) {
         return J === q;
       },
-      'Weylh': function Weylh(J) {
+      'Weylh': function (J) {
         return J();
       },
-      'twEQH': function twEQH(J, q) {
+      'twEQH': function (J, q) {
         return J < q;
       },
-      'qVwxF': function qVwxF(J, q) {
+      'qVwxF': function (J, q) {
         return J + q;
       },
-      'nJIoO': function nJIoO(J, q) {
+      'nJIoO': function (J, q) {
         return J + q;
       },
-      'uvKqA': function uvKqA(J, q) {
+      'uvKqA': function (J, q) {
         return J + q;
       },
       'UyLpW': DD(zD.z) + DD(zD.B) + 'AND\x20c_ch' + Dw(zD.O) + DD(zD.I) + DD(zD.r) + DD(zD.d) + 'MIT\x201\x20OF' + DD(zD.t),
-      'xyJwn': function xyJwn(J, q) {
+      'xyJwn': function (J, q) {
         return J - q;
       },
       'vmHaZ': Dw(0x1a0) + DD(zD.c),
-      'ackUK': function ackUK(J, q) {
+      'ackUK': function (J, q) {
         return J + q;
       },
       'CdONN': Dw(zD.m),
       'aMbly': DD(zD.z) + '_id\x20>\x20?\x20' + Dw(zD.U) + 'at_id\x20=\x20' + Dw(zD.X) + 'BY\x20c_id\x20' + DD(zD.R) + '\x20OFFSET\x20' + '?',
-      'TMPpi': function TMPpi(J, q, K) {
+      'TMPpi': function (J, q, K) {
         return J(q, K);
       },
-      'RHSrm': function RHSrm(J, q) {
+      'RHSrm': function (J, q) {
         return J === q;
       },
       'lYtsN': Dw(zD.J) + DD(zD.q),
-      'wZdZk': function wZdZk(J) {
+      'wZdZk': function (J) {
         return J();
       },
-      'cNFuO': function cNFuO(J, q) {
+      'cNFuO': function (J, q) {
         return J <= q;
       },
       'OxtGt': 'DB2.frie' + Dw(zD.K),
-      'TYhsf': function TYhsf(J, q, K) {
+      'TYhsf': function (J, q, K) {
         return J(q, K);
       },
       'VdeSO': '2|3|1|4|' + Dw(zD.H),
-      'IqEsA': function IqEsA(J, q) {
+      'IqEsA': function (J, q) {
         return J < q;
       },
-      'UeOwi': function UeOwi(J, q) {
+      'UeOwi': function (J, q) {
         return J(q);
       },
-      'FmAUP': function FmAUP(J, q) {
+      'FmAUP': function (J, q) {
         return J > q;
       },
-      'QPLiP': function QPLiP(J, q) {
+      'QPLiP': function (J, q) {
         return J * q;
       },
-      'uZGcf': function uZGcf(J, q) {
+      'uZGcf': function (J, q) {
         return J * q;
       },
-      'HhdBO': function HhdBO(J, q) {
+      'HhdBO': function (J, q) {
         return J < q;
       },
-      'RIchT': function RIchT(J, q) {
+      'RIchT': function (J, q) {
         return J(q);
       },
-      'ADlZm': function ADlZm(J, q) {
+      'ADlZm': function (J, q) {
         return J(q);
       },
       'aurzr': DD(0x17f) + '3',
-      'vliVr': function vliVr(J) {
+      'vliVr': function (J) {
         return J();
       },
-      'uxygZ': function uxygZ(J, q) {
+      'uxygZ': function (J, q) {
         return J + q;
       },
-      'SeASF': function SeASF(J, q) {
+      'SeASF': function (J, q) {
         return J < q;
       },
       'ALLyZ': '3|4|0|2|' + '1',
-      'kUjzL': function kUjzL(J, q) {
+      'kUjzL': function (J, q) {
         return J(q);
       },
-      'arLlD': function arLlD(J) {
+      'arLlD': function (J) {
         return J();
       },
       'BpzxI': '\x20FROM\x20ch' + 'at_rooms' + Dw(zD.Z) + Dw(0x256) + Dw(zD.u) + Dw(zD.G) + Dw(zD.j) + '=\x20o_id\x20W' + 'HERE\x20r_i' + 'd\x20=\x20?',
-      'eBtqp': function eBtqp(J, q, K, H) {
+      'eBtqp': function (J, q, K, H) {
         return J(q, K, H);
       },
       'WlDhE': DD(zD.o) + '5|1',
       'YdFLp': 'SELECT\x20a' + Dw(zD.F) + Dw(0x25b) + ',waterma' + Dw(zD.b) + '\x20chat_ro' + Dw(zD.h) + DD(0x1f2),
-      'LYmPP': function LYmPP(J, q) {
+      'LYmPP': function (J, q) {
         return J(q);
       },
-      'Sbeaq': function Sbeaq(J, q) {
+      'Sbeaq': function (J, q) {
         return J(q);
       },
-      'APAxh': function APAxh(J, q) {
+      'APAxh': function (J, q) {
         return J(q);
       },
-      'suCPD': function suCPD(J, q) {
+      'suCPD': function (J, q) {
         return J === q;
       },
-      'hiVIK': function hiVIK(J, q) {
+      'hiVIK': function (J, q) {
         return J + q;
       },
-      'YGFvb': function YGFvb(J, q) {
+      'YGFvb': function (J, q) {
         return J || q;
       },
-      'fSlqi': function fSlqi(J, q) {
+      'fSlqi': function (J, q) {
         return J(q);
       },
       'uTWry': '\x20WHERE\x20c' + '__id\x20>\x20?' + '\x20AND\x20c__' + DD(zD.C) + 'ORDER\x20BY' + DD(0x24d),
       'BREBt': Dw(0x197) + 'id\x20\x20FROM' + '\x20chat_lo' + Dw(zD.E) + DD(0x1fe) + Dw(zD.T) + 'IT\x201',
-      'mXIje': function mXIje(J, q) {
+      'mXIje': function (J, q) {
         return J + q;
       },
-      'HripL': function HripL(J, q) {
+      'HripL': function (J, q) {
         return J + q;
       },
       'LrHaU': '\x20FROM\x20DB' + DD(zD.P) + DD(zD.n) + DD(zD.e),
       'khVXx': Dw(zD.A),
       'Tktry': DD(0x24e),
       'TfmbD': '1|4|0|3|' + '2',
-      'lReoc': function lReoc(J) {
+      'lReoc': function (J) {
         return J();
       },
-      'MMxLs': function MMxLs(J, q) {
+      'MMxLs': function (J, q) {
         return J(q);
       },
-      'GNyfZ': function GNyfZ(J) {
+      'GNyfZ': function (J) {
         return J();
       },
-      'sYWRu': function sYWRu(J, q) {
+      'sYWRu': function (J, q) {
         return J(q);
       },
-      'uXutQ': function uXutQ(J, q) {
+      'uXutQ': function (J, q) {
         return J != q;
       },
       'SceKj': Dw(zD.Q) + Dw(zD.S) + '7|6|3|9|' + '8',
-      'lJuin': function lJuin(J, q) {
+      'lJuin': function (J, q) {
         return J + q;
       },
-      'sJUbX': function sJUbX(J, q) {
+      'sJUbX': function (J, q) {
         return J + q;
       },
       'IRMRH': DD(zD.a) + Dw(0x196) + DD(0x216) + Dw(zD.i) + DD(zD.s) + DD(0x1f9) + Dw(zD.N) + '2.friend' + DD(zD.V) + Dw(zD.p) + 'user_id\x20' + '=\x20DB2.fr' + DD(zD.W) + DD(zD.l) + DD(zD.Y) + DD(zD.k) + DD(zD.L) + DD(zD.v) + DD(zD.g) + 'r_id\x20<>\x20' + DD(0x21e),
-      'NGMkp': function NGMkp(J, q) {
+      'NGMkp': function (J, q) {
         return J(q);
       },
       'vfdAo': Dw(zD.x) + 'gs.type\x20' + '<>\x200\x20AND' + '\x20',
@@ -675,12 +675,12 @@ function w(z, B) {
           continue;
         case '3':
           var F = {
-            'EzDTP': function EzDTP(M) {
+            'EzDTP': function (M) {
               var DU = Dt;
               return B[DU(wN.z)](M);
             },
             'QocEl': B['OxtGt'],
-            'fsBSP': function fsBSP(M, D0) {
+            'fsBSP': function (M, D0) {
               return B['PQIEG'](M, D0);
             }
           };
@@ -696,7 +696,7 @@ function w(z, B) {
             while (!![]) {
               switch (A[Q++]) {
                 case '0':
-                  for (var S = function S(M) {
+                  for (var S = function (M) {
                       var DX = Dt,
                         DR = Dt,
                         y = CompletableFuture[DX(wW.z) + DX(0x23b)](function () {
@@ -858,7 +858,7 @@ function w(z, B) {
           continue;
         case '3':
           var Z = {
-            'NeNOj': function NeNOj(b, h) {
+            'NeNOj': function (b, h) {
               return b >= h;
             }
           };
@@ -998,7 +998,7 @@ function w(z, B) {
           }
           continue;
         case '3':
-          for (var T = function T(L) {
+          for (var T = function (L) {
               var DL = Dk,
                 Dx = DY,
                 x = CompletableFuture[DL(z8.z) + 'ync'](function () {

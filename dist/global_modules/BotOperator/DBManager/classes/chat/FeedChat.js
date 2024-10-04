@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var R = w,
   F = w;
 (function (z, B) {
@@ -26,7 +25,7 @@ var R = w,
     }
   }
 })(D, 0xe4847);
-var __extends = void 0 && (void 0)[R(0x181) + 's'] || function () {
+var __extends = this && this[R(0x181) + 's'] || function () {
   var Ds = {
       z: 0x18b,
       B: 0x171
@@ -54,28 +53,28 @@ var __extends = void 0 && (void 0)[R(0x181) + 's'] || function () {
     J = R,
     q = R,
     z = {
-      'MzNlN': function MzNlN(O, I) {
+      'MzNlN': function (O, I) {
         return O instanceof I;
       },
-      'HfDea': function HfDea(O, I) {
+      'HfDea': function (O, I) {
         return O != I;
       },
       'cCBAc': J(0x13c),
-      'KJPbK': function KJPbK(O, I) {
+      'KJPbK': function (O, I) {
         return O + I;
       },
       'atRaP': J(Ds.z) + q(Ds.B) + 'lue\x20',
-      'DRGpn': function DRGpn(O, I) {
+      'DRGpn': function (O, I) {
         return O(I);
       },
-      'VWmSH': function VWmSH(O, I, r) {
+      'VWmSH': function (O, I, r) {
         return O(I, r);
       }
     },
-    _B = function B(O, I) {
+    B = function (O, I) {
       var K = q,
         H = J;
-      return _B = Object[K(DS.z) + K(DS.B)] || z[K(0x145)]({
+      return B = Object[K(DS.z) + K(DS.B)] || z[K(0x145)]({
         '__proto__': []
       }, Array) && function (d, c) {
         d['__proto_' + '_'] = c;
@@ -83,7 +82,7 @@ var __extends = void 0 && (void 0)[R(0x181) + 's'] || function () {
         var Z = H,
           u = K;
         for (var m in c) Object[Z(DQ.z) + 'e']['hasOwnPr' + Z(DQ.B)][u(DQ.O)](c, m) && (d[m] = c[m]);
-      }, _B(O, I);
+      }, B(O, I);
     };
   return function (O, I) {
     var Da = {
@@ -91,12 +90,12 @@ var __extends = void 0 && (void 0)[R(0x181) + 's'] || function () {
       },
       G = J,
       j = q;
-    if (z['HfDea'](z[G(Di.z)], _typeof(I)) && null !== I) throw new TypeError(z[j(Di.B)](z['atRaP'] + z[j(0x15e)](String, I), G(Di.O) + G(Di.I) + G(Di.r) + '\x20null'));
+    if (z['HfDea'](z[G(Di.z)], typeof I) && null !== I) throw new TypeError(z[j(Di.B)](z['atRaP'] + z[j(0x15e)](String, I), G(Di.O) + G(Di.I) + G(Di.r) + '\x20null'));
     function d() {
       var o = j;
       this['construc' + o(Da.z)] = O;
     }
-    z[j(Di.d)](_B, O, I), O['prototyp' + 'e'] = null === I ? Object[G(Di.t)](I) : (d[G(Di.c) + 'e'] = I[G(Di.m) + 'e'], new d());
+    z[j(Di.d)](B, O, I), O['prototyp' + 'e'] = null === I ? Object[G(Di.t)](I) : (d[G(Di.c) + 'e'] = I[G(Di.m) + 'e'], new d());
   };
 }();
 Object[R(0x188) + 'operty'](exports, R(0x173) + 'le', {
@@ -148,10 +147,10 @@ var Chat_1 = require(F(0x195)),
       b = R,
       E = F,
       B = {
-        'nJTux': function nJTux(I, r) {
+        'nJTux': function (I, r) {
           return I === r;
         },
-        'EwrFt': function EwrFt(I, r) {
+        'EwrFt': function (I, r) {
           return I === r;
         },
         'nZBJD': b(Dy.z)
@@ -163,7 +162,7 @@ var Chat_1 = require(F(0x195)),
       return d[h(0x185)] = -0x1, d[C(0x185)] = I[C(0x133)][C(Dp.z)], d;
     }
     return __extends(O, z), Object[E(Dy.B) + 'operty'](O[E(Dy.O) + 'e'], B['nZBJD'], {
-      'get': function get() {
+      'get': function () {
         var T = E,
           P = b;
         return this[T(DW.z)][T(DW.B)];
@@ -215,7 +214,7 @@ var InviteFeed = function (z) {
     N = R,
     V = R,
     B = {
-      'mSusr': function mSusr(I, r, d) {
+      'mSusr': function (I, r, d) {
         return I(r, d);
       },
       'ahnGT': N(0x190) + V(w5.z),
@@ -226,7 +225,7 @@ var InviteFeed = function (z) {
     return z[p(0x13e)](this, I) || this;
   }
   return B['mSusr'](__extends, O, z), Object[V(w5.B) + 'operty'](O[V(w5.O) + 'e'], B[V(w5.I)], {
-    'get': function get() {
+    'get': function () {
       var W = V,
         l = V;
       return this[W(0x14f)][W(0x133)][l(0x152)];
@@ -234,7 +233,7 @@ var InviteFeed = function (z) {
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object[N(0x188) + 'operty'](O[V(w5.O) + 'e'], B[N(w5.r)], {
-    'get': function get() {
+    'get': function () {
       var Y = V,
         k = N;
       return this[Y(w3.z)]['message'][k(w3.B)];
@@ -264,7 +263,7 @@ var OpenChatJoinedFeed = function (z) {
     v = F,
     g = F,
     B = {
-      'vybdB': function vybdB(I, r, d) {
+      'vybdB': function (I, r, d) {
         return I(r, d);
       }
     };
@@ -273,7 +272,7 @@ var OpenChatJoinedFeed = function (z) {
     return z[L(w7.z)](this, I) || this;
   }
   return B[v(wD.z)](__extends, O, z), Object[g(wD.B) + g(0x184)](O[v(wD.O) + 'e'], 'joinUser' + 's', {
-    'get': function get() {
+    'get': function () {
       var x = v,
         f = v;
       return this[x(w8.z)][f(w8.B)][x(w8.O)];
@@ -328,7 +327,7 @@ var LeaveFeed = function (z) {
     return z[D1(wO.z)](this, O) || this;
   }
   return __extends(B, z), Object[D2(wt.z) + D2(wt.B)](B[D2(wt.O) + 'e'], D3(wt.I) + 'r', {
-    'get': function get() {
+    'get': function () {
       var D4 = D2,
         D5 = D2;
       return this[D4(0x14f)][D5(wI.z)][D4(0x17c)];
@@ -366,14 +365,14 @@ var OpenChatKickedFeed = function (z) {
     return z['call'](this, I) || this;
   }
   return __extends(O, z), Object[Dw(wR.B) + Dw(0x184)](O[Dw(wR.O) + 'e'], DD(wR.I) + 'er', {
-    'get': function get() {
+    'get': function () {
       var Dz = DD;
       return this['_raw']['message'][Dz(wm.z)];
     },
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object['definePr' + Dw(0x184)](O['prototyp' + 'e'], B[Dw(wR.r)], {
-    'get': function get() {
+    'get': function () {
       var DB = Dw;
       return this[DB(0x179)];
     },
@@ -385,7 +384,7 @@ var OpenChatKickedFeed = function (z) {
 }(KickedFeed);
 function D() {
   var wV = ['erFeed', 'tends\x20va', 'DeleteFe', '__esModu', 'serByLog', 'create', 'ahnGT', 'InviteFe', 'leaveUse', 'user', '131833gptuzX', '7KOxEaQ', 'member', 'Chat', 'logId', 'kickedBy', 'eFeed', '__extend', 'tor', 'isHandOv', 'operty', 'feedType', 'demoteUs', '31833FfjNCz', 'definePr', 'ser', 'prevHost', 'Class\x20ex', '178440MTsGUV', 'KickedFe', 'newHost', 'hat', 'invitedU', 'VWmSH', 'kickedUs', '649TVjtCS', 'inviter', './Chat', '4666062NLfLib', 'apply', 'WUqIP', 'message', 'DemoteFe', 'atJoinFe', 'dFeed', 'vybdB', 'Feed', '648uiBWnV', 'atKicked', 'hidden', 'function', 'isPromot', 'call', 'OpenChat', 'deletedC', 'HandOver', 'FeedChat', 'eed', 'setProto', 'MzNlN', 'isKicked', 'isOpenCh', 'PromoteF', 'JoinedFe', 'getChatU', '1464JyReJY', 'KJPbK', 'uQseH', 'cCBAc', '_raw', 'isDelete', '664jwRcgs', 'members', '41100zQwxWZ', '238JhANik', 'isDemote', 'isFeed', 'INTSJ', '61695QmtGrV', '\x20is\x20not\x20', 'peChange', 'a\x20constr', 'isHandov', 'Gincp', 'DRGpn', 'typeOf', 'inviteUs', 'ils/db_u', 'nJTux', 'uctor\x20or', '1214210xdUMor', 'vgjvM', 'xMuUS', '_originC', 'prototyp', 'sers', 'kicked', 'LeaveFee', 'promoteU', 'yKCDf', 'EwrFt', 'MemberTy'];
-  D = function D() {
+  D = function () {
     return wV;
   };
   return D();
@@ -393,7 +392,7 @@ function D() {
 exports['OpenChat' + F(0x18d) + 'ed'] = OpenChatKickedFeed;
 function w(z, B) {
   var O = D();
-  return w = function w(I, r) {
+  return w = function (I, r) {
     I = I - 0x131;
     var d = O[I];
     return d;
@@ -409,7 +408,7 @@ var MemberTypeChangedFeed = function (z) {
     DO = R,
     DI = R,
     B = {
-      'vgjvM': function vgjvM(I, r, d) {
+      'vgjvM': function (I, r, d) {
         return I(r, d);
       }
     };
@@ -444,7 +443,7 @@ var PromoteFeed = function (z) {
     Dd = F,
     Dt = R,
     B = {
-      'INTSJ': function INTSJ(I, r, d) {
+      'INTSJ': function (I, r, d) {
         return I(r, d);
       }
     };
@@ -453,7 +452,7 @@ var PromoteFeed = function (z) {
     return z[Dr(wj.z)](this, I) || this;
   }
   return B[Dd(wb.z)](__extends, O, z), Object[Dd(wb.B) + 'operty'](O[Dt(wb.O) + 'e'], Dd(wb.I) + Dd(wb.r), {
-    'get': function get() {
+    'get': function () {
       var Dc = Dt,
         Dm = Dd;
       return this[Dc(0x14f)][Dm(wo.z)][Dc(wo.B)];
@@ -483,7 +482,7 @@ var DemoteFeed = function (z) {
     return z['call'](this, O) || this;
   }
   return __extends(B, z), Object[DU(wT.z) + DU(wT.B)](B[DU(wT.O) + 'e'], DX(wT.I) + 'er', {
-    'get': function get() {
+    'get': function () {
       var DR = DU,
         DJ = DU;
       return this['_raw'][DR(wC.z)][DJ(wC.B)];
@@ -515,7 +514,7 @@ var HandOverFeed = function (z) {
     Dq = R,
     DK = F,
     B = {
-      'uQseH': function uQseH(I, r, d) {
+      'uQseH': function (I, r, d) {
         return I(r, d);
       },
       'xMuUS': 'newHost'
@@ -524,7 +523,7 @@ var HandOverFeed = function (z) {
     return z['call'](this, I) || this;
   }
   return B[Dq(0x14d)](__extends, O, z), Object[DK(wS.z) + Dq(wS.B)](O[DK(wS.O) + 'e'], DK(wS.I), {
-    'get': function get() {
+    'get': function () {
       var DH = Dq,
         DZ = Dq;
       return this[DH(0x14f)][DH(we.z)][DZ(we.B)];
@@ -532,7 +531,7 @@ var HandOverFeed = function (z) {
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object['definePr' + Dq(wS.r)](O['prototyp' + 'e'], B[Dq(wS.d)], {
-    'get': function get() {
+    'get': function () {
       var Du = Dq,
         DG = Dq;
       return this['_raw'][Du(wA.z)][Du(wA.B)];
@@ -568,7 +567,7 @@ var DeleteFeed = function (z) {
     Dj = F,
     Do = F,
     B = {
-      'EWJIw': function EWJIw(I, r, d) {
+      'EWJIw': function (I, r, d) {
         return I(r, d);
       },
       'Gincp': Dj(wN.z) + Do(wN.B)
@@ -578,7 +577,7 @@ var DeleteFeed = function (z) {
     return z[DF(wi.z)](this, I) || this;
   }
   return B['EWJIw'](__extends, O, z), Object[Dj(wN.O) + Do(wN.I)](O[Do(wN.r) + 'e'], B[Do(wN.d)], {
-    'get': function get() {
+    'get': function () {
       var Db = Do,
         Dh = Dj;
       return this[Db(ws.z) + Db(ws.B)] || (this[Dh(ws.z) + Db(ws.B)] = db_util_1['DBUtil'][Db(ws.O) + Db(ws.I) + 'ID'](this[Db(0x14f)][Dh(0x133)][Dh(ws.r)]), this[Dh(ws.d) + Db(ws.B)]['channel'] = this['_channel']), this['_originC' + Db(ws.t)];

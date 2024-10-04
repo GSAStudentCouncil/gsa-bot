@@ -1,6 +1,5 @@
 'use strict';
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var X = o,
   z = o;
 (function (g, O) {
@@ -29,20 +28,20 @@ var X = o,
 })(k, 0xb8e4d);
 function k() {
   var t = ['construc', '997736KTkdwE', 'rror', '1983605ObGiRc', 'Chlhn', '함수를\x20실행하는', 'umovU', 'definePr', 'ydfHB', 'MooNz', '__esModu', '3816714yOJpKX', '1529670WjeSuz', 'Class\x20ex', 'RuntimeE', 'prototyp', '\x20도중\x20에러가\x20', 'BnayI', '발생했습니다.', '12567447jxBXCZ', '238RuClaM', '582496EhLCrG', '24296EyhJNW', '10dctzEv', '__proto_', 'message', 'typeOf', 'NYMBD', 'operty', 'mYZJQ', 'setProto', 'apply', '2XosZUC', '\x20null', 'tends\x20va'];
-  k = function k() {
+  k = function () {
     return t;
   };
   return k();
 }
 function o(g, O) {
   var N = k();
-  return o = function o(l, s) {
+  return o = function (l, s) {
     l = l - 0x1bf;
     var v = N[l];
     return v;
   }, o(g, O);
 }
-var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
+var __extends = this && this['__extend' + 's'] || function () {
   var R = {
       g: 0x1cf
     },
@@ -61,26 +60,26 @@ var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
     D = o,
     J = o,
     g = {
-      'BnayI': function BnayI(N, l, s) {
+      'BnayI': function (N, l, s) {
         return N(l, s);
       },
-      'Chlhn': function Chlhn(N, l) {
+      'Chlhn': function (N, l) {
         return N != l;
       },
       'mYZJQ': 'function',
-      'ieTOd': function ieTOd(N, l) {
+      'ieTOd': function (N, l) {
         return N !== l;
       },
-      'ydfHB': function ydfHB(N, l) {
+      'ydfHB': function (N, l) {
         return N + l;
       },
       'KfKnV': D(0x1dd) + J(R.g) + 'lue\x20',
-      'XtGXQ': function XtGXQ(N, l) {
+      'XtGXQ': function (N, l) {
         return N(l);
       },
       'MooNz': '\x20is\x20not\x20' + 'a\x20constr' + 'uctor\x20or' + D(0x1ce)
     },
-    _O = function O(N, l) {
+    O = function (N, l) {
       var r = {
           g: 0x1df,
           O: 0x1c9
@@ -90,7 +89,7 @@ var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
         },
         m = J,
         M = J;
-      return _O = Object[m(P.g) + M(P.O)] || {
+      return O = Object[m(P.g) + M(P.O)] || {
         '__proto__': []
       } instanceof Array && function (s, v) {
         var x = m;
@@ -99,17 +98,17 @@ var __extends = void 0 && (void 0)['__extend' + 's'] || function () {
         var n = m,
           e = m;
         for (var E in v) Object[n(r.g) + 'e']['hasOwnPr' + e(r.O)]['call'](v, E) && (s[E] = v[E]);
-      }, g[M(P.N)](_O, N, l);
+      }, g[M(P.N)](O, N, l);
     };
   return function (N, l) {
     var W = D,
       T = D;
-    if (g[W(h.g)](g[T(0x1ca)], _typeof(l)) && g['ieTOd'](null, l)) throw new TypeError(g[W(h.O)](g[T(h.N)](g['KfKnV'], g['XtGXQ'](String, l)), g[T(0x1d9)]));
+    if (g[W(h.g)](g[T(0x1ca)], typeof l) && g['ieTOd'](null, l)) throw new TypeError(g[W(h.O)](g[T(h.N)](g['KfKnV'], g['XtGXQ'](String, l)), g[T(0x1d9)]));
     function s() {
       var j = T;
       this[j(0x1d0) + 'tor'] = N;
     }
-    _O(N, l), N['prototyp' + 'e'] = null === l ? Object['create'](l) : (s[T(h.l) + 'e'] = l[T(h.s) + 'e'], new s());
+    O(N, l), N['prototyp' + 'e'] = null === l ? Object['create'](l) : (s[T(h.l) + 'e'] = l[T(h.s) + 'e'], new s());
   };
 }();
 Object[X(0x1d7) + X(0x1c9)](exports, z(0x1da) + 'le', {
@@ -129,11 +128,11 @@ var RuntimeError = function (g) {
     V = z,
     C = X,
     O = {
-      'umovU': function umovU(l, s) {
+      'umovU': function (l, s) {
         return l !== s;
       },
       'NYMBD': V(d.g) + V(d.O) + C(d.N),
-      'zjSXM': function zjSXM(l, s, v) {
+      'zjSXM': function (l, s, v) {
         return l(s, v);
       }
     };

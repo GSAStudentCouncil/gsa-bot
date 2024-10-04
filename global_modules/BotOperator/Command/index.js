@@ -766,7 +766,7 @@ class Registry {
 				command.executeCron(idx, datetime);
 				
 				if (isValidChannel(logRoom))
-					logRoom.send(CronLog(command, idx, datetime)).then(() => {}, e => Log.e(e.stack));
+					logRoom.send(CronLog(command, idx, datetime)).then(() => {}, e => Log.e(e + '\n' + e.stack));
 			}, cronOpt);
 		}
 	}
@@ -911,5 +911,5 @@ exports.NaturalCommand = NaturalCommand;
 exports.CommandRegistry = Registry.CommandRegistry;
 
 } catch (e) {
-	Log.e(e.stack);
+	Log.e(e + '\n' + e.stack);
 }
