@@ -1,8 +1,9 @@
 "use strict";
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 !function (t, r) {
-  "object" == typeof exports && "undefined" != typeof module ? r(exports) : "function" == typeof define && define.amd ? define(["exports"], r) : r((t = "undefined" != typeof globalThis ? globalThis : t || self).LosslessJSON = {});
-}(this, function (t) {
+  "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? r(exports) : "function" == typeof define && define.amd ? define(["exports"], r) : r((t = "undefined" != typeof globalThis ? globalThis : t || self).LosslessJSON = {});
+}(void 0, function (t) {
   function r(t) {
     return n.test(t);
   }
@@ -37,10 +38,10 @@
     s = /\./,
     d = /0+$/;
   function y(t) {
-    return y = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (t) {
-      return typeof t;
+    return y = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (t) {
+      return _typeof(t);
     } : function (t) {
-      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : typeof t;
+      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : _typeof(t);
     }, y(t);
   }
   function v(t, r) {
@@ -79,7 +80,7 @@
     var o, a;
     return o = n, (a = [{
       key: "valueOf",
-      value: function () {
+      value: function value() {
         var n = c(this.value);
         if (void 0 === n || n === t.UnsafeNumberReason.truncate_float) return parseFloat(this.value);
         if (r(this.value)) return BigInt(this.value);
@@ -87,7 +88,7 @@
       }
     }, {
       key: "toString",
-      value: function () {
+      value: function value() {
         return this.value;
       }
     }]) && v(o.prototype, a), Object.defineProperty(o, "prototype", {
@@ -101,10 +102,10 @@
     return new h(t);
   }
   function w(t) {
-    return w = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (t) {
-      return typeof t;
+    return w = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (t) {
+      return _typeof(t);
     } : function (t) {
-      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : typeof t;
+      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : _typeof(t);
     }, w(t);
   }
   function g(t, r) {
@@ -160,10 +161,10 @@
     P = 70,
     T = 102;
   function $(t) {
-    return $ = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (t) {
-      return typeof t;
+    return $ = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (t) {
+      return _typeof(t);
     } : function (t) {
-      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : typeof t;
+      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : _typeof(t);
     }, $(t);
   }
   var B = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;

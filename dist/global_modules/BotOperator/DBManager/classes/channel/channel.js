@@ -26,7 +26,7 @@ var Z = w,
 })(D, 0x500e4);
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x134;
     var d = O[I];
     return d;
@@ -195,53 +195,53 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
       G = u,
       j = u,
       z = {
-        'rKkER': function (O, I) {
+        'rKkER': function rKkER(O, I) {
           return O === I;
         },
-        'NNPAj': function (O, I) {
+        'NNPAj': function NNPAj(O, I) {
           return O === I;
         },
         'tjnpP': G(Dg.z) + 't',
-        'smkds': function (O, I) {
+        'smkds': function smkds(O, I) {
           return O !== I;
         },
-        'yoyiC': function (O) {
+        'yoyiC': function yoyiC(O) {
           return O();
         },
-        'EIoqy': function (O) {
+        'EIoqy': function EIoqy(O) {
           return O();
         },
-        'zQkZB': function (O, I) {
+        'zQkZB': function zQkZB(O, I) {
           return O === I;
         },
-        'mZNaJ': function (O, I) {
+        'mZNaJ': function mZNaJ(O, I) {
           return O !== I;
         },
-        'ePOeM': function (O, I) {
+        'ePOeM': function ePOeM(O, I) {
           return O == I;
         },
-        'cIWKP': function (O, I) {
+        'cIWKP': function cIWKP(O, I) {
           return O !== I;
         },
-        'wpRsi': function (O, I) {
+        'wpRsi': function wpRsi(O, I) {
           return O == I;
         },
-        'HHlTU': function (O, I) {
+        'HHlTU': function HHlTU(O, I) {
           return O != I;
         },
-        'WJapt': function (O, I) {
+        'WJapt': function WJapt(O, I) {
           return O === I;
         },
-        'yymbb': function (O, I) {
+        'yymbb': function yymbb(O, I) {
           return O / I;
         },
-        'wvVLW': function (O, I) {
+        'wvVLW': function wvVLW(O, I) {
           return O <= I;
         },
-        'uuKLM': function (O, I) {
+        'uuKLM': function uuKLM(O, I) {
           return O === I;
         },
-        'ictuO': function (O, I) {
+        'ictuO': function ictuO(O, I) {
           return O === I;
         },
         'MIRvz': 'members',
@@ -256,7 +256,7 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
       this[o(0x156)] = O, this[o(0x157)] = O['id'];
     }
     return Object[G(Dg.d) + 'operty'](B[G(Dg.t) + 'e'], z[j(Dg.c)], {
-      'get': function () {
+      'get': function get() {
         var b = j,
           h = G;
         return this[b(0x18f)] || (this['_members'] = db_util_1['DBUtil'][b(Du.z) + h(Du.B) + 'ID'](this[b(Du.O)])), this[h(Du.I)];
@@ -264,7 +264,7 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[j(Dg.d) + 'operty'](B[G(0x19f) + 'e'], z['cXauT'], {
-      'get': function () {
+      'get': function get() {
         var C = j,
           E = G;
         if (z[C(DG.z)](void 0x0, this[E(DG.B) + E(DG.O)])) {
@@ -283,7 +283,7 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
       var n = G;
       return db_util_1['DBUtil'][n(Do.z) + 'elInfoBy' + 'Id'](O);
     }, Object[G(Dg.d) + j(Dg.X)](B[j(0x19f) + 'e'], 'raw', {
-      'get': function () {
+      'get': function get() {
         return this['_raw'];
       },
       'enumerable': !0x1,
@@ -294,7 +294,7 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
         'openLink': null
       };
     }, Object['definePr' + G(Dg.X)](B[j(Dg.R) + 'e'], z[G(Dg.J)], {
-      'get': function () {
+      'get': function get() {
         var e = G,
           A = G;
         return this[e(Dh.z) + 't'] || (this[A(0x14d) + 't'] = db_util_1[e(Dh.B)][A(Dh.O) + e(Dh.I) + 'ID'](this['_raw']['last_log' + '_id']), this[A(0x14d) + 't'][A(Dh.r)] = this), this['_lastCha' + 't'];
@@ -302,11 +302,11 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[j(Dg.d) + 'operty'](B[j(Dg.t) + 'e'], z[j(Dg.q)], {
-      'get': function () {
+      'get': function get() {
         var S = G,
           a = G,
           O = {
-            'FzGIi': function (m, U) {
+            'FzGIi': function FzGIi(m, U) {
               var Q = w;
               return z[Q(DC.z)](m, U);
             }
@@ -331,7 +331,7 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
         }
         return this[a(DT.r)];
       },
-      'set': function (O) {
+      'set': function set(O) {
         this['_name'] = O;
       },
       'enumerable': !0x1,
@@ -352,10 +352,10 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
         N = G,
         V = j,
         I = {
-          'WChTq': function (m, U) {
+          'WChTq': function WChTq(m, U) {
             return m(U);
           },
-          'rikVk': function (m, U) {
+          'rikVk': function rikVk(m, U) {
             return z['smkds'](m, U);
           }
         },
@@ -379,13 +379,13 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
         O = channel_session_manager_1[k(0x143) + k(Da.z) + k(Da.B)]['getChann' + 'elByID'](this[k(0x157)]);
       return O ? O[k(Da.O)]() : !!z[k(Da.I)](global)[L(Da.r)] && Api[k(Da.d) + 'ad']();
     }, Object[j(Dg.Dy) + j(0x175)](B['prototyp' + 'e'], 'id', {
-      'get': function () {
+      'get': function get() {
         return this['_id'];
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object['definePr' + 'operty'](B[G(Dg.t) + 'e'], z[G(0x142)], {
-      'get': function () {
+      'get': function get() {
         var v = j,
           g = G;
         if (z['zQkZB'](void 0x0, this[v(DN.z)])) {
@@ -469,7 +469,7 @@ var channel_session_manager_1 = require(u(0x13e) + Z(0x15a) + u(0x162) + 'r'),
   }();
 function D() {
   var Dx = ['ils', 'display_', 'rectChan', '_host', 'customNa', 'send', 'replyRoo', 'BigJSON', 'getCurre', 'FzGIi', 'host', './channe', 'NNPAj', '_name', 'floor', 'jLYwN', 'ChannelS', 'elByID', 'toJSON', 'get', 'getTime', 'parse', '__esModu', '4|2|3|5|', 'rKkER', 'getMembe', '_lastCha', 'MIRvz', 'hatsByCh', 'now', 'KvnQo', 'DirectCh', 'getChann', 'g_json', 'rikVk', '_raw', '_id', 'filter', 'getRecen', 'l-sessio', 'getPromi', 'ils/db_u', 'read', 'name', 'til', 'essionMa', 'markAsRe', 'n-manage', 'members', 'channel', 'MultiCha', 'tjnpP', 'getCount', '../../bi', 'getChatU', 'includeF', 'tChat', 'isMultiC', 'isOpenMu', 'definePr', '46ggRvDK', 'warehous', 'mZNaJ', '1|0|6', 'elInfoBy', 'getLastC', 'operty', '7719490lXzVFh', 'ltiChann', 'yoyiC', 'nager', 'length', 'isDirect', '5BfhCoU', 'YRPcU', 'hostId', '../../ut', '3915510mJxVbd', 'yymbb', '14Bfyyli', '_customN', '1782016pMwqhQ', 'ePOeM', '23253gInoYH', 'lastChat', 'ame', 'cIWKP', 'EIoqy', 'split', '459995GrNPHY', 'getOneUs', 'Api', '_members', 'content', 'serByLog', '4522239QczLby', 'ayName', 'pByUser', '1830836CTWaQQ', 'Channel', 'ser', 'isOpenCh', 'rsByRoom', 'annel', 'DBUtil', 'GroupByU', 'WChTq', 'type', 'prototyp', 'meta'];
-  D = function () {
+  D = function D() {
     return Dx;
   };
   return D();

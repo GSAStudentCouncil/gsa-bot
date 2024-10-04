@@ -1,3 +1,5 @@
+"use strict";
+
 exports.Event = {
   MESSAGE: 'message',
   COMMAND: 'command',

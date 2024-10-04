@@ -2,7 +2,7 @@
 
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x1ef;
     var d = O[I];
     return d;
@@ -12,7 +12,7 @@ var c = w,
   m = w;
 function D() {
   var i = ['tkpkp', 'memberTy', '44997euLydF', 'raw', '6500529RdDVfK', '10330168mSjjic', 'file_ima', '4QhSfcw', '230excCQt', '_raw', 'image_ur', '7249428oMbRCR', 'profile_', '4221714PVTtdc', 'full_pro', '7DYrLSl', 'definePr', 'mage', 'name', '_image_u', 'toJSON', 'User', 'customNa', '63459yIhUAg', 'ge_url', 'prototyp', 'ype', '4091255pvvNBK', '_profile', 'operty', '28ueEtDa', 'member_t', 'original'];
-  D = function () {
+  D = function D() {
     return i;
   };
   return D();
@@ -107,14 +107,14 @@ var User = function () {
   return B[U(a.B) + 'e']['isMine'] = function () {
     return !0x1;
   }, Object['definePr' + X(a.O)](B['prototyp' + 'e'], 'id', {
-    'get': function () {
+    'get': function get() {
       var J = X;
       return this[J(E.z)]['id'];
     },
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object['definePr' + U(0x1f9)](B[X(0x1f5) + 'e'], z['RLYpZ'], {
-    'get': function () {
+    'get': function get() {
       var q = X,
         K = U;
       return this[q(T.z)][K(T.B)];
@@ -122,14 +122,14 @@ var User = function () {
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object['definePr' + X(a.O)](B[X(0x1f5) + 'e'], X(a.I) + 'me', {
-    'get': function () {
+    'get': function get() {
       var H = X;
       return this[H(P.z)]['nick_nam' + 'e'] || null;
     },
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object['definePr' + U(a.r)](B[U(0x1f5) + 'e'], X(0x1fe) + 'pe', {
-    'get': function () {
+    'get': function get() {
       var Z = X,
         u = U;
       return this[Z(n.z)][Z(n.B) + Z(n.O)];
@@ -137,7 +137,7 @@ var User = function () {
     'enumerable': !0x1,
     'configurable': !0x0
   }), Object[X(a.i) + X(a.s)](B[U(a.N) + 'e'], z[X(a.V)], {
-    'get': function () {
+    'get': function get() {
       var G = U;
       return this[G(e.z)];
     },
@@ -146,7 +146,7 @@ var User = function () {
   }), B[X(a.p) + 'e']['isOpenUs' + 'er'] = function () {
     return !0x1;
   }, Object[X(a.W) + 'operty'](B[U(a.l) + 'e'], 'profileI' + U(a.Y), {
-    'get': function () {
+    'get': function get() {
       var j = X,
         o = X,
         O = this[j(0x206)][o(Q.z) + j(0x1f8) + j(Q.B) + 'rl'],

@@ -2,14 +2,14 @@
 
 function D() {
   var X = ['__esModu', '4172180zmNxAD', '1477AHkHvj', '3geJtBN', 'definePr', '8dWvGQx', '1361850AYJDdW', '4739859YXhKcC', '2369600IKTYza', 'operty', '765755VmduXD', '632412jufhYj', '6204CTJacr'];
-  D = function () {
+  D = function D() {
     return X;
   };
   return D();
 }
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x17d;
     var d = O[I];
     return d;

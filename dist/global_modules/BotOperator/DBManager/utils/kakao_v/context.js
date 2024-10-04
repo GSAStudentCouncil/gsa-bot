@@ -26,7 +26,7 @@ var U = w,
 })(D, 0xdbfbd);
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x133;
     var d = O[I];
     return d;
@@ -34,7 +34,7 @@ function w(z, B) {
 }
 function D() {
   var K = ['197410mIUTQn', '7014378ycZhTP', '8LnLHRV', '__esModu', '3mjuNxI', '1047377NXAOCi', '216156eAyOeq', 'definePr', 'Api', '16fjVugW', 'bvxNu', 'idContex', '1529TFEpDn', '7vDjIbx', 'getConte', '10258370AUsuuq', '1960434ZnPwyS', 'getAndro', 'operty', '704506IcNdAf'];
-  D = function () {
+  D = function D() {
     return K;
   };
   return D();
@@ -48,7 +48,7 @@ function getAndroidContext() {
     c = w,
     m = w,
     z = {
-      'bvxNu': function (B) {
+      'bvxNu': function bvxNu(B) {
         return B();
       }
     };

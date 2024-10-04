@@ -167,8 +167,8 @@ var getMeals = function getMeals(dt, bullet) {
     }
     return meals;
   } catch (e) {
-    if (isValidChannel(logRoom)) logRoom.send("Error:".concat(e.stack));
-    Log.e(e.stack);
+    if (isValidChannel(logRoom)) logRoom.send("Error:".concat(e, "\n").concat(e.stack));
+    Log.e(e + '\n' + e.stack);
     return [null, null, null];
   }
 };
@@ -512,6 +512,6 @@ try {
   ////////////////////// 봇 가동 시작
   bot.start();
 } catch (err) {
-  if (isValidChannel(logRoom)) logRoom.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err.stack));
-  Log.error(err.stack);
+  if (isValidChannel(logRoom)) logRoom.error("\uBD07 \uAC00\uB3D9 \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.\n\n".concat(err, "\n").concat(err.stack));
+  Log.error(err + '\n' + err.stack);
 }

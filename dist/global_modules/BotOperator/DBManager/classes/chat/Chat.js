@@ -32,7 +32,7 @@ Object[J(0x191) + q(0x192)](exports, '__esModu' + 'le', {
 }), exports[q(0x18e)] = void 0x0;
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x178;
     var d = O[I];
     return d;
@@ -40,7 +40,7 @@ function w(z, B) {
 }
 function D() {
   var De = ['isEmotic', '_type', '_channel', '147792rlptXv', '796445uxBynR', 'text', 'shout', 'SxiIf', 'bIdcB', '715NSVozb', '18AjJPPj', 'ticon', 'dMember', 'isMap', 'getUnrea', '_user', 'pleUsers', 'type', 'GbQCt', 'originTy', '207bElpQG', 'getMulti', 'Fcfzt', '436hedsoE', '_isHidde', 'KilLe', 'pdOWx', 'pQsEK', 'chat_id', 'hoto', 'hat', '3992vHuefG', 'indexOf', '../../ut', 'UcRKA', 'sendTime', '2026906eIGiCt', 'toJSON', 'map', 'prototyp', 'getReadM', '3242320LbdodS', 'ByIDs', 'DBUtil', 'raw', '5176irvdxZ', 'Chat', 'mbers', 'user_id', 'definePr', 'operty', 'isDelete', '18uDJIgD', 'getNextC', 'BlHJw', 'til', 'mSUjg', 'ASRui', '_mention', 'isMultiP', 'hasShout', 'isFile', 'attachme', 'uYtRh', 'mentions', 'ers', 'isAudio', 'isProfil', 'readMemb', 'HHxzU', 'isPhoto', 'ember', 'isReply', 'uDJJN', 'getPrevC', '295UjXtNf', '_raw'];
-  D = function () {
+  D = function D() {
     return De;
   };
   return D();
@@ -166,31 +166,31 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
       K = J,
       H = q,
       z = {
-        'EnKqF': function (O, I) {
+        'EnKqF': function EnKqF(O, I) {
           return O >= I;
         },
-        'GbQCt': function (O, I) {
+        'GbQCt': function GbQCt(O, I) {
           return O & I;
         },
-        'UcRKA': function (O, I) {
+        'UcRKA': function UcRKA(O, I) {
           return O !== I;
         },
-        'uYtRh': function (O, I) {
+        'uYtRh': function uYtRh(O, I) {
           return O === I;
         },
-        'BlHJw': function (O, I) {
+        'BlHJw': function BlHJw(O, I) {
           return O === I;
         },
-        'KilLe': function (O, I) {
+        'KilLe': function KilLe(O, I) {
           return O(I);
         },
-        'mSUjg': function (O, I) {
+        'mSUjg': function mSUjg(O, I) {
           return O < I;
         },
-        'bIdcB': function (O, I) {
+        'bIdcB': function bIdcB(O, I) {
           return O < I;
         },
-        'Fcfzt': function (O, I) {
+        'Fcfzt': function Fcfzt(O, I) {
           return O - I;
         },
         'ASRui': K(Dn.z) + 'pe',
@@ -210,36 +210,36 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
       this[u(D7.O) + 'n'] = z['EnKqF'](this['_type'], 0x4000), this[Z(D7.z)] = z[Z(0x1bf)](0xffffbfff, I);
     }
     return Object['definePr' + 'operty'](B[K(Dn.d) + 'e'], z[H(Dn.t)], {
-      'get': function () {
+      'get': function get() {
         var G = H;
         return this[G(D8.z)];
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[H(Dn.c) + K(Dn.m)](B[K(Dn.d) + 'e'], z['bGIvy'], {
-      'get': function () {
+      'get': function get() {
         var j = H;
         return this[j(D9.z)];
       },
-      'set': function (O) {
+      'set': function set(O) {
         var o = H;
         this[o(DD.z)] = O;
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[H(Dn.U) + H(0x192)](B[H(Dn.d) + 'e'], z[H(Dn.De)], {
-      'get': function () {
+      'get': function get() {
         var F = K;
         return this[F(Dw.z)];
       },
-      'set': function (O) {
+      'set': function set(O) {
         var b = H;
         z['UcRKA'](null, O) && (this[b(Dz.z)] = O);
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[K(Dn.DA) + 'operty'](B[K(Dn.d) + 'e'], z[K(0x17b)], {
-      'get': function () {
+      'get': function get() {
         var h = K,
           C = H;
         return db_util_1[h(0x18b)][C(0x1bb) + h(DB.z)](this[C(0x18c)][h(DB.B)], this[C(DB.O)]['id']);
@@ -247,7 +247,7 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object['definePr' + 'operty'](B[H(Dn.d) + 'e'], z['BfsPX'], {
-      'get': function () {
+      'get': function get() {
         var E = H,
           T = K;
         return db_util_1[E(DO.z)][T(0x188) + E(DO.B)](this[E(DO.O)]['chat_id'], this[T(DO.I)]['id']);
@@ -255,20 +255,20 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object['definePr' + 'operty'](B[H(Dn.DQ) + 'e'], z[K(Dn.DS)], {
-      'get': function () {
+      'get': function get() {
         return this['_raw']['message'];
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[H(0x191) + 'operty'](B[K(0x187) + 'e'], 'id', {
-      'get': function () {
+      'get': function get() {
         var P = H;
         return this[P(Dr.z)]['id'];
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[K(Dn.Da) + K(0x192)](B[H(0x187) + 'e'], z[K(0x1a5)], {
-      'get': function () {
+      'get': function get() {
         var n = H;
         return this[n(Dd.z)];
       },
@@ -288,7 +288,7 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
         'channel': this[Q(Dc.B)]
       };
     }, Object[K(Dn.c) + H(Dn.Ds)](B['prototyp' + 'e'], z[H(Dn.DN)], {
-      'get': function () {
+      'get': function get() {
         var a = H,
           i = K;
         return new Date(0x3e8 * z[a(Dm.z)](Number, this[a(Dm.B)]['created_' + 'at']));
@@ -296,7 +296,7 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[H(Dn.DV) + K(0x192)](B[H(Dn.DQ) + 'e'], K(Dn.Dp) + 'nt', {
-      'get': function () {
+      'get': function get() {
         var s = K,
           N = H;
         return this[s(DU.z)][s(0x19e) + 'nt'];
@@ -339,7 +339,7 @@ var db_util_1 = require(q(0x181) + 'ils/db_u' + J(0x197)),
         Y = K;
       return void 0x0 === O && (O = 0x1), z[l(DC.z)](0x0, O) ? this : z[Y(DC.B)](O, 0x0) ? this[l(0x1aa) + Y(DC.O)](-O) : db_util_1[l(DC.I)][Y(DC.r) + Y(DC.d)](this, O);
     }, Object[K(0x191) + 'operty'](B[H(Dn.w0) + 'e'], K(Dn.w1), {
-      'get': function () {
+      'get': function get() {
         var DT = {
             z: 0x1c3,
             B: 0x180

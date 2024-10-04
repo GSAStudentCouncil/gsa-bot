@@ -1,10 +1,11 @@
 "use strict";
 
+function _typeof2(o) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof2(o); }
 function _typeof(e) {
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
-    return typeof e;
+  return _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
+    return _typeof2(e);
   } : function (e) {
-    return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
+    return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : _typeof2(e);
   }, _typeof(e);
 }
 Object.defineProperty(exports, "__esModule", {

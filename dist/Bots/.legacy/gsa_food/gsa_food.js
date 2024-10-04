@@ -1,4 +1,6 @@
-const scriptName = "food";
+"use strict";
+
+var scriptName = "food";
 
 /**
  * 카카오톡봇(메신저봇R)을 이용한 학교 홈페이지의 급식(http://gsa.gen.hs.kr)을 크롤링 해 오는 코드입니다. 따라서 Rhino JS를 사용합니다.
@@ -8,7 +10,7 @@ const scriptName = "food";
  * 제작은 2020년도에 하고, 2022년 수정함.
  */
 
-const Jsoup = org.jsoup.Jsoup;
+var Jsoup = org.jsoup.Jsoup;
 importPackage(javax.net.ssl);
 importPackage(java.lang);
 importPackage(java.net);
@@ -35,21 +37,21 @@ function getWebText(link) {
       android.os.StrictMode.setThreadPolicy(policy);
     }
     try {
-      let sslContext = javax.net.ssl.SSLContext.getInstance("SSL");
+      var sslContext = javax.net.ssl.SSLContext.getInstance("SSL");
       sslContext.init(null, [new JavaAdapter(javax.net.ssl.X509TrustManager, {
-        getAcceptedIssuers: () => {
+        getAcceptedIssuers: function getAcceptedIssuers() {
           return null;
         },
-        checkClientTrusted: () => {
+        checkClientTrusted: function checkClientTrusted() {
           return;
         },
-        checkServerTrusted: () => {
+        checkServerTrusted: function checkServerTrusted() {
           return;
         }
       })], new java.security.SecureRandom());
       HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
       HttpsURLConnection.setDefaultHostnameVerifier(new JavaAdapter(javax.net.ssl.HostnameVerifier, {
-        verify: (hostname, session) => {
+        verify: function verify(hostname, session) {
           return true;
         }
       }));
@@ -87,21 +89,28 @@ function getWebText(link) {
  */
 function iamschool_menu(Y, command) {
   try {
-    let req = JSON.parse(getWebText('https://school.iamservice.net/api/article/organization/5698?next_token=0', 1))['articles'];
+    var req = JSON.parse(getWebText('https://school.iamservice.net/api/article/organization/5698?next_token=0', 1))['articles'];
     // let req = JSON.parse(Jsoup.connect('https://school.iamservice.net/api/article/organization/5698?next_token=0').ignoreContentType(true).execute().body())['articles'];
-    let res = req.filter(e => command.includes(e['title'])).reverse();
-    let result = command.slice();
-    let type = true;
-    for (let i in command) {
-      let val = res.filter(e => e['title'] == command[i]);
+    var res = req.filter(function (e) {
+      return command.includes(e['title']);
+    }).reverse();
+    var _result = command.slice();
+    var type = true;
+    var _loop = function _loop(i) {
+      var val = res.filter(function (e) {
+        return e['title'] == command[i];
+      });
       if (val.length) {
-        result[i] = Y + '년 ' + result[i] + '\n' + val[0]['content'].replace(/\d\d\./g, '').replace(/\d\./g, '');
+        _result[i] = Y + '년 ' + _result[i] + '\n' + val[0]['content'].replace(/\d\d\./g, '').replace(/\d\./g, '');
       } else {
-        result[i] = Y + '년 ' + result[i] + '\n급식이 없습니다.';
+        _result[i] = Y + '년 ' + _result[i] + '\n급식이 없습니다.';
         type = false;
       }
+    };
+    for (var i in command) {
+      _loop(i);
     }
-    return [result.join('\n\n'), type];
+    return [_result.join('\n\n'), type];
   } catch (e) {
     throw new Error(e);
   }
@@ -116,8 +125,8 @@ function iamschool_menu(Y, command) {
  */
 function school_menu(Y, M, D, type, time) {
   try {
-    let a = Jsoup.connect("http://gsa.gen.hs.kr/xboard/board.php?mode=list&tbnum=55&sCat=0&page=1&keyset=&searchword=&sYear=" + Y + "&sMonth=" + M).get().select(".food_list_box").eq(D - 1);
-    let b;
+    var a = Jsoup.connect("http://gsa.gen.hs.kr/xboard/board.php?mode=list&tbnum=55&sCat=0&page=1&keyset=&searchword=&sYear=" + Y + "&sMonth=" + M).get().select(".food_list_box").eq(D - 1);
+    var b;
     if (type == 'all') {
       b = ["", "", ""];
       b[0] = a.select("span.content").eq(1).html().replace(/<br> /g, "\n").replace(/\d\d\./g, '').replace(/\d\./g, '').replace(/\(\)/g, '').replace(/\(\n\)/g, '\n').replace(/\n\n/g, '\n').trim();
@@ -138,16 +147,16 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
   // 단톡방 이름은 무조건 광곽 nn기 (ex. 광곽 37기) 이어야 함. 아니면 봇 카톡의 방 이름이라도 이렇게 설정.
   if (room.search(/광곽 \d\d기/) == 0 && room.length == 6 || isGroupChat == false) {
     if (msg.endsWith('급식')) {
-      let type = msg.replace(/ /g, '').slice(0, -2);
-      let plus;
+      var type = msg.replace(/ /g, '').slice(0, -2);
+      var plus;
       if (type == '오늘') plus = 0;else if (type == '내일') plus = 1;else if (type == '모레' || type == '모래') plus = 2;else if (type == '글피') plus = type.length + 1;else return;
-      let date = new Date();
+      var date = new Date();
       date.setDate(date.getDate() + plus);
-      let Y = date.getFullYear();
-      let M = date.getMonth() + 1;
-      let D = date.getDate();
-      let value = M + '월 ' + D + '일 ';
-      let command = [value + '[아침]', value + '[점심]', value + '[저녁]'];
+      var Y = date.getFullYear();
+      var M = date.getMonth() + 1;
+      var D = date.getDate();
+      var value = M + '월 ' + D + '일 ';
+      var command = [value + '[아침]', value + '[점심]', value + '[저녁]'];
       try {
         result = iamschool_menu(Y, command);
         if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(Y, M, D, 'all', ''));
@@ -155,92 +164,92 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         replier.reply(school_menu(Y, M, D, 'all', ''));
       }
     } else if (msg.endsWith('낼급') || msg.endsWith('!ㄴㄱ')) {
-      let plus;
-      plus = 1;
-      let date = new Date();
-      date.setDate(date.getDate() + plus);
-      let Y = date.getFullYear();
-      let M = date.getMonth() + 1;
-      let D = date.getDate();
-      let value = M + '월 ' + D + '일 ';
-      let command = [value + '[아침]', value + '[점심]', value + '[저녁]'];
+      var _plus;
+      _plus = 1;
+      var _date = new Date();
+      _date.setDate(_date.getDate() + _plus);
+      var _Y = _date.getFullYear();
+      var _M = _date.getMonth() + 1;
+      var _D = _date.getDate();
+      var _value = _M + '월 ' + _D + '일 ';
+      var _command = [_value + '[아침]', _value + '[점심]', _value + '[저녁]'];
       try {
-        result = iamschool_menu(Y, command);
-        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(Y, M, D, 'all', ''));
+        result = iamschool_menu(_Y, _command);
+        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(_Y, _M, _D, 'all', ''));
       } catch (e) {
-        replier.reply(school_menu(Y, M, D, 'all', ''));
+        replier.reply(school_menu(_Y, _M, _D, 'all', ''));
       }
     } else if (msg.endsWith('모급') || msg.endsWith('!ㅁㄱ')) {
-      let plus;
-      plus = 2;
-      let date = new Date();
-      date.setDate(date.getDate() + plus);
-      let Y = date.getFullYear();
-      let M = date.getMonth() + 1;
-      let D = date.getDate();
-      let value = M + '월 ' + D + '일 ';
-      let command = [value + '[아침]', value + '[점심]', value + '[저녁]'];
+      var _plus2;
+      _plus2 = 2;
+      var _date2 = new Date();
+      _date2.setDate(_date2.getDate() + _plus2);
+      var _Y2 = _date2.getFullYear();
+      var _M2 = _date2.getMonth() + 1;
+      var _D2 = _date2.getDate();
+      var _value2 = _M2 + '월 ' + _D2 + '일 ';
+      var _command2 = [_value2 + '[아침]', _value2 + '[점심]', _value2 + '[저녁]'];
       try {
-        result = iamschool_menu(Y, command);
-        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(Y, M, D, 'all', ''));
+        result = iamschool_menu(_Y2, _command2);
+        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(_Y2, _M2, _D2, 'all', ''));
       } catch (e) {
-        replier.reply(school_menu(Y, M, D, 'all', ''));
+        replier.reply(school_menu(_Y2, _M2, _D2, 'all', ''));
       }
     } else if (msg.endsWith('글급') || msg.endsWith('!ㄱㄱ')) {
-      let plus;
-      plus = 3;
-      let date = new Date();
-      date.setDate(date.getDate() + plus);
-      let Y = date.getFullYear();
-      let M = date.getMonth() + 1;
-      let D = date.getDate();
-      let value = M + '월 ' + D + '일 ';
-      let command = [value + '[아침]', value + '[점심]', value + '[저녁]'];
+      var _plus3;
+      _plus3 = 3;
+      var _date3 = new Date();
+      _date3.setDate(_date3.getDate() + _plus3);
+      var _Y3 = _date3.getFullYear();
+      var _M3 = _date3.getMonth() + 1;
+      var _D3 = _date3.getDate();
+      var _value3 = _M3 + '월 ' + _D3 + '일 ';
+      var _command3 = [_value3 + '[아침]', _value3 + '[점심]', _value3 + '[저녁]'];
       try {
-        result = iamschool_menu(Y, command);
-        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(Y, M, D, 'all', ''));
+        result = iamschool_menu(_Y3, _command3);
+        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(_Y3, _M3, _D3, 'all', ''));
       } catch (e) {
-        replier.reply(school_menu(Y, M, D, 'all', ''));
+        replier.reply(school_menu(_Y3, _M3, _D3, 'all', ''));
       }
     } else if (msg.endsWith('오급') || msg.endsWith('ㅇㄱ')) {
-      let plus;
-      plus = 0;
-      let date = new Date();
-      date.setDate(date.getDate() + plus);
-      let Y = date.getFullYear();
-      let M = date.getMonth() + 1;
-      let D = date.getDate();
-      let value = M + '월 ' + D + '일 ';
-      let command = [value + '[아침]', value + '[점심]', value + '[저녁]'];
+      var _plus4;
+      _plus4 = 0;
+      var _date4 = new Date();
+      _date4.setDate(_date4.getDate() + _plus4);
+      var _Y4 = _date4.getFullYear();
+      var _M4 = _date4.getMonth() + 1;
+      var _D4 = _date4.getDate();
+      var _value4 = _M4 + '월 ' + _D4 + '일 ';
+      var _command4 = [_value4 + '[아침]', _value4 + '[점심]', _value4 + '[저녁]'];
       try {
-        result = iamschool_menu(Y, command);
-        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(Y, M, D, 'all', ''));
+        result = iamschool_menu(_Y4, _command4);
+        if (result[1]) replier.reply(result[0]);else replier.reply(school_menu(_Y4, _M4, _D4, 'all', ''));
       } catch (e) {
-        replier.reply(school_menu(Y, M, D, 'all', ''));
+        replier.reply(school_menu(_Y4, _M4, _D4, 'all', ''));
       }
     } else if (['오늘아침', '오늘점심', '오늘저녁', '오늘 아침', '오늘 점심', '오늘 저녁', '내일아침', '내일점심', '내일저녁', '내일 아침', '내일 점심', '내일 저녁'].includes(msg)) {
       msg = msg.replace(/ /g, '');
-      let type = msg.slice(0, -2);
-      let plus;
-      if (type == '오늘') plus = 0;else if (type == '내일') plus = 1;
-      let date = new Date();
-      date.setDate(date.getDate() + plus);
-      let time = msg.slice(-2);
-      let Y = date.getFullYear();
-      let M = date.getMonth() + 1;
-      let D = date.getDate();
-      let command = [M + '월 ' + D + '일 [' + time + ']'];
+      var _type = msg.slice(0, -2);
+      var _plus5;
+      if (_type == '오늘') _plus5 = 0;else if (_type == '내일') _plus5 = 1;
+      var _date5 = new Date();
+      _date5.setDate(_date5.getDate() + _plus5);
+      var time = msg.slice(-2);
+      var _Y5 = _date5.getFullYear();
+      var _M5 = _date5.getMonth() + 1;
+      var _D5 = _date5.getDate();
+      var _command5 = [_M5 + '월 ' + _D5 + '일 [' + time + ']'];
       try {
-        result = iamschool_menu(Y, command);
+        result = iamschool_menu(_Y5, _command5);
         if (result[1]) replier.reply(result[0]);else {
-          let time_type;
+          var time_type;
           if (time == '아침') time_type = 1;else if (time == '점심') time_type = 0;else if (time == '저녁') time_type = 2;
-          replier.reply(school_menu(Y, M, D, time_type, ' [' + time + ']'));
+          replier.reply(school_menu(_Y5, _M5, _D5, time_type, ' [' + time + ']'));
         }
       } catch (e) {
-        let time_type;
-        if (time == '아침') time_type = 1;else if (time == '점심') time_type = 0;else if (time == '저녁') time_type = 2;
-        replier.reply(school_menu(Y, M, D, time_type, ' [' + time + ']'));
+        var _time_type;
+        if (time == '아침') _time_type = 1;else if (time == '점심') _time_type = 0;else if (time == '저녁') _time_type = 2;
+        replier.reply(school_menu(_Y5, _M5, _D5, _time_type, ' [' + time + ']'));
       }
     }
   }

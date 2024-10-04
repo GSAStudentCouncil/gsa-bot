@@ -1,10 +1,11 @@
 'use strict';
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var R = w,
   h = w;
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0xb5;
     var d = O[I];
     return d;
@@ -36,7 +37,7 @@ function w(z, B) {
     }
   }
 })(D, 0xa4141);
-var __extends = this && this[R(0xba) + 's'] || function () {
+var __extends = void 0 && (void 0)[R(0xba) + 's'] || function () {
   var W = {
       z: 0xc5,
       B: 0xce,
@@ -57,28 +58,28 @@ var __extends = this && this[R(0xba) + 's'] || function () {
     J = R,
     q = R,
     z = {
-      'iNBIi': function (O, I) {
+      'iNBIi': function iNBIi(O, I) {
         return O instanceof I;
       },
-      'GKUwa': function (O, I) {
+      'GKUwa': function GKUwa(O, I) {
         return O != I;
       },
-      'cnYmt': function (O, I) {
+      'cnYmt': function cnYmt(O, I) {
         return O !== I;
       },
-      'kzUSG': function (O, I) {
+      'kzUSG': function kzUSG(O, I) {
         return O + I;
       },
       'PbwET': J(W.z) + J(0xc6) + q(0xd5),
       'UQfKY': '\x20is\x20not\x20' + q(W.B) + 'uctor\x20or' + J(W.O),
-      'qohfT': function (O, I) {
+      'qohfT': function qohfT(O, I) {
         return O === I;
       }
     },
-    B = function (O, I) {
+    _B = function B(O, I) {
       var K = q,
         H = J;
-      return B = Object[K(N.z) + 'typeOf'] || z[K(N.B)]({
+      return _B = Object[K(N.z) + 'typeOf'] || z[K(N.B)]({
         '__proto__': []
       }, Array) && function (d, c) {
         var Z = H;
@@ -87,7 +88,7 @@ var __extends = this && this[R(0xba) + 's'] || function () {
         var u = K,
           G = H;
         for (var m in c) Object[u(0xda) + 'e'][G(0xcc) + 'operty'][u(0xd0)](c, m) && (d[m] = c[m]);
-      }, B(O, I);
+      }, _B(O, I);
     };
   return function (O, I) {
     var V = {
@@ -95,13 +96,13 @@ var __extends = this && this[R(0xba) + 's'] || function () {
       },
       j = J,
       o = q;
-    if (z['GKUwa'](j(p.z), typeof I) && z['cnYmt'](null, I)) throw new TypeError(z[j(p.B)](z['PbwET'], String(I)) + z[o(0xbf)]);
+    if (z['GKUwa'](j(p.z), _typeof(I)) && z['cnYmt'](null, I)) throw new TypeError(z[j(p.B)](z['PbwET'], String(I)) + z[o(0xbf)]);
     function d() {
       var F = j,
         b = j;
       this[F(V.z) + b(0xc2)] = O;
     }
-    B(O, I), O[o(0xda) + 'e'] = z[o(0xbc)](null, I) ? Object[o(0xd1)](I) : (d[j(p.O) + 'e'] = I[o(p.O) + 'e'], new d());
+    _B(O, I), O[o(0xda) + 'e'] = z[o(0xbc)](null, I) ? Object[o(0xd1)](I) : (d[j(p.O) + 'e'] = I[o(p.O) + 'e'], new d());
   };
 }();
 Object[R(0xbb) + 'operty'](exports, h(0xcd) + 'le', {
@@ -109,7 +110,7 @@ Object[R(0xbb) + 'operty'](exports, h(0xcd) + 'le', {
 }), exports[R(0xb6)] = void 0x0;
 function D() {
   var g = ['file', 'attachme', '1971528aIORmc', '5432875KsTRaH', 'construc', 'hasOwnPr', '__esModu', 'a\x20constr', '811594LYEkue', 'call', 'create', 'operty', '12JFlzSi', '798470rWylXj', 'lue\x20', 'kzUSG', '58976lRzYTK', 'rrxrZ', '\x20null', 'prototyp', '1004142YyoSAo', 'FileChat', '1035lbGZmW', '__proto_', '20GYrrzh', '__extend', 'definePr', 'qohfT', 'function', '386444eiAifL', 'UQfKY', '77RmeTpQ', '1bAZliu', 'tor', 'setProto', 'iNBIi', 'Class\x20ex', 'tends\x20va'];
-  D = function () {
+  D = function D() {
     return g;
   };
   return D();
@@ -129,7 +130,7 @@ var Chat_1 = require('./Chat'),
       C = R,
       T = h,
       B = {
-        'rrxrZ': function (I, r, d) {
+        'rrxrZ': function rrxrZ(I, r, d) {
           return I(r, d);
         },
         'uaarU': C(v.z)
@@ -141,7 +142,7 @@ var Chat_1 = require('./Chat'),
     return B[T(v.B)](__extends, O, z), O[C(v.O) + 'e']['isFile'] = function () {
       return !0x0;
     }, Object[C(v.I) + T(v.r)](O[T(v.O) + 'e'], B['uaarU'], {
-      'get': function () {
+      'get': function get() {
         var P = C;
         return this['_raw'][P(L.z) + 'nt'];
       },

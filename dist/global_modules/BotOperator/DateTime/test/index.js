@@ -1,15 +1,16 @@
-const {
-  DateTime
-} = require('../index');
-parse = string => {
+"use strict";
+
+var _require = require('../index'),
+  DateTime = _require.DateTime;
+parse = function parse(string) {
   console.log(string[0]);
-  const parsed = DateTime.parse(string[0]);
-  console.log(parsed?.toString('YYYY-MM-DD t hh:mm:ss.sss WW'));
+  var parsed = DateTime.parse(string[0]);
+  console.log(parsed === null || parsed === void 0 ? void 0 : parsed.toString('YYYY-MM-DD t hh:mm:ss.sss WW'));
 };
-parseDuration = string => {
+parseDuration = function parseDuration(string) {
   console.log(string[0]);
-  const parsed = DateTime.parseDuration(string[0]);
-  console.log(`${parsed.from} ~ ${parsed.to}`);
+  var parsed = DateTime.parseDuration(string[0]);
+  console.log("".concat(parsed.from, " ~ ").concat(parsed.to));
 };
 
 // console.log(DateTime.now().gt({ year: 2024, month: 7, day: 7 }));

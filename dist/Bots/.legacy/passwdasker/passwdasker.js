@@ -1,4 +1,6 @@
-const scriptName = "passwdasker";
+"use strict";
+
+var scriptName = "passwdasker";
 /**
  * (string) room
  * (string) sender

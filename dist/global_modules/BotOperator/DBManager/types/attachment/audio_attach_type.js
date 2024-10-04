@@ -4,7 +4,7 @@ var c = w,
   m = w;
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x82;
     var d = O[I];
     return d;
@@ -34,7 +34,7 @@ function w(z, B) {
 })(D, 0xe03d8);
 function D() {
   var X = ['2998578KLADNi', '1259010ofwssl', '99GoqiCT', '__esModu', '226596RSWAaI', 'definePr', '545448ISwbSk', 'operty', '2222dTcUWu', '5106RzqSbw', '74eoZGCR', '4210iFCutA', '94508rcLDgh', '413jtHwAi', '145YbxfAW'];
-  D = function () {
+  D = function D() {
     return X;
   };
   return D();

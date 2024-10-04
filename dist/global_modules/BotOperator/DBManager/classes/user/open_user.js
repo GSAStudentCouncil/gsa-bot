@@ -1,5 +1,6 @@
 'use strict';
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var R = w,
   b = w;
 (function (z, B) {
@@ -28,20 +29,20 @@ var R = w,
 })(D, 0x7f2b1);
 function D() {
   var D2 = ['ppXQQ', 'Class\x20ex', 'PWIGg', '4127494eHVgBF', '45465eCIcjL', '__extend', 'OpenUser', 'function', '8204740xgPIqM', 'call', '117592aVwIYF', 'HTFkb', 'isOpenUs', '585qpSWwz', '12868vtCSmq', 'MMgzl', 'BCauu', 'VsREo', '1375253QSVcgs', 'memberTy', '\x20is\x20not\x20', 'dfPuv', '580LEnrZR', 'typeOf', 'azizZ', './user', 'tends\x20va', 'lue\x20', '6fBdjrW', '523195wHmiFk', 'construc', '74jJhGsU', 'iMHsx', 'hasOwnPr', 'a\x20constr', 'operty', 'definePr', '\x20null', 'fCpyE', 'isHost', 'FiJJc', 'tor', '24TZOnBj', 'raw', '__esModu', 'prototyp'];
-  D = function () {
+  D = function D() {
     return D2;
   };
   return D();
 }
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x15a;
     var d = O[I];
     return d;
   }, w(z, B);
 }
-var __extends = this && this[R(0x162) + 's'] || function () {
+var __extends = void 0 && (void 0)[R(0x162) + 's'] || function () {
   var k = {
       z: 0x15e,
       B: 0x177,
@@ -64,31 +65,31 @@ var __extends = this && this[R(0x162) + 's'] || function () {
     J = R,
     q = R,
     z = {
-      'MMgzl': function (O, I) {
+      'MMgzl': function MMgzl(O, I) {
         return O instanceof I;
       },
-      'HTFkb': function (O, I, r) {
+      'HTFkb': function HTFkb(O, I, r) {
         return O(I, r);
       },
-      'iMHsx': function (O, I) {
+      'iMHsx': function iMHsx(O, I) {
         return O != I;
       },
       'azizZ': J(0x164),
-      'ppXQQ': function (O, I) {
+      'ppXQQ': function ppXQQ(O, I) {
         return O + I;
       },
       'kQpvc': q(k.z) + J(k.B) + J(k.O),
-      'BCauu': function (O, I) {
+      'BCauu': function BCauu(O, I) {
         return O(I);
       },
-      'dfPuv': function (O, I, r) {
+      'dfPuv': function dfPuv(O, I, r) {
         return O(I, r);
       },
-      'FiJJc': function (O, I) {
+      'FiJJc': function FiJJc(O, I) {
         return O === I;
       }
     },
-    B = function (O, I) {
+    _B = function B(O, I) {
       var p = {
           z: 0x15c,
           B: 0x17e,
@@ -96,7 +97,7 @@ var __extends = this && this[R(0x162) + 's'] || function () {
         },
         K = q,
         H = q;
-      return B = Object['setProto' + K(W.z)] || z[H(W.B)]({
+      return _B = Object['setProto' + K(W.z)] || z[H(W.B)]({
         '__proto__': []
       }, Array) && function (d, c) {
         d['__proto_' + '_'] = c;
@@ -104,7 +105,7 @@ var __extends = this && this[R(0x162) + 's'] || function () {
         var Z = K,
           u = K;
         for (var m in c) Object[Z(p.z) + 'e'][Z(p.B) + u(0x180)][Z(p.O)](c, m) && (d[m] = c[m]);
-      }, z[K(W.O)](B, O, I);
+      }, z[K(W.O)](_B, O, I);
     };
   return function (O, I) {
     var l = {
@@ -113,13 +114,13 @@ var __extends = this && this[R(0x162) + 's'] || function () {
       },
       G = q,
       j = J;
-    if (z[G(0x17d)](z[G(0x175)], typeof I) && null !== I) throw new TypeError(z['ppXQQ'](z[G(0x15d)](z['kQpvc'], z[j(Y.z)](String, I)), G(Y.B) + G(Y.O) + 'uctor\x20or' + G(Y.I)));
+    if (z[G(0x17d)](z[G(0x175)], _typeof(I)) && null !== I) throw new TypeError(z['ppXQQ'](z[G(0x15d)](z['kQpvc'], z[j(Y.z)](String, I)), G(Y.B) + G(Y.O) + 'uctor\x20or' + G(Y.I)));
     function d() {
       var o = G,
         F = j;
       this[o(l.z) + F(l.B)] = O;
     }
-    z[j(Y.r)](B, O, I), O[j(0x15c) + 'e'] = z[j(Y.d)](null, I) ? Object['create'](I) : (d['prototyp' + 'e'] = I[G(Y.t) + 'e'], new d());
+    z[j(Y.r)](_B, O, I), O[j(0x15c) + 'e'] = z[j(Y.d)](null, I) ? Object['create'](I) : (d['prototyp' + 'e'] = I[G(Y.t) + 'e'], new d());
   };
 }();
 Object[R(0x181) + b(0x180)](exports, R(0x15b) + 'le', {
@@ -148,10 +149,10 @@ var user_1 = require(R(0x176)),
       h = R,
       C = b,
       B = {
-        'fCpyE': function (I, r) {
+        'fCpyE': function fCpyE(I, r) {
           return I !== r;
         },
-        'VsREo': function (I, r, d) {
+        'VsREo': function VsREo(I, r, d) {
           return I(r, d);
         },
         'PWIGg': h(D1.z),
@@ -162,13 +163,13 @@ var user_1 = require(R(0x176)),
       return z[E(g.z)](this, I) || this;
     }
     return B[h(D1.O)](__extends, O, z), Object['definePr' + h(D1.I)](O[C(D1.r) + 'e'], B[C(D1.d)], {
-      'get': function () {
+      'get': function get() {
         return this['_raw'];
       },
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[h(D1.t) + h(D1.I)](O[h(D1.c) + 'e'], B['NXzOg'], {
-      'get': function () {
+      'get': function get() {
         return this['_raw']['v']['openlink']['mt'];
       },
       'enumerable': !0x1,

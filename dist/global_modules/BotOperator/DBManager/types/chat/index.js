@@ -24,7 +24,7 @@ var J = w,
     }
   }
 })(D, 0x62a3d);
-var __createBinding = this && this[J(0x1b9) + J(0x1ba)] || (Object[J(0x1a5)] ? function (z, B, O, I) {
+var __createBinding = void 0 && (void 0)[J(0x1b9) + J(0x1ba)] || (Object[J(0x1a5)] ? function (z, B, O, I) {
     var h = {
         z: 0x1ab,
         B: 0x1be,
@@ -39,10 +39,10 @@ var __createBinding = this && this[J(0x1b9) + J(0x1ba)] || (Object[J(0x1a5)] ? f
       K = q,
       H = q,
       d = {
-        'zZzEN': function (m, U) {
+        'zZzEN': function zZzEN(m, U) {
           return m === U;
         },
-        'kdRaq': function (m, U) {
+        'kdRaq': function kdRaq(m, U) {
           return m in U;
         },
         'nPzeQ': K(0x1b4)
@@ -51,7 +51,7 @@ var __createBinding = this && this[J(0x1b9) + J(0x1ba)] || (Object[J(0x1a5)] ? f
     var c = Object[K(h.B) + H(h.O) + K(h.I)](B, O);
     c && !(d[K(0x1c1)](d[K(h.r)], c) ? !B[H(0x1c2) + 'le'] : c[H(h.d)] || c[K(h.t) + K(0x1a6)]) || (c = {
       'enumerable': !0x0,
-      'get': function () {
+      'get': function get() {
         return B[O];
       }
     }), Object[K(h.c) + H(h.m)](z, I, c);
@@ -61,13 +61,13 @@ var __createBinding = this && this[J(0x1b9) + J(0x1ba)] || (Object[J(0x1a5)] ? f
       },
       Z = q,
       d = {
-        'qgpPM': function (c, m) {
+        'qgpPM': function qgpPM(c, m) {
           return c === m;
         }
       };
     d[Z(E.z)](void 0x0, I) && (I = O), z[I] = B[O];
   }),
-  __exportStar = this && this[J(0x1c5) + J(0x1bb)] || function (z, B) {
+  __exportStar = void 0 && (void 0)[J(0x1c5) + J(0x1bb)] || function (z, B) {
     var n = {
         z: 0x1a8,
         B: 0x1bc,
@@ -77,11 +77,11 @@ var __createBinding = this && this[J(0x1b9) + J(0x1ba)] || (Object[J(0x1a5)] ? f
       u = J,
       G = J,
       O = {
-        'XBYEE': function (d, c) {
+        'XBYEE': function XBYEE(d, c) {
           return d === c;
         },
         'TyYJw': 'default',
-        'Cckvw': function (d, c, m, U) {
+        'Cckvw': function Cckvw(d, c, m, U) {
           return d(c, m, U);
         }
       };
@@ -92,7 +92,7 @@ Object[q(0x1bf) + J(0x1af)](exports, q(0x1c2) + 'le', {
 }), __exportStar(require('./chat_t' + 'ype'), exports);
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x1a5;
     var d = O[I];
     return d;
@@ -100,7 +100,7 @@ function w(z, B) {
 }
 function D() {
   var e = ['13977sVPgfE', 'qgpPM', 'operty', '3473589QAnUlY', 'scriptor', 'opertyDe', '205670nsnEQY', 'get', '584795VceXbK', 'writable', 'configur', 'nPzeQ', '__create', 'Binding', 'Star', 'prototyp', '4590jTkNUi', 'getOwnPr', 'definePr', '706888wGBuub', 'kdRaq', '__esModu', '3FOoZnp', 'call', '__export', 'create', 'able', 'Cckvw', 'TyYJw', '1140442PXUcbe', '6DclPPJ', 'zZzEN', '2239456MoAVWT'];
-  D = function () {
+  D = function D() {
     return e;
   };
   return D();

@@ -1,3 +1,5 @@
+"use strict";
+
 Array.prototype.flat || (Array.prototype.flat = function (t, r) {
   return r = this.concat.apply([], this), t > 1 && r.some(Array.isArray) ? r.flat(t - 1) : r;
 }, Array.prototype.flatMap = function (t, r) {
@@ -6,11 +8,11 @@ Array.prototype.flat || (Array.prototype.flat = function (t, r) {
 String.prototype.replaceAll || (String.prototype.replaceAll = function (t, r) {
   return this.split(t).join(r);
 });
-const getJosa = (str, josaPair) => {
-  const lastChar = str.charCodeAt(str.length - 1);
-  const hasFinalConsonant = (lastChar - 44032) % 28 !== 0;
-  const isFinalRieul = (lastChar - 44032) % 28 === 8;
-  const josaMap = {
+var getJosa = function getJosa(str, josaPair) {
+  var lastChar = str.charCodeAt(str.length - 1);
+  var hasFinalConsonant = (lastChar - 44032) % 28 !== 0;
+  var isFinalRieul = (lastChar - 44032) % 28 === 8;
+  var josaMap = {
     '이가': hasFinalConsonant ? '이' : '가',
     '은는': hasFinalConsonant ? '은' : '는',
     '을를': hasFinalConsonant ? '을' : '를',
@@ -21,49 +23,57 @@ const getJosa = (str, josaPair) => {
 };
 Object.defineProperties(String.prototype, {
   '이가': {
-    get() {
+    get: function get() {
       return getJosa(this, '이가');
     }
   },
   '은는': {
-    get() {
+    get: function get() {
       return getJosa(this, '은는');
     }
   },
   '을를': {
-    get() {
+    get: function get() {
       return getJosa(this, '을를');
     }
   },
   '으로': {
-    get() {
+    get: function get() {
       return getJosa(this, '으로');
     }
   },
   '와과': {
-    get() {
+    get: function get() {
       return getJosa(this, '와과');
     }
   }
 });
-const shortURL = url => org.jsoup.Jsoup.connect(`https://tinyurl.com/api-create.php?url=${url}`).get().text().substring('https://'.length);
-const prettyBytes = bytes => {
-  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-  let i = 0;
+var shortURL = function shortURL(url) {
+  return org.jsoup.Jsoup.connect("https://tinyurl.com/api-create.php?url=".concat(url)).get().text().substring('https://'.length);
+};
+var prettyBytes = function prettyBytes(bytes) {
+  var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  var i = 0;
   while (bytes >= 1024 && ++i) bytes /= 1024;
-  return `${bytes.toFixed(2)} ${units[i]}`;
+  return "".concat(bytes.toFixed(2), " ").concat(units[i]);
 };
-const prettyDuration = seconds => {
-  const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
-  const minutes = String(Math.floor(seconds % 3600 / 60)).padStart(2, '0');
-  const secs = String(Math.floor(seconds % 60)).padStart(2, '0');
-  return (hours !== "00" ? `${hours}: ` : '') + `${minutes}:${secs}`;
+var prettyDuration = function prettyDuration(seconds) {
+  var hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+  var minutes = String(Math.floor(seconds % 3600 / 60)).padStart(2, '0');
+  var secs = String(Math.floor(seconds % 60)).padStart(2, '0');
+  return (hours !== "00" ? "".concat(hours, ": ") : '') + "".concat(minutes, ":").concat(secs);
 };
-exports.isNumber = name => /^\d+$/.test(name);
-exports.isNaN = n => Number.isNaN(n);
-exports.compress = '\u200b'.repeat(500);
+exports.isNumber = function (name) {
+  return /^\d+$/.test(name);
+};
+exports.isNaN = function (n) {
+  return Number.isNaN(n);
+};
+exports.compress = "\u200B".repeat(500);
 exports.getJosa = getJosa;
-exports.isValidChannel = channel => channel != null && channel.send != null;
+exports.isValidChannel = function (channel) {
+  return channel != null && channel.send != null;
+};
 exports.shortURL = shortURL;
 exports.prettyBytes = prettyBytes;
 exports.prettyDuration = prettyDuration;

@@ -28,14 +28,14 @@ var c = w,
 })(D, 0x94b78);
 function D() {
   var X = ['530djNaEI', '__esModu', '2YwWmsO', '40MdnOXf', '5083086zrUyUB', '3201Hoosoo', '154557wBOaji', '6869192TQtZQK', '3484095rBoEdM', 'definePr', '2336QdcDXz', '593154QJPVra', '911631rJcxhz'];
-  D = function () {
+  D = function D() {
     return X;
   };
   return D();
 }
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x12b;
     var d = O[I];
     return d;

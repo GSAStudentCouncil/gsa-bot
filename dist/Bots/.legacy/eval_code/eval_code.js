@@ -1,11 +1,13 @@
-const scriptName = "eval_code";
-let admin = [-2048786473];
-const Jsoup = org.jsoup.Jsoup;
+"use strict";
+
+var scriptName = "eval_code";
+var admin = [-2048786473];
+var Jsoup = org.jsoup.Jsoup;
 importPackage(javax.net.ssl);
 importPackage(java.lang);
 importPackage(java.net);
 importPackage(java.io);
-const FS = FileStream;
+var FS = FileStream;
 function MD5(s) {
   return rstr2hex(rstr_md5(str2rstr_utf8(s)));
 }
@@ -160,14 +162,14 @@ function safe_add(x, y) {
 function bit_rol(num, cnt) {
   return num << cnt | num >>> 32 - cnt;
 }
-const URL = java.net.URL;
-const BufferedReader = java.io.BufferedReader;
-const InputStreamReader = java.io.InputStreamReader;
+var URL = java.net.URL;
+var BufferedReader = java.io.BufferedReader;
+var InputStreamReader = java.io.InputStreamReader;
 function getHTML(url) {
-  let u = new URL(url);
+  var u = new URL(url);
   con = u.openConnection();
   br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-  let temp = "";
+  var temp = "";
   while ((temp = br.readLine()) != null) {
     temp += br.readLine();
   }
@@ -176,22 +178,22 @@ function getHTML(url) {
 }
 function requestSSL(url) {
   if (android.os.Build.VERSION.SDK_INT > 9) {
-    const policy = new android.os.StrictMode.ThreadPolicy.Builder().permitAll().build();
+    var policy = new android.os.StrictMode.ThreadPolicy.Builder().permitAll().build();
     android.os.StrictMode.setThreadPolicy(policy);
   }
-  const sslContext = javax.net.ssl.SSLContext.getInstance('SSL');
+  var sslContext = javax.net.ssl.SSLContext.getInstance('SSL');
   sslContext.init(null, [new JavaAdapter(javax.net.ssl.X509TrustManager, {
-    getAcceptedIssuers: function () {
+    getAcceptedIssuers: function getAcceptedIssuers() {
       return null;
     },
-    checkClientTrusted: function () {
+    checkClientTrusted: function checkClientTrusted() {
       return;
     },
-    checkServerTrusted: function () {
+    checkServerTrusted: function checkServerTrusted() {
       return;
     }
   })], new java.security.SecureRandom());
-  const sslSocketFactory = sslContext.getSocketFactory();
+  var sslSocketFactory = sslContext.getSocketFactory();
   return org.jsoup.Jsoup.connect(url).sslSocketFactory(sslSocketFactory).timeout(60000).get();
 }
 function getWebText(link, value) {
@@ -202,21 +204,21 @@ function getWebText(link, value) {
     }
     if (value == 1) {
       try {
-        let sslContext = javax.net.ssl.SSLContext.getInstance("SSL");
+        var sslContext = javax.net.ssl.SSLContext.getInstance("SSL");
         sslContext.init(null, [new JavaAdapter(javax.net.ssl.X509TrustManager, {
-          getAcceptedIssuers: () => {
+          getAcceptedIssuers: function getAcceptedIssuers() {
             return null;
           },
-          checkClientTrusted: () => {
+          checkClientTrusted: function checkClientTrusted() {
             return;
           },
-          checkServerTrusted: () => {
+          checkServerTrusted: function checkServerTrusted() {
             return;
           }
         })], new java.security.SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         HttpsURLConnection.setDefaultHostnameVerifier(new JavaAdapter(javax.net.ssl.HostnameVerifier, {
-          verify: (hostname, session) => {
+          verify: function verify(hostname, session) {
             return true;
           }
         }));
@@ -247,10 +249,10 @@ function getWebText(link, value) {
 }
 ;
 function response(params) {
-  let profileCode = java.lang.String(params.ImageDB.getProfileImage()).hashCode();
+  var profileCode = java.lang.String(params.ImageDB.getProfileImage()).hashCode();
   if (params.msg.startsWith("*ev")) {
     if (admin.includes(profileCode).valueOf()) {
-      let startTime, endTime, operatedTime;
+      var startTime, endTime, operatedTime;
       startTime = Date.now();
       try {
         params.replier.reply(eval(params.msg.replace("*ev", "")));

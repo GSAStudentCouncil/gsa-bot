@@ -1,5 +1,6 @@
 'use strict';
 
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var R = w,
   h = w;
 (function (z, B) {
@@ -29,12 +30,12 @@ var R = w,
 })(D, 0xb2894);
 function D() {
   var M = ['\x20is\x20not\x20', 'rce', 'yBEoV', 'oVAOK', '../../ut', '__proto_', '15xGKAtI', 'DtMGL', '6kBJhXi', 'raw', 'TYpZL', 'operty', '172310hbcFSu', '1854EKbSiH', 'qeOEm', '407ZIIBtw', '1383pxEVos', 'isReply', '489765DMVIUb', 'attach_c', 'hasOwnPr', 'serByLog', 'qacLF', 'ils/db_u', '374096AMfctp', 'Class\x20ex', './Chat', 'tends\x20va', 'til', 'tor', 'DBUtil', 'attachme', 'PKyVp', 'lue\x20', '\x20null', 'nly', '8715396jcETFU', 'src_logI', 'channel', 'emoticon', 'a\x20constr', '_chatSou', '__extend', '_raw', 'source', 'dVLpS', 'ReplyCha', 'create', 'construc', 'ZtOVW', '2635047ijGemL', '_channel', '168004hEzMrb', '__esModu', 'call', 'function', 'definePr', 'prototyp', '98NyPqEM', 'uctor\x20or'];
-  D = function () {
+  D = function D() {
     return M;
   };
   return D();
 }
-var __extends = this && this[R(0xc6) + 's'] || function () {
+var __extends = void 0 && (void 0)[R(0xc6) + 's'] || function () {
   var Y = {
       z: 0xd3,
       B: 0xf1,
@@ -63,29 +64,29 @@ var __extends = this && this[R(0xc6) + 's'] || function () {
     J = R,
     q = R,
     z = {
-      'TYpZL': function (O, I) {
+      'TYpZL': function TYpZL(O, I) {
         return O instanceof I;
       },
-      'oVAOK': function (O, I, r) {
+      'oVAOK': function oVAOK(O, I, r) {
         return O(I, r);
       },
-      'yBEoV': function (O, I) {
+      'yBEoV': function yBEoV(O, I) {
         return O != I;
       },
       'oWNai': J(Y.z),
-      'qacLF': function (O, I) {
+      'qacLF': function qacLF(O, I) {
         return O + I;
       },
       'PKyVp': J(Y.B) + J(Y.O) + q(Y.I),
       'dVLpS': J(0xd8) + J(Y.r) + q(Y.d) + q(Y.t),
-      'FYByH': function (O, I) {
+      'FYByH': function FYByH(O, I) {
         return O === I;
       }
     },
-    B = function (O, I) {
+    _B = function B(O, I) {
       var K = J,
         G = q;
-      return B = Object['setProto' + 'typeOf'] || z[K(0xe2)]({
+      return _B = Object['setProto' + 'typeOf'] || z[K(0xe2)]({
         '__proto__': []
       }, Array) && function (d, c) {
         var H = K;
@@ -94,7 +95,7 @@ var __extends = this && this[R(0xc6) + 's'] || function () {
         var Z = K,
           u = K;
         for (var m in c) Object[Z(V.z) + 'e'][u(V.B) + Z(V.O)][u(V.I)](c, m) && (d[m] = c[m]);
-      }, z[G(0xdb)](B, O, I);
+      }, z[G(0xdb)](_B, O, I);
     };
   return function (O, I) {
     var W = {
@@ -103,13 +104,13 @@ var __extends = this && this[R(0xc6) + 's'] || function () {
       },
       j = q,
       o = J;
-    if (z[j(0xda)](z['oWNai'], typeof I) && null !== I) throw new TypeError(z[o(l.z)](z[o(l.z)](z[j(l.B)], String(I)), z[o(l.O)]));
+    if (z[j(0xda)](z['oWNai'], _typeof(I)) && null !== I) throw new TypeError(z[o(l.z)](z[o(l.z)](z[j(l.B)], String(I)), z[o(l.O)]));
     function d() {
       var F = o,
         b = o;
       this[F(W.z) + F(W.B)] = O;
     }
-    z['oVAOK'](B, O, I), O[j(l.I) + 'e'] = z['FYByH'](null, I) ? Object[j(l.r)](I) : (d[j(l.I) + 'e'] = I[j(l.I) + 'e'], new d());
+    z['oVAOK'](_B, O, I), O[j(l.I) + 'e'] = z['FYByH'](null, I) ? Object[j(l.r)](I) : (d[j(l.I) + 'e'] = I[j(l.I) + 'e'], new d());
   };
 }();
 Object[h(0xd4) + 'operty'](exports, R(0xd1) + 'le', {
@@ -117,7 +118,7 @@ Object[h(0xd4) + 'operty'](exports, R(0xd1) + 'le', {
 }), exports['ReplyCha' + 't'] = void 0x0;
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0xc0;
     var d = O[I];
     return d;
@@ -153,7 +154,7 @@ var Chat_1 = require(R(0xf2)),
       C = R,
       E = h,
       B = {
-        'ZtOVW': function (I, r, d) {
+        'ZtOVW': function ZtOVW(I, r, d) {
           return I(r, d);
         },
         'DtMGL': C(f.z),
@@ -163,7 +164,7 @@ var Chat_1 = require(R(0xf2)),
       return z['call'](this, I) || this;
     }
     return B[E(0xcd)](__extends, O, z), Object[C(0xd4) + C(f.O)](O[C(0xd5) + 'e'], B[C(f.I)], {
-      'get': function () {
+      'get': function get() {
         var T = C,
           P = C;
         return this['_chatSou' + T(v.z)] || (this[T(v.B) + P(0xd9)] = db_util_1[P(v.O)]['getChatU' + T(v.I) + 'ID'](this[T(v.r)][T(v.d) + 'nt'][T(v.t) + 'd']), this[P(v.B) + P(v.z)][P(v.c)] = this[P(v.m)]), this[P(0xc5) + T(v.z)];
@@ -171,7 +172,7 @@ var Chat_1 = require(R(0xf2)),
       'enumerable': !0x1,
       'configurable': !0x0
     }), Object[E(0xd4) + C(0xe3)](O[E(f.r) + 'e'], B[C(f.d)], {
-      'get': function () {
+      'get': function get() {
         var n = C,
           e = C;
         return this['raw'][n(0xf7) + 'nt']['attach_o' + n(g.z)] ? this[e(0xe1)][e(0xf7) + 'nt'][n(0xeb) + 'ontent'] : null;

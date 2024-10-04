@@ -3,14 +3,14 @@
 var c = w;
 function D() {
   var U = ['15605EMbiHb', '987184xTbFOF', '1290XTeaYS', '644424yfgtqv', '24zMVHqa', '16700841HBnvDl', '3915483kNrRxD', '702632VUdHnF', '10fzXXcb', 'definePr', '1620717zSbPME'];
-  D = function () {
+  D = function D() {
     return U;
   };
   return D();
 }
 function w(z, B) {
   var O = D();
-  return w = function (I, r) {
+  return w = function w(I, r) {
     I = I - 0x11b;
     var d = O[I];
     return d;

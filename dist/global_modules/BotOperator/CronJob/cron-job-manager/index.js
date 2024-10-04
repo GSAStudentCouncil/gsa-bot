@@ -2,7 +2,7 @@
 
 function k() {
   var A = ['Star', 'operty', 'prototyp', 'scriptor', '1056505cZPTkv', '9ymcunL', '49040TSxoJK', '__create', '4374078dXfFgM', '2486029JPNSnu', 'definePr', 'default', 'getOwnPr', '1926114TzRTAc', 'XedOE', '4799792cTTTat', 'ckuWA', 'ob-manag', 'rWQVY', 'get', '__export', 'create', 'LHabR', 'writable', '18680616IgXzsi', 'hasOwnPr', 'call', 'HYjPX', '486HtRMiL', '__esModu'];
-  k = function () {
+  k = function k() {
     return A;
   };
   return k();
@@ -11,7 +11,7 @@ var J = o,
   m = o;
 function o(g, O) {
   var N = k();
-  return o = function (l, s) {
+  return o = function o(l, s) {
     l = l - 0x1a8;
     var v = N[l];
     return v;
@@ -40,7 +40,7 @@ function o(g, O) {
     }
   }
 })(k, 0xb3042);
-var __createBinding = this && this[J(0x1c4) + 'Binding'] || (Object[m(0x1b4)] ? function (g, O, N, l) {
+var __createBinding = void 0 && (void 0)[J(0x1c4) + 'Binding'] || (Object[m(0x1b4)] ? function (g, O, N, l) {
     var V = {
         g: 0x1b2,
         O: 0x1ba,
@@ -54,10 +54,10 @@ var __createBinding = this && this[J(0x1c4) + 'Binding'] || (Object[m(0x1b4)] ? 
       M = m,
       x = J,
       s = {
-        'HYjPX': function (E, a) {
+        'HYjPX': function HYjPX(E, a) {
           return E === a;
         },
-        'ckuWA': function (E, a) {
+        'ckuWA': function ckuWA(E, a) {
           return E in a;
         },
         'jEtWW': M(V.g)
@@ -66,7 +66,7 @@ var __createBinding = this && this[J(0x1c4) + 'Binding'] || (Object[m(0x1b4)] ? 
     var v = Object[M(V.N) + 'opertyDe' + M(V.l)](O, N);
     v && !(s[M(V.s)](s['jEtWW'], v) ? !O[M(V.v) + 'le'] : v[x(V.E)] || v['configur' + 'able']) || (v = {
       'enumerable': !0x0,
-      'get': function () {
+      'get': function get() {
         return O[N];
       }
     }), Object[x(0x1a9) + x(V.a)](g, l, v);
@@ -76,13 +76,13 @@ var __createBinding = this && this[J(0x1c4) + 'Binding'] || (Object[m(0x1b4)] ? 
       },
       n = J,
       s = {
-        'rWQVY': function (v, E) {
+        'rWQVY': function rWQVY(v, E) {
           return v === E;
         }
       };
     s[n(w.g)](void 0x0, l) && (l = N), g[l] = O[N];
   }),
-  __exportStar = this && this[m(0x1b3) + m(0x1bd)] || function (g, O) {
+  __exportStar = void 0 && (void 0)[m(0x1b3) + m(0x1bd)] || function (g, O) {
     var L = {
         g: 0x1aa,
         O: 0x1ad,
@@ -93,7 +93,7 @@ var __createBinding = this && this[J(0x1c4) + 'Binding'] || (Object[m(0x1b4)] ? 
       W = J,
       N = {
         'XedOE': e(L.g),
-        'LHabR': function (s, v, E, a) {
+        'LHabR': function LHabR(s, v, E, a) {
           return s(v, E, a);
         }
       };
