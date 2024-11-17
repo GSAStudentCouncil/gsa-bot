@@ -105,8 +105,8 @@ for (var _i = 0, _Object$entries = _objectEntries(DB.channels.c2i); _i < _Object
   var ch = BotOperator.getChannelById(id);
   if (ch == null) continue;
   if (isNumber(name)) {
-    if (ch.isGroupChannel() && ch.members.length > 80)
-      // 기수 톡방이 맞는지 검사 (조건: 최소 80명 이상)
+    if (ch.isGroupChannel() && ch.members.length > 70)
+      // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
       studentRooms[name] = ch;
   }
   rooms[name] = ch;
