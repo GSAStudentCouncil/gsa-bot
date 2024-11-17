@@ -65,7 +65,7 @@ for (let [name, id] of Object.entries(DB.channels.c2i)) {
 		continue;
 	
 	if (isNumber(name)) {
-		if (ch.isGroupChannel() && ch.members.length > 80)  // 기수 톡방이 맞는지 검사 (조건: 최소 80명 이상)
+		if (ch.isGroupChannel() && ch.members.length > 70)  // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
 			studentRooms[name] = ch;
 	}
 	
