@@ -195,7 +195,7 @@ bot.addCommand(new StructuredCommand.Builder()
 	.setDescription('디버그 모드를 실행하거나 종료합니다. 디버그 모드를 실행하면 테스트방을 제외한 모든 명령어의 사용이 제한됩니다.')
 	.setUsage('디버그 <스위치:str?>')
 	.setChannels(debugRoom1, debugRoom2)
-	.setExamples('디버그 시작', '디버그 종료', '디버그')
+	.setExamples('디버그 시작', '디버그 종료', '디버그', '디버그 객체')
 	.setExecute((self, chat, channel, { 스위치 }) => {
 		if (스위치 === '시작') {
 			bot.setDebugMode(true);
@@ -204,6 +204,10 @@ bot.addCommand(new StructuredCommand.Builder()
 		else if (스위치 === '종료') {
 			bot.setDebugMode(false);
 			channel.success('디버그 모드가 종료되었습니다.');
+		}
+		else if (스위치 === '객체') {
+			channel.info(JSON.parse(JSON.stringify(chat)));
+			channel.info(JSON.parse(JSON.stringify(chat.user)));
 		}
 		else if (스위치 == null) {
 			if (bot.isDebugMod) {
