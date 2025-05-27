@@ -315,10 +315,9 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "toString",
     value: function toString(formatString) {
-      var _formatString,
-        _this = this;
+      var _this = this;
       var cultureInfo = getCultureInfo(this.locale);
-      formatString = (_formatString = formatString) !== null && _formatString !== void 0 ? _formatString : cultureInfo['formats']['full'];
+      formatString = formatString !== null && formatString !== void 0 ? formatString : cultureInfo['formats']['full'];
       return formatString.replace(/ss?s?|mm?|hh?|ii?|t|DD?|WW?|MM?M?M?|YY(?:YY)?/g, function (match) {
         switch (match) {
           case 's':
@@ -771,8 +770,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "on",
     value: function on(month, day) {
-      var _day;
-      day = (_day = day) !== null && _day !== void 0 ? _day : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime(new $D(new $D().getFullYear(), month - 1, day));
     }
   }, {
@@ -848,7 +846,6 @@ var DateTime = /*#__PURE__*/function () {
         }
       };
       var common_parse = function common_parse() {
-        var _year, _month, _day2, _hour, _minute, _second, _millisecond;
         var year, month, day, hour, minute, second, millisecond;
         var idx = -1; // ymd, md 등 정규식에 가장 뒤에서 걸린 것(인덱스의 최댓값)을 찾기 위한 변수
 
@@ -910,13 +907,13 @@ var DateTime = /*#__PURE__*/function () {
             idx = Math.max(idx, _match.index);
           }
         }
-        (_year = year) !== null && _year !== void 0 ? _year : year = matched.year;
-        (_month = month) !== null && _month !== void 0 ? _month : month = matched.month;
-        (_day2 = day) !== null && _day2 !== void 0 ? _day2 : day = matched.day;
-        (_hour = hour) !== null && _hour !== void 0 ? _hour : hour = matched.hour;
-        (_minute = minute) !== null && _minute !== void 0 ? _minute : minute = matched.minute;
-        (_second = second) !== null && _second !== void 0 ? _second : second = matched.second;
-        (_millisecond = millisecond) !== null && _millisecond !== void 0 ? _millisecond : millisecond = matched.millisecond;
+        year !== null && year !== void 0 ? year : year = matched.year;
+        month !== null && month !== void 0 ? month : month = matched.month;
+        day !== null && day !== void 0 ? day : day = matched.day;
+        hour !== null && hour !== void 0 ? hour : hour = matched.hour;
+        minute !== null && minute !== void 0 ? minute : minute = matched.minute;
+        second !== null && second !== void 0 ? second : second = matched.second;
+        millisecond !== null && millisecond !== void 0 ? millisecond : millisecond = matched.millisecond;
         if (year != null) year = parseInt(year);
         if (month != null) month = parseInt(month);
         if (day != null) day = parseInt(day);
@@ -1752,8 +1749,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "january",
     value: function january(day) {
-      var _day3;
-      day = (_day3 = day) !== null && _day3 !== void 0 ? _day3 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 1,
         day: day
@@ -1762,8 +1758,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "february",
     value: function february(day) {
-      var _day4;
-      day = (_day4 = day) !== null && _day4 !== void 0 ? _day4 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 2,
         day: day
@@ -1772,8 +1767,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "march",
     value: function march(day) {
-      var _day5;
-      day = (_day5 = day) !== null && _day5 !== void 0 ? _day5 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 3,
         day: day
@@ -1782,8 +1776,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "april",
     value: function april(day) {
-      var _day6;
-      day = (_day6 = day) !== null && _day6 !== void 0 ? _day6 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 4,
         day: day
@@ -1792,8 +1785,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "may",
     value: function may(day) {
-      var _day7;
-      day = (_day7 = day) !== null && _day7 !== void 0 ? _day7 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 5,
         day: day
@@ -1802,8 +1794,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "june",
     value: function june(day) {
-      var _day8;
-      day = (_day8 = day) !== null && _day8 !== void 0 ? _day8 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 6,
         day: day
@@ -1812,8 +1803,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "july",
     value: function july(day) {
-      var _day9;
-      day = (_day9 = day) !== null && _day9 !== void 0 ? _day9 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 7,
         day: day
@@ -1822,8 +1812,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "august",
     value: function august(day) {
-      var _day10;
-      day = (_day10 = day) !== null && _day10 !== void 0 ? _day10 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 8,
         day: day
@@ -1832,8 +1821,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "september",
     value: function september(day) {
-      var _day11;
-      day = (_day11 = day) !== null && _day11 !== void 0 ? _day11 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 9,
         day: day
@@ -1842,8 +1830,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "october",
     value: function october(day) {
-      var _day12;
-      day = (_day12 = day) !== null && _day12 !== void 0 ? _day12 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 10,
         day: day
@@ -1852,8 +1839,7 @@ var DateTime = /*#__PURE__*/function () {
   }, {
     key: "november",
     value: function november(day) {
-      var _day13;
-      day = (_day13 = day) !== null && _day13 !== void 0 ? _day13 : 1;
+      day = day !== null && day !== void 0 ? day : 1;
       return new DateTime({
         month: 11,
         day: day
