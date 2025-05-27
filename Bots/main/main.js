@@ -7,6 +7,9 @@
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
  *    - 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
  * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
+ * 
+ * [!] channel 객체 구조 변경으로 인한 수정사항
+ * channel.members.length -> channel.raw.active_members_count
  */
 
 ////////////////////// 모듈 불러오기
@@ -65,7 +68,7 @@ for (let [name, id] of Object.entries(DB.channels.c2i)) {
 		continue;
 	
 	if (isNumber(name)) {
-		if (ch.isGroupChannel() && ch.members.length > 70)  // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
+		if (ch.isGroupChannel() && ch.raw.active_members_count > 70)  // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
 			studentRooms[name] = ch;
 	}
 	
@@ -206,8 +209,8 @@ bot.addCommand(new StructuredCommand.Builder()
 			channel.success('디버그 모드가 종료되었습니다.');
 		}
 		else if (스위치 === '객체') {
-			channel.info(JSON.parse(JSON.stringify(chat)));
-			channel.info(JSON.parse(JSON.stringify(chat.user)));
+			channel.info(JSON.parse(JSON.stringify(channel.raw)));
+			channel.info(JSON.parse(JSON.stringify(chat.raw)));
 		}
 		else if (스위치 == null) {
 			if (bot.isDebugMod) {
@@ -365,7 +368,7 @@ bot.addCommand(new StructuredCommand.Builder()
 			기수.push(thirdNth, thirdNth + 1, thirdNth + 2);
 		}
 		
-		channel.info(`${chat.user.name}님, ${부서.으로}서 ${기수.join(', ')}기에 공지할 내용을 작성해주세요.\n'취소'라고 보내면 중단됩니다.`);
+		channel.info(`${부서.으로}서 ${기수.join(', ')}기에 공지할 내용을 작성해주세요.\n'취소'라고 보내면 중단됩니다.`);
 	}, (self, chat, prevChat, channel, prevChannel, { 부서, 기수 }) => {
 		// 취소 시 중단
 		if (chat.text === '취소') {

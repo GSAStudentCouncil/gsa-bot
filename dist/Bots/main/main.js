@@ -28,6 +28,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * 3. 모든 기수 방의 이름이 정확히 기수로만 되어있어야함 (39, 40, ...)
  *    - 봇 초대 -> 봇 계정에서 채팅방 이름 바꾸기 -> `.` 메시지 보내서 채널 등록 순서로 진행
  * 4. 봇 코드를 컴파일한 뒤 명령어를 사용하기 전에 `.`과 같은 더미 메시지를 보내서 봇이 채널을 등록할 수 있게 해야함
+ * 
+ * [!] channel 객체 구조 변경으로 인한 수정사항
+ * channel.members.length -> channel.raw.active_members_count
  */
 
 ////////////////////// 모듈 불러오기
@@ -105,7 +108,7 @@ for (var _i = 0, _Object$entries = _objectEntries(DB.channels.c2i); _i < _Object
   var ch = BotOperator.getChannelById(id);
   if (ch == null) continue;
   if (isNumber(name)) {
-    if (ch.isGroupChannel() && ch.members.length > 70)
+    if (ch.isGroupChannel() && ch.raw.active_members_count > 70)
       // 기수 톡방이 맞는지 검사 (조건: 최소 70명 이상)
       studentRooms[name] = ch;
   }
@@ -221,8 +224,8 @@ try {
       bot.setDebugMode(false);
       channel.success('디버그 모드가 종료되었습니다.');
     } else if (스위치 === '객체') {
-      channel.info(JSON.parse(JSON.stringify(chat)));
-      channel.info(JSON.parse(JSON.stringify(chat.user)));
+      channel.info(JSON.parse(JSON.stringify(channel.raw)));
+      channel.info(JSON.parse(JSON.stringify(chat.raw)));
     } else if (스위치 == null) {
       if (bot.isDebugMod) {
         bot.setDebugMode(false);
@@ -358,7 +361,7 @@ try {
       var thirdNth = DateTime.now().year - 2000 + 15;
       기수.push(thirdNth, thirdNth + 1, thirdNth + 2);
     }
-    channel.info("".concat(chat.user.name, "\uB2D8, ").concat(부서.으로, "\uC11C ").concat(기수.join(', '), "\uAE30\uC5D0 \uACF5\uC9C0\uD560 \uB0B4\uC6A9\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694.\n'\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0B4\uBA74 \uC911\uB2E8\uB429\uB2C8\uB2E4."));
+    channel.info("".concat(부서.으로, "\uC11C ").concat(기수.join(', '), "\uAE30\uC5D0 \uACF5\uC9C0\uD560 \uB0B4\uC6A9\uC744 \uC791\uC131\uD574\uC8FC\uC138\uC694.\n'\uCDE8\uC18C'\uB77C\uACE0 \uBCF4\uB0B4\uBA74 \uC911\uB2E8\uB429\uB2C8\uB2E4."));
   }, function (self, chat, prevChat, channel, prevChannel, _ref4) {
     var 부서 = _ref4.부서,
       기수 = _ref4.기수;

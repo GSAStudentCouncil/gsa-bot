@@ -11,8 +11,8 @@
     "test-local": "npm run ready && adb connect 127.0.0.1:62001 && adb push dist/Bots /sdcard/msgbot && adb push dist/global_modules /sdcard/msgbot && adb shell am broadcast -a com.xfl.msgbot.broadcast.compile -p com.xfl.msgbot --es name main"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.23.9",
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.3",
     "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/plugin-transform-named-capturing-groups-regex": "^7.22.5",
     "@babel/preset-env": "^7.23.9",
